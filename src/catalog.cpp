@@ -1042,6 +1042,8 @@ QVariantList Catalog::search(const QString &text, int limit) const
             continue;
         if (matched == n)
             score += 25;
+        else
+            score /= 2; // a word missed: behind the full matches
         if (app.nameFold == query)
             score += 100;
         if (featuredKeys.contains(app.key))

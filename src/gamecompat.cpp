@@ -27,6 +27,7 @@
 #include <QJsonDocument>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QRegularExpression>
 #include <QStandardPaths>
 #include <QUrlQuery>
 
@@ -248,6 +249,13 @@ void GameCompat::onSteamResults(const QJsonArray &items, int generation)
     for (const QJsonValue &v : items) {
         const QJsonObject item = v.toObject();
         if (item.value(QStringLiteral("type")).toString() != QLatin1String("app"))
+            continue;
+        // Soundtracks, artbooks and other extras aren't games
+        static const QRegularExpression extras(
+            QStringLiteral("\\b(soundtrack|ost|artbook|art book|season pass|dlc|wallpapers?|demo)\\b"),
+            QRegularExpression::CaseInsensitiveOption);
+        const QString name = item.value(QStringLiteral("name")).toString();
+        if (extras.match(name).hasMatch() && !extras.match(m_query).hasMatch())
             continue;
         const QString appId = QString::number(item.value(QStringLiteral("id")).toInteger());
         m_results << QVariantMap{
