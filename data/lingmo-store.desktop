@@ -1,0 +1,17 @@
+[Desktop Entry]
+Type=Application
+Name=App Store
+Name[pt_BR]=Loja de aplicativos
+GenericName=Software Center
+GenericName[pt_BR]=Central de programas
+Comment=Find, install and remove applications
+Comment[pt_BR]=Encontre, instale e remova aplicativos
+Exec=lingmo-store %U
+Icon=system-software-install
+Terminal=false
+Categories=System;PackageManager;
+Keywords=store;software;apps;install;flatpak;flathub;games;
+Keywords[pt_BR]=loja;programas;aplicativos;apps;instalar;flatpak;flathub;jogos;
+MimeType=x-scheme-handler/appstream;application/vnd.flatpak.ref;
+StartupNotify=true
+SingleMainWindow=true

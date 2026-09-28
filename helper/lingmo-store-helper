@@ -1,0 +1,265 @@
+#!/bin/sh
+#
+# Copyright (C) 2026 LingmoOS Team.
+#
+# Author:     devalexandre <alexandre@dev2learn.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# The only part of Lingmo Store that runs as root, through
+#   pkexec /usr/lib/lingmo-store/lingmo-store-helper <command> [args]
+# (polkit action com.lingmo.store.manage-packages).
+#
+#   install <pkg>...          pacman -S --needed --noconfirm <pkg>...
+#   remove <pkg>...           pacman -Rns --noconfirm <pkg>...
+#   enable-multilib           uncomment [multilib] in pacman.conf (a backup is kept)
+#   prepare-gaming <pkg>...   enable-multilib when needed, then
+#                             pacman -Syu --needed --noconfirm <pkg>...
+#
+# Besides pacman's own output it prints "@@" lines the store turns into progress:
+#   @@STEP <name>   multilib | sync | install | remove | done
+#   @@ERROR <code>  lock | name | protected | config | usage
+#
+# Testing without root: when not running as root and LINGMO_STORE_FAKE is set, pacman
+# is simulated (LINGMO_STORE_FAKE: 1|ok, fail, offline, lock, cancel) and
+# enable-multilib edits LINGMO_STORE_PACMAN_CONF (a copy of pacman.conf) instead of
+# /etc/pacman.conf. As root those variables are ignored.
+
+export LC_ALL=C
+PATH=/usr/bin:/bin:/usr/sbin:/sbin
+export PATH
+
+CONF=/etc/pacman.conf
+LOCK=/var/lib/pacman/db.lck
+FAKE=
+if [ "$(id -u)" != 0 ] && [ -n "$LINGMO_STORE_FAKE" ]; then
+    FAKE=$LINGMO_STORE_FAKE
+    [ "$FAKE" = 1 ] && FAKE=ok
+    CONF=${LINGMO_STORE_PACMAN_CONF:-}
+    LOCK=/nonexistent/db.lck
+    [ "$FAKE" = lock ] && LOCK=/dev/null
+fi
+SPEED=${LINGMO_STORE_FAKE_DELAY:-0.35}
+
+# Removing these would leave the system unbootable or without a desktop
+PROTECTED="base linux linux-lts linux-zen linux-hardened linux-firmware systemd glibc pacman sudo polkit
+filesystem bash coreutils mesa xorg-server sddm kwin kwin-x11 flatpak lingmo-store lingmo-desktop
+lingmo-core lingmo-dock lingmo-statusbar lingmo-launcher lingmo-filemanager lingmo-settings lingmo-updater
+lingmoui networkmanager dbus grub efibootmgr"
+
+fail() {
+    echo "@@ERROR $1"
+    shift
+    echo "error: $*" >&2
+    exit 2
+}
+
+check_names() {
+    [ $# -gt 0 ] || fail usage "no packages given"
+    for p in "$@"; do
+        case $p in
+        -*|*[!a-zA-Z0-9@._+-]*|'') fail name "invalid package name: $p" ;;
+        esac
+    done
+}
+
+check_lock() {
+    if [ -e "$LOCK" ]; then
+        echo "error: failed to init transaction (unable to lock database)"
+        echo "@@ERROR lock"
+        exit 1
+    fi
+}
+
+multilib_enabled() {
+    [ -n "$CONF" ] && [ -r "$CONF" ] || return 1
+    grep -Eq '^[[:space:]]*\[multilib\][[:space:]]*$' "$CONF"
+}
+
+# Uncomments "#[multilib]" and its "#Include = ..." lines, or appends the section
+edit_multilib() {
+    awk '
+        /^[[:space:]]*#[[:space:]]*\[multilib\][[:space:]]*$/ { print "[multilib]"; insec = 1; found = 1; next }
+        insec && /^[[:space:]]*#[[:space:]]*(Include|Server)[[:space:]]*=/ { sub(/^[[:space:]]*#[[:space:]]*/, ""); print; next }
+        insec && (/^[[:space:]]*$/ || /^[[:space:]]*#?[[:space:]]*\[/) { insec = 0 }
+        { print }
+        END {
+            if (!found) {
+                print ""
+                print "[multilib]"
+                print "Include = /etc/pacman.d/mirrorlist"
+            }
+        }' "$1"
+}
+
+enable_multilib() {
+    echo "@@STEP multilib"
+    if [ -z "$CONF" ]; then
+        # fake mode without a pacman.conf copy: nothing to edit
+        echo ":: Enabling the [multilib] repository (simulated)"
+        return 0
+    fi
+    [ -w "$CONF" ] || fail config "cannot write $CONF"
+    if multilib_enabled; then
+        echo ":: [multilib] is already enabled in $CONF"
+        return 0
+    fi
+    dir=$(dirname "$CONF")
+    tmp=$(mktemp "$dir/.pacman.conf.lingmo-store.XXXXXX") || fail config "cannot create a temporary file in $dir"
+    if ! edit_multilib "$CONF" > "$tmp"; then
+        rm -f "$tmp"
+        fail config "could not edit $CONF"
+    fi
+    # The result must still be a valid pacman.conf that lists [multilib]
+    if ! pacman-conf --config "$tmp" --repo-list 2>/dev/null | grep -qx multilib; then
+        rm -f "$tmp"
+        fail config "the edited configuration is not valid; $CONF was not changed"
+    fi
+    backup="$CONF.lingmo-store-$(date +%Y%m%d-%H%M%S).bak"
+    cp -p "$CONF" "$backup" || { rm -f "$tmp"; fail config "cannot back up $CONF"; }
+    # Rewrite in place: keeps the file's owner and permissions
+    cat "$tmp" > "$CONF" || { cp -p "$backup" "$CONF"; rm -f "$tmp"; fail config "cannot write $CONF"; }
+    rm -f "$tmp"
+    echo ":: Enabled the [multilib] repository in $CONF (backup: $backup)"
+}
+
+fake_pacman() {
+    # fake_pacman <sync:0|1> <verb> <pkg>...
+    sync=$1 verb=$2
+    shift 2
+    sleep 0.6   # "authentication"
+    if [ "$FAKE" = cancel ]; then
+        echo "Error executing command as another user: Request dismissed"
+        exit 126
+    fi
+    if [ "$sync" = 1 ]; then
+        echo "@@STEP sync"
+        echo ":: Synchronizing package databases..."
+        sleep "$SPEED"
+        for r in core extra multilib; do echo " $r downloading..."; done
+        if [ "$FAKE" = offline ]; then
+            echo "error: failed retrieving file 'core.db' from geo.mirror.pkgbuild.com : Could not resolve host: geo.mirror.pkgbuild.com"
+            echo "error: failed to synchronize all databases (download library error)"
+            exit 1
+        fi
+        echo ":: Starting full system upgrade..."
+    fi
+    n=$#
+    echo "resolving dependencies..."
+    echo "looking for conflicting packages..."
+    echo
+    echo "Packages ($n) $*"
+    echo
+    if [ "$verb" = removing ]; then
+        echo "@@STEP remove"
+        echo ":: Do you want to remove these packages? [Y/n] "
+        echo ":: Processing package changes..."
+        i=0
+        for p in "$@"; do
+            i=$((i + 1))
+            sleep "$SPEED"
+            echo "($i/$n) removing $p"
+        done
+    else
+        echo "@@STEP install"
+        echo "Total Download Size:   123.45 MiB"
+        echo "Total Installed Size:  456.78 MiB"
+        echo
+        echo ":: Proceed with installation? [Y/n] "
+        echo ":: Retrieving packages..."
+        for p in "$@"; do
+            sleep "$SPEED"
+            echo " $p-1.0-1-x86_64 downloading..."
+            if [ "$FAKE" = fail ] || [ "$FAKE" = offline ]; then
+                echo "error: failed retrieving file '$p-1.0-1-x86_64.pkg.tar.zst' from geo.mirror.pkgbuild.com : Could not resolve host: geo.mirror.pkgbuild.com"
+                echo "warning: failed to retrieve some files"
+                echo "error: failed to commit transaction (failed to retrieve some files)"
+                echo "Errors occurred, no packages were upgraded."
+                exit 1
+            fi
+        done
+        for step in "checking keys in keyring" "checking package integrity" "loading package files" \
+                    "checking for file conflicts" "checking available disk space"; do
+            i=0
+            while [ $i -lt "$n" ]; do i=$((i + 1)); echo "($i/$n) $step"; done
+            sleep 0.1
+        done
+        echo ":: Processing package changes..."
+        i=0
+        for p in "$@"; do
+            i=$((i + 1))
+            sleep "$SPEED"
+            echo "($i/$n) installing $p"
+        done
+    fi
+    echo ":: Running post-transaction hooks..."
+    echo "(1/2) Arming ConditionNeedsUpdate..."
+    sleep 0.2
+    echo "(2/2) Updating the desktop file MIME type cache..."
+    echo "@@STEP done"
+    exit 0
+}
+
+run_pacman() {
+    # run_pacman <sync:0|1> <install|remove> <pkg>...
+    if [ -n "$FAKE" ]; then
+        verb=installing
+        [ "$2" = remove ] && verb=removing
+        s=$1
+        shift 2
+        fake_pacman "$s" "$verb" "$@"
+    fi
+    case $2 in
+    install)
+        if [ "$1" = 1 ]; then
+            echo "@@STEP sync"
+            shift 2
+            pacman -Syu --needed --noconfirm "$@"
+        else
+            echo "@@STEP install"
+            shift 2
+            pacman -S --needed --noconfirm "$@"
+        fi ;;
+    remove)
+        echo "@@STEP remove"
+        shift 2
+        pacman -Rns --noconfirm "$@" ;;
+    esac
+    rc=$?
+    [ $rc = 0 ] && echo "@@STEP done"
+    exit $rc
+}
+
+cmd=$1
+[ $# -gt 0 ] && shift
+case $cmd in
+install)
+    check_names "$@"
+    check_lock
+    run_pacman 0 install "$@" ;;
+remove)
+    check_names "$@"
+    for p in "$@"; do
+        for q in $PROTECTED; do
+            [ "$p" = "$q" ] && fail protected "$p is an essential system package"
+        done
+    done
+    check_lock
+    run_pacman 0 remove "$@" ;;
+enable-multilib)
+    check_lock
+    enable_multilib
+    echo "@@STEP done" ;;
+prepare-gaming)
+    check_names "$@"
+    check_lock
+    multilib_enabled || enable_multilib
+    # One transaction that also syncs and upgrades: installing lib32 packages after a
+    # bare "pacman -Sy" would be a partial upgrade
+    run_pacman 1 install "$@" ;;
+*)
+    fail usage "usage: lingmo-store-helper install|remove|enable-multilib|prepare-gaming [packages]" ;;
+esac

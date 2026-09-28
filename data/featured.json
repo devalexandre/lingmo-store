@@ -1,0 +1,321 @@
+{
+    "_comment": "Curated content of the Lingmo Store home and games pages. Ids are AppStream/Flathub ids (case and a .desktop suffix are ignored) or Arch package names. Texts: English plus translations keyed by locale.",
+    "hero": [
+        {
+            "id": "com.valvesoftware.Steam",
+            "title": {
+                "en": "Your games, ready to play",
+                "pt_BR": "Seus jogos, prontos para jogar"
+            },
+            "text": {
+                "en": "Thousands of games run on Linux with Steam and Proton.",
+                "pt_BR": "Milhares de jogos rodam no Linux com a Steam e o Proton."
+            },
+            "colors": [
+                "#1b2838",
+                "#2a75bb"
+            ]
+        },
+        {
+            "id": "org.libreoffice.LibreOffice",
+            "title": {
+                "en": "The free office suite",
+                "pt_BR": "O pacote de escritório livre"
+            },
+            "text": {
+                "en": "Documents, spreadsheets and presentations compatible with Microsoft Office.",
+                "pt_BR": "Textos, planilhas e apresentações compatíveis com o Microsoft Office."
+            },
+            "colors": [
+                "#0f7b3d",
+                "#18a303"
+            ]
+        },
+        {
+            "id": "com.obsproject.Studio",
+            "title": {
+                "en": "Record and stream",
+                "pt_BR": "Grave e transmita"
+            },
+            "text": {
+                "en": "OBS Studio captures your screen, camera and games.",
+                "pt_BR": "O OBS Studio grava sua tela, câmera e jogos."
+            },
+            "colors": [
+                "#302e31",
+                "#6b4fbb"
+            ]
+        }
+    ],
+    "featured": [
+        "org.mozilla.firefox",
+        "com.google.Chrome",
+        "org.libreoffice.LibreOffice",
+        "org.onlyoffice.desktopeditors",
+        "com.rtosta.zapzap",
+        "org.telegram.desktop",
+        "com.discordapp.Discord",
+        "com.spotify.Client",
+        "org.videolan.VLC",
+        "com.obsproject.Studio",
+        "org.gimp.GIMP",
+        "org.inkscape.Inkscape",
+        "org.kde.krita",
+        "org.kde.kdenlive",
+        "com.valvesoftware.Steam",
+        "com.usebottles.bottles",
+        "com.visualstudio.code",
+        "us.zoom.Zoom",
+        "org.mozilla.Thunderbird",
+        "org.audacityteam.Audacity"
+    ],
+    "games": [
+        "com.valvesoftware.Steam",
+        "com.heroicgameslauncher.hgl",
+        "net.lutris.Lutris",
+        "com.usebottles.bottles",
+        "com.vysp3r.ProtonPlus",
+        "net.davidotek.pupgui2",
+        "org.prismlauncher.PrismLauncher",
+        "org.libretro.RetroArch",
+        "net.pcsx2.PCSX2",
+        "org.DolphinEmu.dolphin-emu",
+        "com.discordapp.Discord"
+    ],
+    "_nativeGames": "Native games: open-source PC ports rebuilt from decompilation/recompilation projects. \"id\" is a Flathub id (source flathub) or \"pkg\" an Arch package (source archlingmo: shown as coming soon until a repository has it). needsOwnCopy: the game data must come from the user's own copy; never link to ROM sites.",
+    "nativeGames": [
+        {
+            "pkg": "soh",
+            "name": "The Legend of Zelda: Ocarina of Time",
+            "console": "Nintendo 64",
+            "project": "Ship of Harkinian",
+            "source": "archlingmo",
+            "needsOwnCopy": true,
+            "note": {
+                "en": "Needs a ROM dumped from your own cartridge.",
+                "pt_BR": "Precisa de uma ROM extraída do seu próprio cartucho."
+            }
+        },
+        {
+            "pkg": "zelda64recomp",
+            "name": "The Legend of Zelda: Majora's Mask",
+            "console": "Nintendo 64",
+            "project": "Zelda 64: Recompiled",
+            "source": "archlingmo",
+            "needsOwnCopy": true,
+            "note": {
+                "en": "Needs a ROM dumped from your own cartridge.",
+                "pt_BR": "Precisa de uma ROM extraída do seu próprio cartucho."
+            }
+        },
+        {
+            "pkg": "sm64coopdx",
+            "name": "Super Mario 64",
+            "console": "Nintendo 64",
+            "project": "sm64coopdx",
+            "source": "archlingmo",
+            "needsOwnCopy": true,
+            "note": {
+                "en": "Needs a ROM dumped from your own cartridge. Adds online co-op.",
+                "pt_BR": "Precisa de uma ROM extraída do seu próprio cartucho. Traz modo cooperativo online."
+            }
+        },
+        {
+            "pkg": "starship-sf64",
+            "name": "Star Fox 64",
+            "console": "Nintendo 64",
+            "project": "Starship",
+            "source": "archlingmo",
+            "needsOwnCopy": true,
+            "note": {
+                "en": "Needs a ROM dumped from your own cartridge.",
+                "pt_BR": "Precisa de uma ROM extraída do seu próprio cartucho."
+            }
+        },
+        {
+            "pkg": "spaghettikart",
+            "name": "Mario Kart 64",
+            "console": "Nintendo 64",
+            "project": "SpaghettiKart",
+            "source": "archlingmo",
+            "needsOwnCopy": true,
+            "note": {
+                "en": "Needs a ROM dumped from your own cartridge.",
+                "pt_BR": "Precisa de uma ROM extraída do seu próprio cartucho."
+            }
+        },
+        {
+            "pkg": "zelda3",
+            "name": "The Legend of Zelda: A Link to the Past",
+            "console": "Super Nintendo",
+            "project": "zelda3",
+            "source": "archlingmo",
+            "needsOwnCopy": true,
+            "note": {
+                "en": "Needs a ROM dumped from your own cartridge.",
+                "pt_BR": "Precisa de uma ROM extraída do seu próprio cartucho."
+            }
+        },
+        {
+            "pkg": "rsdkv4",
+            "name": "Sonic the Hedgehog 1 & 2",
+            "console": "Mega Drive",
+            "project": "RSDKv4 decompilation",
+            "source": "archlingmo",
+            "needsOwnCopy": true,
+            "note": {
+                "en": "Needs the Data.rsdk file from your copy of the mobile remasters.",
+                "pt_BR": "Precisa do arquivo Data.rsdk da sua cópia das versões para celular."
+            }
+        },
+        {
+            "id": "org.sonic3air.Sonic3AIR",
+            "name": "Sonic 3 A.I.R.",
+            "console": "Mega Drive",
+            "project": "Sonic 3 A.I.R.",
+            "source": "flathub",
+            "needsOwnCopy": true,
+            "note": {
+                "en": "Uses the ROM of Sonic 3 & Knuckles from your Steam copy.",
+                "pt_BR": "Usa a ROM do Sonic 3 & Knuckles da sua cópia da Steam."
+            }
+        },
+        {
+            "id": "org.srb2.SRB2",
+            "name": "Sonic Robo Blast 2",
+            "console": "PC",
+            "project": "SRB2",
+            "source": "flathub",
+            "needsOwnCopy": false,
+            "note": {
+                "en": "A free 3D Sonic fan game, ready to play.",
+                "pt_BR": "Um jogo de fã do Sonic em 3D, gratuito e pronto para jogar."
+            }
+        },
+        {
+            "id": "org.srb2.SRB2Kart",
+            "name": "SRB2Kart",
+            "console": "PC",
+            "project": "SRB2Kart",
+            "source": "flathub",
+            "needsOwnCopy": false,
+            "note": {
+                "en": "Free kart racing with Sonic characters.",
+                "pt_BR": "Corrida de kart gratuita com personagens do Sonic."
+            }
+        },
+        {
+            "id": "org.diasurgical.DevilutionX",
+            "name": "Diablo",
+            "console": "PC",
+            "project": "DevilutionX",
+            "source": "flathub",
+            "needsOwnCopy": true,
+            "note": {
+                "en": "Needs DIABDAT.MPQ from your Diablo copy; the shareware demo works without it.",
+                "pt_BR": "Precisa do DIABDAT.MPQ do seu Diablo; a versão demo funciona sem ele."
+            }
+        },
+        {
+            "id": "io.openrct2.OpenRCT2",
+            "name": "RollerCoaster Tycoon 2",
+            "console": "PC",
+            "project": "OpenRCT2",
+            "source": "flathub",
+            "needsOwnCopy": true,
+            "note": {
+                "en": "Needs the files from your RollerCoaster Tycoon 2 copy.",
+                "pt_BR": "Precisa dos arquivos da sua cópia do RollerCoaster Tycoon 2."
+            }
+        },
+        {
+            "id": "org.openttd.OpenTTD",
+            "name": "Transport Tycoon Deluxe",
+            "console": "PC",
+            "project": "OpenTTD",
+            "source": "flathub",
+            "needsOwnCopy": false,
+            "note": {
+                "en": "Comes with free graphics and music; ready to play.",
+                "pt_BR": "Vem com gráficos e músicas livres; pronto para jogar."
+            }
+        },
+        {
+            "id": "org.openmw.OpenMW",
+            "name": "The Elder Scrolls III: Morrowind",
+            "console": "PC",
+            "project": "OpenMW",
+            "source": "flathub",
+            "needsOwnCopy": true,
+            "note": {
+                "en": "Needs the data files from your Morrowind copy.",
+                "pt_BR": "Precisa dos arquivos da sua cópia do Morrowind."
+            }
+        },
+        {
+            "id": "org.chocolate_doom.ChocolateDoom",
+            "name": "Doom",
+            "console": "PC",
+            "project": "Chocolate Doom",
+            "source": "flathub",
+            "needsOwnCopy": true,
+            "note": {
+                "en": "Plays the free Freedoom right away, or the WADs from your own Doom copy.",
+                "pt_BR": "Roda o Freedoom gratuito na hora, ou os WADs da sua cópia do Doom."
+            }
+        },
+        {
+            "id": "io.github.fabiangreffrath.Doom",
+            "name": "Doom",
+            "console": "PC",
+            "project": "Crispy Doom",
+            "source": "flathub",
+            "needsOwnCopy": true,
+            "note": {
+                "en": "Plays the free Freedoom right away, or the WADs from your own Doom copy.",
+                "pt_BR": "Roda o Freedoom gratuito na hora, ou os WADs da sua cópia do Doom."
+            }
+        },
+        {
+            "id": "org.ioquake3.ioquake3",
+            "name": "Quake III Arena",
+            "console": "PC",
+            "project": "ioquake3",
+            "source": "flathub",
+            "needsOwnCopy": true,
+            "note": {
+                "en": "Needs pak0.pk3 from your Quake III Arena copy.",
+                "pt_BR": "Precisa do pak0.pk3 da sua cópia do Quake III Arena."
+            }
+        },
+        {
+            "id": "net.openra.OpenRA",
+            "name": "Command & Conquer",
+            "console": "PC",
+            "project": "OpenRA",
+            "source": "flathub",
+            "needsOwnCopy": false,
+            "note": {
+                "en": "The original game files, released for free, are downloaded on first start.",
+                "pt_BR": "Os arquivos originais, liberados de graça, são baixados na primeira abertura."
+            }
+        },
+        {
+            "id": "com.github.bvschaik.julius",
+            "name": "Caesar III",
+            "console": "PC",
+            "project": "Julius",
+            "source": "flathub",
+            "needsOwnCopy": true,
+            "note": {
+                "en": "Needs the files from your Caesar III copy.",
+                "pt_BR": "Precisa dos arquivos da sua cópia do Caesar III."
+            }
+        }
+    ],
+    "_aliases": "Flathub id -> Arch package, for apps whose AppStream ids differ between Flathub and Arch",
+    "aliases": {
+        "org.libreoffice.LibreOffice": "libreoffice-fresh",
+        "org.signal.Signal": "signal-desktop"
+    }
+}

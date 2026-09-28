@@ -1,0 +1,49 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="qml/ActionButton.qml">qml/ActionButton.qml</file>
+        <file alias="qml/AppCard.qml">qml/AppCard.qml</file>
+        <file alias="qml/AppGrid.qml">qml/AppGrid.qml</file>
+        <file alias="qml/AppGridView.qml">qml/AppGridView.qml</file>
+        <file alias="qml/AppIcon.qml">qml/AppIcon.qml</file>
+        <file alias="qml/AppPage.qml">qml/AppPage.qml</file>
+        <file alias="qml/Badge.qml">qml/Badge.qml</file>
+        <file alias="qml/Card.qml">qml/Card.qml</file>
+        <file alias="qml/CategoryPage.qml">qml/CategoryPage.qml</file>
+        <file alias="qml/CategoryTile.qml">qml/CategoryTile.qml</file>
+        <file alias="qml/FlathubNotice.qml">qml/FlathubNotice.qml</file>
+        <file alias="qml/GamesPage.qml">qml/GamesPage.qml</file>
+        <file alias="qml/HeroBanner.qml">qml/HeroBanner.qml</file>
+        <file alias="qml/HomePage.qml">qml/HomePage.qml</file>
+        <file alias="qml/InstalledPage.qml">qml/InstalledPage.qml</file>
+        <file alias="qml/LogView.qml">qml/LogView.qml</file>
+        <file alias="qml/Main.qml">qml/Main.qml</file>
+        <file alias="qml/NativeGameCard.qml">qml/NativeGameCard.qml</file>
+        <file alias="qml/NativeGamesPage.qml">qml/NativeGamesPage.qml</file>
+        <file alias="qml/ScreenshotViewer.qml">qml/ScreenshotViewer.qml</file>
+        <file alias="qml/SearchPage.qml">qml/SearchPage.qml</file>
+        <file alias="qml/SectionHeader.qml">qml/SectionHeader.qml</file>
+        <file alias="qml/SideBar.qml">qml/SideBar.qml</file>
+        <file alias="qml/SourceOption.qml">qml/SourceOption.qml</file>
+        <file alias="qml/Spinner.qml">qml/Spinner.qml</file>
+        <file alias="qml/StoreDialog.qml">qml/StoreDialog.qml</file>
+        <file alias="icons/back.svg">resources/icons/back.svg</file>
+        <file alias="icons/check.svg">resources/icons/check.svg</file>
+        <file alias="icons/development.svg">resources/icons/development.svg</file>
+        <file alias="icons/education.svg">resources/icons/education.svg</file>
+        <file alias="icons/games.svg">resources/icons/games.svg</file>
+        <file alias="icons/graphics.svg">resources/icons/graphics.svg</file>
+        <file alias="icons/home.svg">resources/icons/home.svg</file>
+        <file alias="icons/installed.svg">resources/icons/installed.svg</file>
+        <file alias="icons/internet.svg">resources/icons/internet.svg</file>
+        <file alias="icons/multimedia.svg">resources/icons/multimedia.svg</file>
+        <file alias="icons/native.svg">resources/icons/native.svg</file>
+        <file alias="icons/office.svg">resources/icons/office.svg</file>
+        <file alias="icons/search.svg">resources/icons/search.svg</file>
+        <file alias="icons/shield.svg">resources/icons/shield.svg</file>
+        <file alias="icons/updates.svg">resources/icons/updates.svg</file>
+        <file alias="icons/utilities.svg">resources/icons/utilities.svg</file>
+        <file>data/featured.json</file>
+        <file>data/flathub.flatpakrepo</file>
+        <file alias="helper/lingmo-store-helper">helper/lingmo-store-helper</file>
+    </qresource>
+</RCC>
