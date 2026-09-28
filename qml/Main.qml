@@ -45,6 +45,19 @@ LingmoUI.Window {
     property string removeKey: ""
     property string removeSource: ""
     property string removePackageName: ""   // a native game package instead of an app
+    // Closed while installing: stay in the background until it's done
+    property bool quitWhenDone: false
+
+    onClosing: (close) => {
+        if (installer.busy) {
+            close.accepted = false
+            quitWhenDone = true
+            rootWindow.hide()
+            return
+        }
+        Qt.quit()
+    }
+    onVisibleChanged: if (visible) quitWhenDone = false
 
     LingmoUI.WindowBlur {
         view: rootWindow
@@ -85,6 +98,11 @@ LingmoUI.Window {
         }
         function onFinished(key, source, action, ok, message) {
             rootWindow.rev++
+            if (rootWindow.quitWhenDone) {
+                // Give the notification a moment to go out
+                quitTimer.start()
+                return
+            }
             const top = stack.currentItem
             const shownThere = top && ((top.appKey !== undefined && top.appKey === key)
                                        || (action === "gaming" && top.pageName === "games"))
@@ -440,6 +458,12 @@ LingmoUI.Window {
             else
                 installer.remove(rootWindow.removeKey, rootWindow.removeSource)
         }
+    }
+
+    Timer {
+        id: quitTimer
+        interval: 1500
+        onTriggered: if (rootWindow.quitWhenDone && !installer.busy) Qt.quit()
     }
 
     Shortcut {

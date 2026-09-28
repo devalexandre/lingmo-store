@@ -85,6 +85,7 @@ private:
     void runHelper(const QStringList &args);
     void onHelperOutput();
     void onHelperFinished(int exitCode, QProcess::ExitStatus status);
+    void takeLine(const QString &line);
     void parseLine(const QString &line);
     QString helperError(int exitCode) const;
 
@@ -96,6 +97,7 @@ private:
     QString m_status;
     QString m_log;
     QString m_pending;
+    QString m_markers;
     QProcess *m_process = nullptr;
     int m_total = 0;
     int m_downloaded = 0;

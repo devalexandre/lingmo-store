@@ -532,10 +532,6 @@
 <context>
     <name>HeroBanner</name>
     <message>
-        <source>Open</source>
-        <translation>Abrir</translation>
-    </message>
-    <message>
         <source>See App</source>
         <translation>Ver aplicativo</translation>
     </message>

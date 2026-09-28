@@ -127,7 +127,7 @@ Item {
                 }
                 ActionButton {
                     light: true
-                    text: control.hero && control.hero.installed ? qsTr("Open") : qsTr("See App")
+                    text: qsTr("See App")
                     Layout.topMargin: LingmoUI.Units.smallSpacing
                     onClicked: rootWindow.openApp(control.hero.key)
                 }

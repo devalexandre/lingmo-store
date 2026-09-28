@@ -59,6 +59,7 @@ void Installer::begin(const QString &key, const QString &source, const QString &
     m_action = action;
     m_name = name;
     m_log.clear();
+    m_markers.clear();
     m_pending.clear();
     m_total = 0;
     m_downloaded = 0;
@@ -234,14 +235,25 @@ void Installer::onHelperOutput()
         return;
     const QString complete = m_pending.left(end + 1);
     m_pending = m_pending.mid(end + 1);
-    m_log += complete;
+    const QStringList lines = complete.split(QLatin1Char('\n'));
+    for (int i = 0; i < lines.size() - 1; ++i)
+        takeLine(lines.at(i));
+}
+
+// The helper's "@@" markers drive the progress but aren't shown in the details
+void Installer::takeLine(const QString &line)
+{
+    if (line.startsWith(QLatin1String("@@")))
+        m_markers += line + QLatin1Char('\n');
+    else
+        m_log += line + QLatin1Char('\n');
     if (m_log.size() > MaxLogSize)
         m_log = m_log.right(MaxLogSize * 3 / 4);
     if (!m_logTimer.isActive())
         m_logTimer.start();
-    const QStringList lines = complete.split(QLatin1Char('\n'), Qt::SkipEmptyParts);
-    for (const QString &line : lines)
-        parseLine(line.trimmed());
+    const QString trimmed = line.trimmed();
+    if (!trimmed.isEmpty())
+        parseLine(trimmed);
 }
 
 // pacman's non-interactive output -> overall progress:
@@ -290,11 +302,11 @@ QString Installer::helperError(int exitCode) const
 {
     if (exitCode == 126 || exitCode == 127)
         return Errors::authCancelled();
-    if (m_log.contains(QLatin1String("@@ERROR lock")) || m_log.contains(QLatin1String("unable to lock database")))
+    if (m_markers.contains(QLatin1String("@@ERROR lock")) || m_log.contains(QLatin1String("unable to lock database")))
         return Errors::busy();
-    if (m_log.contains(QLatin1String("@@ERROR protected")))
+    if (m_markers.contains(QLatin1String("@@ERROR protected")))
         return tr("This is an essential part of the system and can't be removed.");
-    if (m_log.contains(QLatin1String("@@ERROR config")))
+    if (m_markers.contains(QLatin1String("@@ERROR config")))
         return tr("Could not enable the multilib repository in /etc/pacman.conf. Nothing was changed.");
     if (m_log.contains(QLatin1String("breaks dependency")) || m_log.contains(QLatin1String("required by")))
         return tr("Other programs need this one, so it can't be removed on its own.");
@@ -318,8 +330,7 @@ void Installer::onHelperFinished(int exitCode, QProcess::ExitStatus status)
 {
     onHelperOutput();
     if (!m_pending.isEmpty()) {
-        m_log += m_pending + QLatin1Char('\n');
-        parseLine(m_pending.trimmed());
+        takeLine(m_pending);
         m_pending.clear();
     }
     m_process->deleteLater();

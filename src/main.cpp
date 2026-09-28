@@ -66,6 +66,8 @@ int main(int argc, char *argv[])
     app.setApplicationName(QStringLiteral("lingmo-store"));
     app.setApplicationVersion(QStringLiteral(LINGMO_STORE_VERSION));
     app.setDesktopFileName(QStringLiteral("lingmo-store"));
+    // The window decides: closing it during an installation only hides it
+    app.setQuitOnLastWindowClosed(false);
 
     QCommandLineParser parser;
     parser.setApplicationDescription(QStringLiteral("Lingmo App Store"));
