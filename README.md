@@ -16,12 +16,32 @@ repositories second, the AUR not at all.
   badge), license, size and version, and the choice between *Versão do Arch* and
   *Flathub* when both exist. The Arch package is recommended when it's in the official
   repositories and not older than Flathub's; otherwise Flathub.
+- **Permissions before installing** — for Flathub apps, the sandbox permissions of the
+  app's metadata (`flatpak info --show-metadata` when installed, `flatpak remote-info
+  --show-metadata flathub <ref>` otherwise, Flathub's `/api/v2/summary/<id>` when the
+  remote isn't set up) in plain words with a risk level: running commands outside the
+  sandbox (`--talk-name=org.freedesktop.Flatpak`), the whole D-Bus session, all files,
+  camera and devices, microphone, SSH keys, saved passwords, network…; a summary sits
+  under the Install button. Arch packages say clearly that they run without a sandbox
+  and which repository (official or not) they come from. Cached for three days.
+- **Ratings and reviews** — from [ODRS](https://odrs.gnome.org), the service GNOME
+  Software and KDE Discover use: average and count on every app card and page (one
+  ~2 MB download a day, matched by AppStream id, `.desktop` id, Flathub id and the ids
+  an app provides), the newest reviews on the app page (in the user's language, else
+  English; cached for six hours) and, for installed apps, *Escrever avaliação*. The
+  reviewer is identified, like in GNOME Software, by a salted SHA-1 of the login and
+  `/etc/machine-id`. Offline, the last answers are shown; nothing waits on the network.
 - **Installed** — what was installed from the store, with Open and Remove. Updates are
   left to Lingmo Updater (linked from the sidebar).
 - **Games** — *Preparar para jogos* enables `[multilib]`, installs Steam, the 32-bit
   Vulkan driver for the GPUs `lspci` reports, GameMode and optionally MangoHud, in one
-  transaction; *Seu jogo funciona?* combines ProtonDB and Are We Anti-Cheat Yet into a
-  verdict.
+  transaction, and adds the user to the `gamemode` group (GameMode's polkit rule needs
+  it); *Proton para todos os jogos* sets Proton Experimental for "all other titles"
+  (`CompatToolMapping` → `0` in Steam's `config/config.vdf`, only while Steam is closed,
+  with a backup); *Modo jogo* explains `gamemoderun %command%`; *Seu jogo funciona?*
+  combines ProtonDB and Are We Anti-Cheat Yet into a verdict, and popular online games
+  whose anti-cheat blocks Linux (`antiCheatWatch` in `featured.json`, checked against
+  Are We Anti-Cheat Yet) are listed as a warning.
 - **Native games** — classic games rebuilt as native programs by decompilation and
   recompilation projects (`nativeGames` in `featured.json`). The store never ships or
   links to game data: entries that need the user's own copy say so and explain how.
@@ -43,7 +63,7 @@ repositories second, the AUR not at all.
   | `install <pkg>…`         | `pacman -S --needed --noconfirm`                    |
   | `remove <pkg>…`          | `pacman -Rns --noconfirm` (refuses essential ones)  |
   | `enable-multilib`        | uncomments `[multilib]` in `/etc/pacman.conf` after a timestamped backup, validated with `pacman-conf` |
-  | `prepare-gaming <pkg>…`  | `enable-multilib` if needed, then `pacman -Syu --needed --noconfirm` (a sync plus install in one transaction, never a partial upgrade) |
+  | `prepare-gaming <pkg>…`  | `enable-multilib` if needed, then `pacman -Syu --needed --noconfirm` (a sync plus install in one transaction, never a partial upgrade); with `gamemode`, `gpasswd -a <user of PKEXEC_UID> gamemode` |
 
   pacman's output is turned into a progress bar and, on failure, into a sentence
   ("Sem internet…", "Outro programa está instalando, tente de novo em instantes", …).
@@ -104,6 +124,10 @@ Values: `1`/`ok`, `fail`, `offline`, `lock`, `cancel`.
 | `LINGMO_STORE_FAKE_GPU=nvidia\|amd\|intel` | skip lspci                                  |
 | `LINGMO_STORE_FAKE_NATIVE=soh,zelda3`  | fake mode: pretend `[archlingmo]` has these native games |
 | `LINGMO_STORE_FAKE_DELAY`              | seconds between fake pacman steps               |
+| `LINGMO_STORE_ODRS_URL=<url>`          | another ODRS server (e.g. a local stub); in fake mode without it, submitting a review is only logged |
+| `LINGMO_STORE_FLATHUB_API=<url>`       | another Flathub API (permissions fallback)      |
+| `LINGMO_STORE_STEAM_DIR=<dir>`         | the Steam folder whose `config/config.vdf` is edited |
+| `LINGMO_STORE_FAKE_STEAM_RUNNING=1\|0` | skip looking for a running Steam                |
 
 ```sh
 cp /etc/pacman.conf /tmp/pacman.conf

@@ -39,6 +39,8 @@ class GameCompat : public QObject
     Q_PROPERTY(QVariantList results READ results NOTIFY changed)
     Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY changed)
     Q_PROPERTY(QString query READ query NOTIFY changed)
+    // Popular games (featured.json "antiCheatWatch") whose anti-cheat keeps Linux out
+    Q_PROPERTY(QVariantList blockedGames READ blockedGames NOTIFY changed)
 
 public:
     explicit GameCompat(QObject *parent = nullptr);
@@ -50,6 +52,9 @@ public:
 
     Q_INVOKABLE void search(const QString &text);
     Q_INVOKABLE void clear();
+    // Downloads (or reads the cached) Are We Anti-Cheat Yet list for blockedGames
+    Q_INVOKABLE void loadWatchlist();
+    QVariantList blockedGames() const;
 
 Q_SIGNALS:
     void changed();
@@ -74,6 +79,7 @@ private:
     int m_generation = 0;
     bool m_steamPending = false;
     QJsonArray m_antiCheat;
+    QStringList m_watch;
     bool m_antiCheatLoading = false;
     QHash<QString, QJsonObject> m_protonDb;    // appid -> summary (+ "fetched")
     QHash<QString, QJsonArray> m_steamSearch;  // folded query -> items

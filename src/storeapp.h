@@ -28,6 +28,8 @@ class FlatpakBackend;
 class GameCompat;
 class GamesManager;
 class Installer;
+class Permissions;
+class Reviews;
 class QQmlApplicationEngine;
 class QQuickWindow;
 
@@ -62,6 +64,7 @@ public:
     Q_INVOKABLE void openUrl(const QString &url);
     Q_INVOKABLE QString formatSize(qint64 bytes) const;
     Q_INVOKABLE bool hasThemeIcon(const QString &name) const;
+    Q_INVOKABLE void copyText(const QString &text);
 
 public Q_SLOTS:
     // D-Bus API
@@ -88,6 +91,8 @@ private:
     Installer *m_installer;
     GamesManager *m_games;
     GameCompat *m_compat;
+    Reviews *m_reviews;
+    Permissions *m_permissions;
     QQmlApplicationEngine *m_engine = nullptr;
     QPointer<QQuickWindow> m_window;
     StoreRequest m_pending;

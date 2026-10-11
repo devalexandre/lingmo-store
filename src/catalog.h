@@ -64,6 +64,7 @@ struct AppEntry {
     std::optional<AppSource> flathub;
     int quality = 0;       // ranking hint: metadata completeness
     bool extra = false;    // installed flatpak that isn't in the catalog
+    QStringList reviewIds; // every AppStream/desktop id the app is known by (ODRS ratings)
     // accent- and case-folded text for search
     QString nameFold, keywordsFold, summaryFold, idFold;
 };

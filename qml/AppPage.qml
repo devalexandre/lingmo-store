@@ -44,6 +44,9 @@ Flickable {
     property string lastError: ""
     property bool showLog: false
     property bool descriptionExpanded: false
+    readonly property var rating: { reviews.revision; return reviews.rating(appKey) }
+    readonly property var perms: { permissions.revision; return app.flathub ? permissions.forApp(app.flathub.flatpakId) : ({}) }
+    readonly property string versionText: src ? (src.version || "") : ""
     readonly property int margin: LingmoUI.Units.largeSpacing * 2
 
     contentWidth: width
@@ -78,6 +81,36 @@ Flickable {
     Component.onCompleted: {
         if (app.flathub)
             catalog.fetchFlathubSize(appKey)
+        loadExtras()
+    }
+    onFoundChanged: loadExtras()
+
+    // Reviews and the sandbox permissions arrive later; the page never waits for them
+    function loadExtras() {
+        if (!found)
+            return
+        reviews.fetch(appKey)
+        if (app.flathub)
+            permissions.fetch(app.flathub.flatpakId, app.flathub.ref || "", !!app.flathub.installed)
+    }
+
+    function safetyText() {
+        if (source === "arch") {
+            const repo = app.arch ? (app.arch.repo || "") : ""
+            return ["core", "extra", "multilib"].indexOf(repo) >= 0 ? qsTr("No sandbox · official repository")
+                                                                     : qsTr("No sandbox")
+        }
+        if (source !== "flathub" || perms.state !== "ready")
+            return ""
+        return perms.level === "high" ? qsTr("Wide access, see below")
+             : perms.level === "medium" ? qsTr("Isolated, some access")
+             : qsTr("Isolated from the system")
+    }
+    function safetyColor() {
+        if (source === "arch")
+            return LingmoUI.Theme.disabledTextColor
+        return perms.level === "high" ? LingmoUI.Theme.redColor
+             : perms.level === "medium" ? LingmoUI.Theme.orangeColor : LingmoUI.Theme.greenColor
     }
 
     function licenseText() {
@@ -186,6 +219,25 @@ Flickable {
                     wrapMode: Text.Wrap
                     Layout.fillWidth: true
                 }
+
+                RowLayout {
+                    visible: !!page.rating.count
+                    spacing: LingmoUI.Units.smallSpacing
+
+                    RatingStars {
+                        size: 16
+                        value: page.rating.average || 0
+                    }
+                    Label {
+                        text: page.rating.count ? Number(page.rating.average).toLocaleString(Qt.locale(), 'f', 1) : ""
+                        font.bold: true
+                        color: LingmoUI.Theme.textColor
+                    }
+                    Label {
+                        text: qsTr("%n rating(s)", "", page.rating.count || 0)
+                        color: LingmoUI.Theme.disabledTextColor
+                    }
+                }
             }
 
             // Actions
@@ -267,6 +319,36 @@ Flickable {
                     color: LingmoUI.Theme.disabledTextColor
                     font.pointSize: LingmoUI.Theme.fontSize * 0.9
                     Layout.alignment: Qt.AlignRight
+                }
+                // How isolated it is, next to the button that installs it
+                RowLayout {
+                    visible: !page.busyHere && page.found && page.safetyText() !== ""
+                    Layout.alignment: Qt.AlignRight
+                    spacing: 4
+
+                    Image {
+                        id: safetyIcon
+                        source: "qrc:/icons/shield.svg"
+                        sourceSize: Qt.size(28, 28)
+                        Layout.preferredWidth: 14
+                        Layout.preferredHeight: 14
+                        visible: false
+                    }
+                    ColorOverlay {
+                        source: safetyIcon
+                        color: page.safetyColor()
+                        Layout.preferredWidth: 14
+                        Layout.preferredHeight: 14
+                    }
+                    Label {
+                        text: page.safetyText()
+                        color: page.safetyColor()
+                        font.pointSize: LingmoUI.Theme.fontSize * 0.9
+                        font.bold: page.source === "flathub" && page.perms.level === "high"
+                        wrapMode: Text.Wrap
+                        horizontalAlignment: Text.AlignRight
+                        Layout.maximumWidth: 200
+                    }
                 }
             }
         }
@@ -409,6 +491,15 @@ Flickable {
             }
         }
 
+        // Before installing: what it can reach
+        PermissionsCard {
+            visible: page.found && (page.source === "flathub" || page.source === "arch")
+            Layout.fillWidth: true
+            source: page.source
+            app: page.app
+            info: page.perms
+        }
+
         // Screenshots
         ListView {
             id: shots
@@ -536,6 +627,15 @@ Flickable {
             }
         }
 
+        ReviewsCard {
+            visible: page.found
+            Layout.fillWidth: true
+            appKey: page.appKey
+            appName: page.app.name || ""
+            installed: page.installed
+            onWriteReview: reviewDialog.openFor(page.appKey, page.app.name || "", page.versionText)
+        }
+
         // Details
         Card {
             visible: page.found
@@ -614,5 +714,9 @@ Flickable {
 
     ScreenshotViewer {
         id: viewer
+    }
+
+    ReviewDialog {
+        id: reviewDialog
     }
 }

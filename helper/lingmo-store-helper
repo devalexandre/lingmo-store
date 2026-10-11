@@ -18,6 +18,8 @@
 #   enable-multilib           uncomment [multilib] in pacman.conf (a backup is kept)
 #   prepare-gaming <pkg>...   enable-multilib when needed, then
 #                             pacman -Syu --needed --noconfirm <pkg>...
+#                             and, when gamemode is among them, adds the user who
+#                             ran pkexec (PKEXEC_UID) to the "gamemode" group
 #
 # Besides pacman's own output it prints "@@" lines the store turns into progress:
 #   @@STEP <name>   multilib | sync | install | remove | done
@@ -126,6 +128,29 @@ enable_multilib() {
     echo ":: Enabled the [multilib] repository in $CONF (backup: $backup)"
 }
 
+AFTER_GAMEMODE=
+
+# GameMode's polkit rule lets members of "gamemode" switch the CPU governor without a
+# password; the group comes with the package (sysusers.d). Never fails the transaction.
+after_install() {
+    [ -n "$AFTER_GAMEMODE" ] || return 0
+    if [ -n "$FAKE" ]; then
+        echo ":: Adding you to the gamemode group (simulated)"
+        return 0
+    fi
+    [ -n "$PKEXEC_UID" ] || return 0
+    case $PKEXEC_UID in *[!0-9]*) return 0 ;; esac
+    user=$(getent passwd "$PKEXEC_UID" | cut -d: -f1)
+    [ -n "$user" ] || return 0
+    getent group gamemode >/dev/null || return 0
+    if id -nG "$user" | tr ' ' '\n' | grep -qx gamemode; then
+        return 0
+    fi
+    echo ":: Adding $user to the gamemode group"
+    gpasswd -a "$user" gamemode >/dev/null || echo "warning: could not add $user to the gamemode group"
+    return 0
+}
+
 fake_pacman() {
     # fake_pacman <sync:0|1> <verb> <pkg>...
     sync=$1 verb=$2
@@ -199,6 +224,7 @@ fake_pacman() {
     echo "(1/2) Arming ConditionNeedsUpdate..."
     sleep 0.2
     echo "(2/2) Updating the desktop file MIME type cache..."
+    after_install
     echo "@@STEP done"
     exit 0
 }
@@ -229,7 +255,10 @@ run_pacman() {
         pacman -Rns --noconfirm "$@" ;;
     esac
     rc=$?
-    [ $rc = 0 ] && echo "@@STEP done"
+    if [ $rc = 0 ]; then
+        after_install
+        echo "@@STEP done"
+    fi
     exit $rc
 }
 
@@ -257,6 +286,9 @@ prepare-gaming)
     check_names "$@"
     check_lock
     multilib_enabled || enable_multilib
+    for p in "$@"; do
+        [ "$p" = gamemode ] && AFTER_GAMEMODE=1
+    done
     # One transaction that also syncs and upgrades: installing lib32 packages after a
     # bare "pacman -Sy" would be a partial upgrade
     run_pacman 1 install "$@" ;;

@@ -329,5 +329,23 @@
   "aliases": {
     "org.libreoffice.LibreOffice": "libreoffice-fresh",
     "org.signal.Signal": "signal-desktop"
-  }
+  },
+  "_antiCheatWatch": "Popular online games checked against Are We Anti-Cheat Yet on the games page; only those still Denied or Broken are shown. Names as written there (accents, case and symbols are ignored).",
+  "antiCheatWatch": [
+    "Fortnite",
+    "Valorant",
+    "League of Legends",
+    "Grand Theft Auto V",
+    "Apex Legends",
+    "Tom Clancy's Rainbow Six Siege",
+    "PUBG: Battlegrounds",
+    "Call of Duty: Warzone",
+    "Call of Duty: Black Ops 6",
+    "EA SPORTS FC 25",
+    "Battlefield 2042",
+    "Destiny 2",
+    "Roblox",
+    "Rust",
+    "Delta Force: Hawk Ops"
+  ]
 }

@@ -19,6 +19,10 @@
         <file alias="qml/Main.qml">qml/Main.qml</file>
         <file alias="qml/NativeGameCard.qml">qml/NativeGameCard.qml</file>
         <file alias="qml/NativeGamesPage.qml">qml/NativeGamesPage.qml</file>
+        <file alias="qml/PermissionsCard.qml">qml/PermissionsCard.qml</file>
+        <file alias="qml/RatingStars.qml">qml/RatingStars.qml</file>
+        <file alias="qml/ReviewDialog.qml">qml/ReviewDialog.qml</file>
+        <file alias="qml/ReviewsCard.qml">qml/ReviewsCard.qml</file>
         <file alias="qml/ScreenshotViewer.qml">qml/ScreenshotViewer.qml</file>
         <file alias="qml/SearchPage.qml">qml/SearchPage.qml</file>
         <file alias="qml/SectionHeader.qml">qml/SectionHeader.qml</file>
@@ -40,6 +44,7 @@
         <file alias="icons/office.svg">resources/icons/office.svg</file>
         <file alias="icons/search.svg">resources/icons/search.svg</file>
         <file alias="icons/shield.svg">resources/icons/shield.svg</file>
+        <file alias="icons/star.svg">resources/icons/star.svg</file>
         <file alias="icons/updates.svg">resources/icons/updates.svg</file>
         <file alias="icons/utilities.svg">resources/icons/utilities.svg</file>
         <file>data/featured.json</file>

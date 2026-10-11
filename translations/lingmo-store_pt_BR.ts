@@ -42,6 +42,13 @@
         <source>Verified</source>
         <translation>Verificado</translation>
     </message>
+    <message numerus="yes">
+        <source>%n rating(s)</source>
+        <translation>
+            <numerusform>%n avaliação</numerusform>
+            <numerusform>%n avaliações</numerusform>
+        </translation>
+    </message>
     <message>
         <source>Cancel</source>
         <translation>Cancelar</translation>
@@ -153,6 +160,26 @@
     <message>
         <source>You need your own copy of the game</source>
         <translation>Você precisa da sua própria cópia do jogo</translation>
+    </message>
+    <message>
+        <source>No sandbox · official repository</source>
+        <translation>Sem isolamento · repositório oficial</translation>
+    </message>
+    <message>
+        <source>No sandbox</source>
+        <translation>Sem isolamento</translation>
+    </message>
+    <message>
+        <source>Wide access, see below</source>
+        <translation>Acesso amplo, veja abaixo</translation>
+    </message>
+    <message>
+        <source>Isolated, some access</source>
+        <translation>Isolado, com alguns acessos</translation>
+    </message>
+    <message>
+        <source>Isolated from the system</source>
+        <translation>Isolado do sistema</translation>
     </message>
     <message>
         <source>How does it work?</source>
@@ -363,6 +390,14 @@
         <translation>Ainda sem avaliações suficientes</translation>
     </message>
     <message>
+        <source>The developer blocks Linux</source>
+        <translation>O desenvolvedor bloqueia o Linux</translation>
+    </message>
+    <message>
+        <source>The anti-cheat doesn&apos;t run on Linux</source>
+        <translation>O anti-cheat não roda no Linux</translation>
+    </message>
+    <message>
         <source>No game called “%1” was found.</source>
         <translation>Nenhum jogo chamado “%1” foi encontrado.</translation>
     </message>
@@ -410,6 +445,10 @@
         <translation>GameMode</translation>
     </message>
     <message>
+        <source>Puts the computer in performance mode while you play. Your user still needs to join the gamemode group.</source>
+        <translation>Deixa o computador em modo desempenho enquanto você joga. Seu usuário ainda precisa entrar no grupo gamemode.</translation>
+    </message>
+    <message>
         <source>Puts the computer in performance mode while you play.</source>
         <translation>Coloca o computador em modo desempenho enquanto você joga.</translation>
     </message>
@@ -420,6 +459,34 @@
     <message>
         <source>Shows FPS, temperatures and usage on top of the game.</source>
         <translation>Mostra FPS, temperaturas e uso por cima do jogo.</translation>
+    </message>
+    <message>
+        <source>Install Steam first.</source>
+        <translation>Instale a Steam primeiro.</translation>
+    </message>
+    <message>
+        <source>Open Steam once and sign in, then close it and try again.</source>
+        <translation>Abra a Steam uma vez e entre na sua conta; depois feche-a e tente de novo.</translation>
+    </message>
+    <message>
+        <source>Close Steam first (Steam menu, Exit), then try again.</source>
+        <translation>Feche a Steam primeiro (menu Steam, Sair) e tente de novo.</translation>
+    </message>
+    <message>
+        <source>Could not read Steam&apos;s settings.</source>
+        <translation>Não foi possível ler as configurações da Steam.</translation>
+    </message>
+    <message>
+        <source>Steam&apos;s settings are in a format the store doesn&apos;t know. Turn it on in Steam instead.</source>
+        <translation>As configurações da Steam estão num formato que a loja não conhece. Ative pela própria Steam.</translation>
+    </message>
+    <message>
+        <source>Could not save a copy of Steam&apos;s settings, so nothing was changed.</source>
+        <translation>Não foi possível guardar uma cópia das configurações da Steam, então nada foi alterado.</translation>
+    </message>
+    <message>
+        <source>Could not save Steam&apos;s settings.</source>
+        <translation>Não foi possível salvar as configurações da Steam.</translation>
     </message>
 </context>
 <context>
@@ -473,6 +540,90 @@
         <translation>Aguardando %1 terminar…</translation>
     </message>
     <message>
+        <source>Proton for all games</source>
+        <translation>Proton para todos os jogos</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation>Ligado</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>Desligado</translation>
+    </message>
+    <message>
+        <source>Proton is what lets Steam run Windows games. Steam already uses it for the games Valve tested; turned on for all titles, you can install and try any other Windows game too.</source>
+        <translation>O Proton é o que faz a Steam rodar jogos de Windows. A Steam já o usa nos jogos que a Valve testou; ligado para todos os títulos, você pode instalar e testar qualquer outro jogo de Windows também.</translation>
+    </message>
+    <message>
+        <source>Turned on with %1: Steam uses it for every Windows game.</source>
+        <translation>Ligado com o %1: a Steam o usa em todos os jogos de Windows.</translation>
+    </message>
+    <message>
+        <source>Turned off: only the games Valve tested can be installed.</source>
+        <translation>Desligado: só os jogos testados pela Valve podem ser instalados.</translation>
+    </message>
+    <message>
+        <source>Close Steam (Steam menu, Exit) to change this setting.</source>
+        <translation>Feche a Steam (menu Steam, Sair) para mudar esta opção.</translation>
+    </message>
+    <message>
+        <source>Open Steam once and sign in, then close it and come back here.</source>
+        <translation>Abra a Steam uma vez e entre na sua conta; depois feche-a e volte aqui.</translation>
+    </message>
+    <message>
+        <source>Get ready for games above first: it installs Steam.</source>
+        <translation>Use “Preparar para jogos” acima primeiro: ele instala a Steam.</translation>
+    </message>
+    <message>
+        <source>Turn it on in Steam instead (see below).</source>
+        <translation>Ative pela própria Steam (veja abaixo).</translation>
+    </message>
+    <message>
+        <source>Turn On for All Games</source>
+        <translation>Ligar para todos os jogos</translation>
+    </message>
+    <message>
+        <source>Or in Steam: Settings › Compatibility › “Enable Steam Play for all other titles”.</source>
+        <translation>Ou na Steam: Configurações › Compatibilidade › “Ativar o Steam Play para todos os outros títulos”.</translation>
+    </message>
+    <message>
+        <source>Game mode (GameMode)</source>
+        <translation>Modo jogo (GameMode)</translation>
+    </message>
+    <message>
+        <source>Installed</source>
+        <translation>Instalado</translation>
+    </message>
+    <message>
+        <source>Not installed</source>
+        <translation>Não instalado</translation>
+    </message>
+    <message>
+        <source>Puts the processor in performance mode while a game runs and back to normal when you stop, so games run smoother without wasting power the rest of the time.</source>
+        <translation>Coloca o processador em modo desempenho enquanto um jogo roda e volta ao normal quando você para: os jogos ficam mais fluidos sem gastar energia à toa no resto do tempo.</translation>
+    </message>
+    <message>
+        <source>To use it with a Steam game: right-click the game › Properties › Launch options, and type:</source>
+        <translation>Para usar com um jogo da Steam: clique com o botão direito no jogo › Propriedades › Opções de inicialização, e escreva:</translation>
+    </message>
+    <message>
+        <source>Get ready for games above to install it. Then, in Steam, right-click a game › Properties › Launch options, and type:</source>
+        <translation>Use “Preparar para jogos” acima para instalá-lo. Depois, na Steam, clique com o botão direito num jogo › Propriedades › Opções de inicialização, e escreva:</translation>
+    </message>
+    <message>
+        <source>Copied</source>
+        <translation>Copiado</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Copiar</translation>
+    </message>
+    <message>
+        <source>Your user is not in the “gamemode” group yet, so it can&apos;t switch the processor&apos;s mode. “Get ready for games” above adds it; then sign out and back in once.</source>
+        <translation>Seu usuário ainda não está no grupo “gamemode”, então o modo do processador não pode ser trocado. “Preparar para jogos” acima resolve isso; depois saia e entre de novo na sessão uma vez.</translation>
+    </message>
+    <message>
         <source>Does your game work?</source>
         <translation>Seu jogo funciona?</translation>
     </message>
@@ -499,6 +650,18 @@
     <message>
         <source>Ratings come from the ProtonDB community and from Are We Anti-Cheat Yet.</source>
         <translation>As avaliações vêm da comunidade do ProtonDB e do Are We Anti-Cheat Yet.</translation>
+    </message>
+    <message>
+        <source>Popular games that don&apos;t work on Linux</source>
+        <translation>Jogos populares que não funcionam no Linux</translation>
+    </message>
+    <message>
+        <source>Their anti-cheat blocks Linux, so they can&apos;t be played online here, not even with Proton. Check before buying.</source>
+        <translation>O anti-cheat deles bloqueia o Linux, então não dá para jogá-los online aqui, nem com o Proton. Confira antes de comprar.</translation>
+    </message>
+    <message>
+        <source>Status from Are We Anti-Cheat Yet. Search any other game above.</source>
+        <translation>Situação segundo o Are We Anti-Cheat Yet. Pesquise qualquer outro jogo acima.</translation>
     </message>
     <message>
         <source>Apps for gamers</source>
@@ -823,6 +986,550 @@
     <message>
         <source>How does it work?</source>
         <translation>Como funciona?</translation>
+    </message>
+</context>
+<context>
+    <name>Permissions</name>
+    <message>
+        <source>Runs programs outside the sandbox</source>
+        <translation>Executa programas fora da caixa</translation>
+    </message>
+    <message>
+        <source>Can start any program directly on your system, without isolation (org.freedesktop.Flatpak).</source>
+        <translation>Pode abrir qualquer programa direto no seu sistema, sem isolamento (org.freedesktop.Flatpak).</translation>
+    </message>
+    <message>
+        <source>The whole D-Bus session</source>
+        <translation>Sessão D-Bus inteira</translation>
+    </message>
+    <message>
+        <source>Can talk to every program of your session, which is enough to get out of the sandbox.</source>
+        <translation>Pode conversar com todos os programas da sua sessão, o que basta para sair da caixa.</translation>
+    </message>
+    <message>
+        <source>The whole system D-Bus</source>
+        <translation>D-Bus do sistema inteiro</translation>
+    </message>
+    <message>
+        <source>Can talk to every service of the system.</source>
+        <translation>Pode conversar com todos os serviços do sistema.</translation>
+    </message>
+    <message>
+        <source>Downloads</source>
+        <translation>Downloads</translation>
+    </message>
+    <message>
+        <source>Documents</source>
+        <translation>Documentos</translation>
+    </message>
+    <message>
+        <source>Pictures</source>
+        <translation>Imagens</translation>
+    </message>
+    <message>
+        <source>Music</source>
+        <translation>Música</translation>
+    </message>
+    <message>
+        <source>Videos</source>
+        <translation>Vídeos</translation>
+    </message>
+    <message>
+        <source>Desktop</source>
+        <translation>Área de trabalho</translation>
+    </message>
+    <message>
+        <source>Public</source>
+        <translation>Público</translation>
+    </message>
+    <message>
+        <source>Templates</source>
+        <translation>Modelos</translation>
+    </message>
+    <message>
+        <source>All the files on this computer</source>
+        <translation>Acesso a todos os arquivos do computador</translation>
+    </message>
+    <message>
+        <source>Can read every file, including system files and other people&apos;s.</source>
+        <translation>Pode ler qualquer arquivo, inclusive os do sistema e os de outras pessoas.</translation>
+    </message>
+    <message>
+        <source>Can read, change and delete every file, including system files and other people&apos;s.</source>
+        <translation>Pode ler, alterar e apagar qualquer arquivo, inclusive os do sistema e os de outras pessoas.</translation>
+    </message>
+    <message>
+        <source>System files</source>
+        <translation>Arquivos do sistema</translation>
+    </message>
+    <message>
+        <source>Can read the programs and settings of the operating system.</source>
+        <translation>Pode ler os programas e as configurações do sistema operacional.</translation>
+    </message>
+    <message>
+        <source>All your files (read only)</source>
+        <translation>Acesso a todos os seus arquivos (só leitura)</translation>
+    </message>
+    <message>
+        <source>Can read everything in your personal folder.</source>
+        <translation>Pode ler tudo o que está na sua pasta pessoal.</translation>
+    </message>
+    <message>
+        <source>All your files</source>
+        <translation>Acesso a todos os seus arquivos</translation>
+    </message>
+    <message>
+        <source>Can read, change and delete everything in your personal folder.</source>
+        <translation>Pode ler, alterar e apagar tudo o que está na sua pasta pessoal.</translation>
+    </message>
+    <message>
+        <source>Your folders: %1</source>
+        <translation>Suas pastas: %1</translation>
+    </message>
+    <message>
+        <source>Can read, change and delete the files in these folders.</source>
+        <translation>Pode ler, alterar e apagar os arquivos dessas pastas.</translation>
+    </message>
+    <message>
+        <source>Your folders, read only: %1</source>
+        <translation>Suas pastas, só leitura: %1</translation>
+    </message>
+    <message>
+        <source>Can read the files in these folders.</source>
+        <translation>Pode ler os arquivos dessas pastas.</translation>
+    </message>
+    <message>
+        <source>Pen drives and external disks</source>
+        <translation>Pen drives e discos externos</translation>
+    </message>
+    <message>
+        <source>Can read the files on removable drives.</source>
+        <translation>Pode ler os arquivos de discos removíveis.</translation>
+    </message>
+    <message>
+        <source>Can read and change the files on removable drives.</source>
+        <translation>Pode ler e alterar os arquivos de discos removíveis.</translation>
+    </message>
+    <message>
+        <source>Other folders</source>
+        <translation>Outras pastas</translation>
+    </message>
+    <message>
+        <source>Can read and change: %1</source>
+        <translation>Pode ler e alterar: %1</translation>
+    </message>
+    <message>
+        <source>Some desktop settings and services</source>
+        <translation>Algumas configurações e serviços da área de trabalho</translation>
+    </message>
+    <message>
+        <source>Can read: %1</source>
+        <translation>Pode ler: %1</translation>
+    </message>
+    <message>
+        <source>Camera and every other device</source>
+        <translation>Câmera e todos os outros dispositivos</translation>
+    </message>
+    <message>
+        <source>Can use the webcam, game controllers, USB devices and any other device connected.</source>
+        <translation>Pode usar a webcam, controles de jogo, dispositivos USB e qualquer outro aparelho conectado.</translation>
+    </message>
+    <message>
+        <source>Game controllers and input devices</source>
+        <translation>Controles de jogo e dispositivos de entrada</translation>
+    </message>
+    <message>
+        <source>Can read joysticks and other input devices directly.</source>
+        <translation>Pode ler joysticks e outros dispositivos de entrada diretamente.</translation>
+    </message>
+    <message>
+        <source>USB devices</source>
+        <translation>Dispositivos USB</translation>
+    </message>
+    <message>
+        <source>Can talk to USB devices directly.</source>
+        <translation>Pode conversar com dispositivos USB diretamente.</translation>
+    </message>
+    <message>
+        <source>Virtual machines (KVM)</source>
+        <translation>Máquinas virtuais (KVM)</translation>
+    </message>
+    <message>
+        <source>Can run virtual machines with hardware acceleration.</source>
+        <translation>Pode rodar máquinas virtuais com aceleração de hardware.</translation>
+    </message>
+    <message>
+        <source>Sound and microphone</source>
+        <translation>Som e microfone</translation>
+    </message>
+    <message>
+        <source>Can play sound, record from the microphone and capture the screen (PipeWire).</source>
+        <translation>Pode tocar som, gravar do microfone e capturar a tela (PipeWire).</translation>
+    </message>
+    <message>
+        <source>Can play sound and record from the microphone.</source>
+        <translation>Pode tocar som e gravar do microfone.</translation>
+    </message>
+    <message>
+        <source>Bluetooth</source>
+        <translation>Bluetooth</translation>
+    </message>
+    <message>
+        <source>Can find and connect to Bluetooth devices.</source>
+        <translation>Pode procurar e conectar aparelhos Bluetooth.</translation>
+    </message>
+    <message>
+        <source>Developer tools</source>
+        <translation>Ferramentas de desenvolvedor</translation>
+    </message>
+    <message>
+        <source>Can inspect and control other programs (ptrace).</source>
+        <translation>Pode inspecionar e controlar outros programas (ptrace).</translation>
+    </message>
+    <message>
+        <source>Your SSH keys</source>
+        <translation>Suas chaves SSH</translation>
+    </message>
+    <message>
+        <source>Can use your SSH keys to log in to other computers.</source>
+        <translation>Pode usar suas chaves SSH para entrar em outros computadores.</translation>
+    </message>
+    <message>
+        <source>Your GPG keys</source>
+        <translation>Suas chaves GPG</translation>
+    </message>
+    <message>
+        <source>Can sign and decrypt with your GPG keys.</source>
+        <translation>Pode assinar e descriptografar com suas chaves GPG.</translation>
+    </message>
+    <message>
+        <source>Your background services</source>
+        <translation>Seus serviços em segundo plano</translation>
+    </message>
+    <message>
+        <source>Can start and stop services of your session (systemd).</source>
+        <translation>Pode iniciar e parar serviços da sua sessão (systemd).</translation>
+    </message>
+    <message>
+        <source>Your saved passwords</source>
+        <translation>Suas senhas guardadas</translation>
+    </message>
+    <message>
+        <source>Can read the passwords kept in the system keyring.</source>
+        <translation>Pode ler as senhas guardadas no chaveiro do sistema.</translation>
+    </message>
+    <message>
+        <source>Network settings</source>
+        <translation>Configurações de rede</translation>
+    </message>
+    <message>
+        <source>Can see and change your network connections.</source>
+        <translation>Pode ver e alterar suas conexões de rede.</translation>
+    </message>
+    <message>
+        <source>Disks</source>
+        <translation>Discos</translation>
+    </message>
+    <message>
+        <source>Can mount and manage disks.</source>
+        <translation>Pode montar e gerenciar discos.</translation>
+    </message>
+    <message>
+        <source>Internet</source>
+        <translation>Rede e internet</translation>
+    </message>
+    <message>
+        <source>Can connect to the internet and to your local network.</source>
+        <translation>Pode se conectar à internet e à sua rede local.</translation>
+    </message>
+    <message>
+        <source>Graphics acceleration</source>
+        <translation>Aceleração gráfica</translation>
+    </message>
+    <message>
+        <source>Uses the video card to draw faster.</source>
+        <translation>Usa a placa de vídeo para desenhar mais rápido.</translation>
+    </message>
+    <message>
+        <source>Windows through X11</source>
+        <translation>Janelas pelo X11</translation>
+    </message>
+    <message>
+        <source>Uses the older X11 window system, where apps can see other windows and keystrokes.</source>
+        <translation>Usa o sistema de janelas X11, mais antigo, em que os apps podem ver outras janelas e o que é digitado.</translation>
+    </message>
+    <message>
+        <source>Printers</source>
+        <translation>Impressoras</translation>
+    </message>
+    <message>
+        <source>Can print directly.</source>
+        <translation>Pode imprimir diretamente.</translation>
+    </message>
+    <message>
+        <source>Smart cards</source>
+        <translation>Cartões inteligentes</translation>
+    </message>
+    <message>
+        <source>Can use smart card readers (digital certificates).</source>
+        <translation>Pode usar leitores de cartão inteligente (certificados digitais).</translation>
+    </message>
+    <message>
+        <source>Other programs</source>
+        <translation>Outros programas</translation>
+    </message>
+    <message>
+        <source>Talks to: %1</source>
+        <translation>Conversa com: %1</translation>
+    </message>
+    <message>
+        <source>System services</source>
+        <translation>Serviços do sistema</translation>
+    </message>
+    <message>
+        <source>Wide access</source>
+        <translation>Acesso amplo</translation>
+    </message>
+    <message>
+        <source>This app is only partly isolated: it can reach your files or the system in ways that matter. Install it only if you trust the developer.</source>
+        <translation>Este app é isolado só em parte: ele alcança seus arquivos ou o sistema de formas importantes. Instale apenas se confiar no desenvolvedor.</translation>
+    </message>
+    <message numerus="yes">
+        <source>Isolated, with %n sensitive permission(s)</source>
+        <translation>
+            <numerusform>Isolado, com %n permissão sensível</numerusform>
+            <numerusform>Isolado, com %n permissões sensíveis</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Runs in a sandbox, but can reach a few things worth knowing about.</source>
+        <translation>Roda numa caixa isolada, mas alcança algumas coisas que vale a pena conhecer.</translation>
+    </message>
+    <message>
+        <source>Isolated from the system</source>
+        <translation>Isolado do sistema</translation>
+    </message>
+    <message>
+        <source>Runs in a sandbox with no special permissions.</source>
+        <translation>Roda numa caixa isolada, sem permissões especiais.</translation>
+    </message>
+    <message>
+        <source>Runs in a sandbox, without access to anything sensitive.</source>
+        <translation>Roda numa caixa isolada, sem acesso a nada sensível.</translation>
+    </message>
+</context>
+<context>
+    <name>PermissionsCard</name>
+    <message>
+        <source>High risk</source>
+        <translation>Risco alto</translation>
+    </message>
+    <message>
+        <source>Sensitive</source>
+        <translation>Sensível</translation>
+    </message>
+    <message>
+        <source>Low risk</source>
+        <translation>Risco baixo</translation>
+    </message>
+    <message>
+        <source>What this app can access</source>
+        <translation>O que este app pode acessar</translation>
+    </message>
+    <message>
+        <source>Runs without a sandbox</source>
+        <translation>Roda sem isolamento</translation>
+    </message>
+    <message>
+        <source>Programs from the Arch repositories run directly on the system, with the same access you have to your files and devices. This one comes from the official Arch Linux repositories (%1), built and signed by its maintainers.</source>
+        <translation>Programas dos repositórios do Arch rodam direto no sistema, sem caixa isolada, com o mesmo acesso que você tem aos seus arquivos e dispositivos. Este vem dos repositórios oficiais do Arch Linux (%1), compilado e assinado pelos mantenedores.</translation>
+    </message>
+    <message>
+        <source>Programs from the Arch repositories run directly on the system, with the same access you have to your files and devices. This one comes from the ArchLingmo repository, built and signed by the ArchLingmo team.</source>
+        <translation>Programas dos repositórios do Arch rodam direto no sistema, sem caixa isolada, com o mesmo acesso que você tem aos seus arquivos e dispositivos. Este vem do repositório do ArchLingmo, compilado e assinado pela equipe do ArchLingmo.</translation>
+    </message>
+    <message>
+        <source>Programs from the Arch repositories run directly on the system, with the same access you have to your files and devices. This one comes from the “%1” repository, which is not an official Arch Linux repository.</source>
+        <translation>Programas dos repositórios do Arch rodam direto no sistema, sem caixa isolada, com o mesmo acesso que você tem aos seus arquivos e dispositivos. Este vem do repositório “%1”, que não é um repositório oficial do Arch Linux.</translation>
+    </message>
+    <message>
+        <source>local</source>
+        <translation>local</translation>
+    </message>
+    <message>
+        <source>Checking the permissions…</source>
+        <translation>Verificando as permissões…</translation>
+    </message>
+    <message>
+        <source>The permissions can&apos;t be checked without internet. They will show up here once you&apos;re back online.</source>
+        <translation>As permissões não podem ser verificadas sem internet. Elas aparecem aqui assim que você voltar a ficar online.</translation>
+    </message>
+    <message>
+        <source>Could not read this app&apos;s permissions right now.</source>
+        <translation>Não foi possível ler as permissões deste app agora.</translation>
+    </message>
+    <message>
+        <source>Show only the important ones</source>
+        <translation>Mostrar só as importantes</translation>
+    </message>
+    <message numerus="yes">
+        <source>Show %n more permission(s)</source>
+        <translation>
+            <numerusform>Mostrar mais %n permissão</numerusform>
+            <numerusform>Mostrar mais %n permissões</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Checked earlier; it couldn&apos;t be checked again now.</source>
+        <translation>Verificado antes; não deu para verificar de novo agora.</translation>
+    </message>
+</context>
+<context>
+    <name>ReviewDialog</name>
+    <message>
+        <source>Thanks! Your review was sent.</source>
+        <translation>Obrigado! Sua avaliação foi enviada.</translation>
+    </message>
+    <message>
+        <source>Review %1</source>
+        <translation>Avaliar o %1</translation>
+    </message>
+    <message>
+        <source>Tap a star to rate</source>
+        <translation>Toque numa estrela para dar sua nota</translation>
+    </message>
+    <message>
+        <source>Terrible</source>
+        <translation>Péssimo</translation>
+    </message>
+    <message>
+        <source>Bad</source>
+        <translation>Ruim</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>Razoável</translation>
+    </message>
+    <message>
+        <source>Good</source>
+        <translation>Bom</translation>
+    </message>
+    <message>
+        <source>Excellent</source>
+        <translation>Excelente</translation>
+    </message>
+    <message>
+        <source>Title (for example: Does everything I need)</source>
+        <translation>Título (por exemplo: Faz tudo o que eu preciso)</translation>
+    </message>
+    <message>
+        <source>What did you like? What could be better?</source>
+        <translation>Do que você gostou? O que poderia ser melhor?</translation>
+    </message>
+    <message>
+        <source>Your name</source>
+        <translation>Seu nome</translation>
+    </message>
+    <message>
+        <source>Anonymous</source>
+        <translation>Anônimo</translation>
+    </message>
+    <message>
+        <source>Write a little more (at least 15 letters).</source>
+        <translation>Escreva um pouco mais (pelo menos 15 letras).</translation>
+    </message>
+    <message>
+        <source>Your review is public and shared with other Linux app stores. It&apos;s linked to an anonymous code of this computer, not to your account.</source>
+        <translation>Sua avaliação é pública e compartilhada com outras lojas de apps do Linux. Ela fica ligada a um código anônimo deste computador, não à sua conta.</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Cancelar</translation>
+    </message>
+    <message>
+        <source>Send Review</source>
+        <translation>Enviar avaliação</translation>
+    </message>
+    <message>
+        <source>Could not send your review. Try again later.</source>
+        <translation>Não foi possível enviar sua avaliação. Tente de novo mais tarde.</translation>
+    </message>
+</context>
+<context>
+    <name>Reviews</name>
+    <message>
+        <source>Anonymous</source>
+        <translation>Anônimo</translation>
+    </message>
+    <message>
+        <source>Could not send your review. Try again later.</source>
+        <translation>Não foi possível enviar sua avaliação. Tente de novo mais tarde.</translation>
+    </message>
+    <message>
+        <source>You already reviewed this app.</source>
+        <translation>Você já avaliou este app.</translation>
+    </message>
+    <message>
+        <source>The review service did not accept your review: %1</source>
+        <translation>O serviço de avaliações não aceitou sua avaliação: %1</translation>
+    </message>
+</context>
+<context>
+    <name>ReviewsCard</name>
+    <message>
+        <source>Ratings and reviews</source>
+        <translation>Notas e avaliações</translation>
+    </message>
+    <message>
+        <source>Write a Review</source>
+        <translation>Escrever avaliação</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n rating(s)</source>
+        <translation>
+            <numerusform>%n avaliação</numerusform>
+            <numerusform>%n avaliações</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Nobody reviewed %1 yet. Be the first!</source>
+        <translation>Ninguém avaliou o %1 ainda. Seja o primeiro!</translation>
+    </message>
+    <message>
+        <source>Nobody reviewed %1 yet.</source>
+        <translation>Ninguém avaliou o %1 ainda.</translation>
+    </message>
+    <message>
+        <source>Loading reviews…</source>
+        <translation>Carregando avaliações…</translation>
+    </message>
+    <message>
+        <source>Reviews need an internet connection.</source>
+        <translation>As avaliações precisam de internet.</translation>
+    </message>
+    <message>
+        <source>Could not load the reviews right now.</source>
+        <translation>Não foi possível carregar as avaliações agora.</translation>
+    </message>
+    <message>
+        <source>No reviews in your language yet; these were written in English.</source>
+        <translation>Ainda não há avaliações em português; estas foram escritas em inglês.</translation>
+    </message>
+    <message>
+        <source>Your review</source>
+        <translation>Sua avaliação</translation>
+    </message>
+    <message>
+        <source>version %1</source>
+        <translation>versão %1</translation>
+    </message>
+    <message>
+        <source>Reviews come from ODRS, the service shared with GNOME Software and KDE Discover.</source>
+        <translation>As avaliações vêm do ODRS, o serviço usado também pelo GNOME Software e pelo KDE Discover.</translation>
+    </message>
+    <message>
+        <source>Reviews come from ODRS, the service shared with GNOME Software and KDE Discover. Install the app to review it.</source>
+        <translation>As avaliações vêm do ODRS, o serviço usado também pelo GNOME Software e pelo KDE Discover. Instale o app para avaliá-lo.</translation>
     </message>
 </context>
 <context>

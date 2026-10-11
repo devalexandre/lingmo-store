@@ -28,6 +28,8 @@ Rectangle {
     property var app: ({})
     signal clicked()
 
+    readonly property var rating: { reviews.revision; return reviews.rating(app.key || "") }
+
     implicitHeight: 104
     radius: LingmoUI.Theme.bigRadius
     color: mouse.containsMouse ? (LingmoUI.Theme.darkMode ? Qt.lighter(LingmoUI.Theme.secondBackgroundColor, 1.18)
@@ -65,13 +67,36 @@ Rectangle {
             Layout.alignment: Qt.AlignVCenter
             spacing: 3
 
-            Label {
-                text: control.app.name || ""
-                font.pointSize: LingmoUI.Theme.fontSize * 1.08
-                font.bold: true
-                color: LingmoUI.Theme.textColor
-                elide: Text.ElideRight
+            RowLayout {
                 Layout.fillWidth: true
+                spacing: LingmoUI.Units.smallSpacing
+
+                Label {
+                    text: control.app.name || ""
+                    font.pointSize: LingmoUI.Theme.fontSize * 1.08
+                    font.bold: true
+                    color: LingmoUI.Theme.textColor
+                    elide: Text.ElideRight
+                    Layout.fillWidth: true
+                }
+                // Average stars and how many people rated it
+                RatingStars {
+                    visible: !!control.rating.count
+                    size: 12
+                    count: 1   // one star: the number says the rest
+                    value: 1
+                    Layout.alignment: Qt.AlignVCenter
+                }
+                Label {
+                    visible: !!control.rating.count
+                    text: control.rating.count
+                          ? "%1 (%2)".arg(Number(control.rating.average).toLocaleString(Qt.locale(), 'f', 1))
+                                     .arg(Number(control.rating.count).toLocaleString(Qt.locale(), 'f', 0))
+                          : ""
+                    color: LingmoUI.Theme.disabledTextColor
+                    font.pointSize: LingmoUI.Theme.fontSize * 0.8
+                    Layout.alignment: Qt.AlignVCenter
+                }
             }
 
             Label {

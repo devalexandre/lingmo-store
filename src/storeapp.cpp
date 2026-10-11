@@ -24,7 +24,10 @@
 #include "gamesmanager.h"
 #include "imageproviders.h"
 #include "installer.h"
+#include "permissions.h"
+#include "reviews.h"
 
+#include <QClipboard>
 #include <QCommandLineParser>
 #include <QDBusConnection>
 #include <QDBusInterface>
@@ -121,6 +124,8 @@ StoreApp::StoreApp(QObject *parent)
     , m_installer(new Installer(m_catalog, m_flatpak, this))
     , m_games(new GamesManager(m_catalog, m_installer, this))
     , m_compat(new GameCompat(this))
+    , m_reviews(new Reviews(m_catalog, m_fake, this))
+    , m_permissions(new Permissions(m_flatpak->userInstallation(), this))
 {
     if (m_fake)
         qInfo("LINGMO_STORE_FAKE is set: nothing will be installed or removed for real");
@@ -128,6 +133,7 @@ StoreApp::StoreApp(QObject *parent)
     m_flatpak->probe();
     m_catalog->reload();
     m_games->detect();
+    m_games->refreshSteam();
 }
 
 StoreApp::~StoreApp()
@@ -153,6 +159,8 @@ void StoreApp::show()
         ctx->setContextProperty(QStringLiteral("flatpak"), m_flatpak);
         ctx->setContextProperty(QStringLiteral("games"), m_games);
         ctx->setContextProperty(QStringLiteral("compat"), m_compat);
+        ctx->setContextProperty(QStringLiteral("reviews"), m_reviews);
+        ctx->setContextProperty(QStringLiteral("permissions"), m_permissions);
         ctx->setContextProperty(QStringLiteral("fixedFontFamily"), fixedFontFamily());
         m_engine->load(QUrl(QStringLiteral("qrc:/qml/Main.qml")));
         if (m_engine->rootObjects().isEmpty()) {
@@ -232,6 +240,11 @@ QString StoreApp::formatSize(qint64 bytes) const
 bool StoreApp::hasThemeIcon(const QString &name) const
 {
     return !name.isEmpty() && QIcon::hasThemeIcon(name);
+}
+
+void StoreApp::copyText(const QString &text)
+{
+    QGuiApplication::clipboard()->setText(text);
 }
 
 bool StoreApp::launch(const QString &key, const QString &source)

@@ -27,6 +27,9 @@ add_executable(lingmo-store
     src/installer.cpp
     src/gamesmanager.cpp
     src/gamecompat.cpp
+    src/steamconfig.cpp
+    src/reviews.cpp
+    src/permissions.cpp
     src/imageproviders.cpp
     resources.qrc
 )

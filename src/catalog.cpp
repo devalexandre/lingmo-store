@@ -302,6 +302,23 @@ QString desktopIdOf(AsComponent *cpt)
     return {};
 }
 
+// The ids ratings may be filed under: the component id, its .desktop launchable
+// and the ids it says it provides (renamed apps)
+void addReviewIds(AsComponent *cpt, QStringList *ids)
+{
+    auto add = [ids](const QString &id) {
+        if (!id.isEmpty() && !ids->contains(id, Qt::CaseInsensitive))
+            ids->append(id);
+    };
+    add(utf8(as_component_get_id(cpt)));
+    add(desktopIdOf(cpt));
+    if (AsProvided *provided = as_component_get_provided_for_kind(cpt, AS_PROVIDED_KIND_ID)) {
+        GPtrArray *items = as_provided_get_items(provided);
+        for (guint i = 0; items && i < items->len; ++i)
+            add(utf8(static_cast<const gchar *>(g_ptr_array_index(items, i))));
+    }
+}
+
 struct LoadConfig {
     QStringList extraDirs;
     QString locale;
@@ -371,6 +388,7 @@ std::shared_ptr<CatalogData> loadCatalog(const LoadConfig &config)
                 src.desktopId = desktopIdOf(cpt);
                 src.verified = qstrcmp(as_component_get_custom_value(cpt, "flathub::verification::verified"), "true") == 0;
                 app.flathub = src;
+                addReviewIds(cpt, &app.reviewIds);
                 byKey.insert(key, apps.size());
                 data->byFlatpakId.insert(ref.section(QLatin1Char('/'), 1, 1).toLower(), apps.size());
                 const QString lastSegment = key.section(QLatin1Char('.'), -1);
@@ -412,6 +430,7 @@ std::shared_ptr<CatalogData> loadCatalog(const LoadConfig &config)
                 AppEntry &app = apps[index];
                 if (!app.arch) {
                     app.arch = src;
+                    addReviewIds(cpt, &app.reviewIds);
                     if (app.iconUrl.isEmpty() && app.iconName.isEmpty())
                         pickIcon(cpt, &app);
                     data->byPkgname.insert(pkgname, index);
@@ -425,6 +444,7 @@ std::shared_ptr<CatalogData> loadCatalog(const LoadConfig &config)
             app.id = id.endsWith(QLatin1String(".desktop")) ? id.chopped(8) : id;
             fillMetadata(cpt, &app);
             app.arch = src;
+            addReviewIds(cpt, &app.reviewIds);
             byKey.insert(key, apps.size());
             if (!data->byPkgname.contains(pkgname))
                 data->byPkgname.insert(pkgname, apps.size());

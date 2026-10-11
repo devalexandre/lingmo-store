@@ -37,6 +37,12 @@ class GamesManager : public QObject
     Q_PROPERTY(QVariantList items READ items NOTIFY changed)
     Q_PROPERTY(bool allDone READ allDone NOTIFY changed)
     Q_PROPERTY(bool includeOptional READ includeOptional WRITE setIncludeOptional NOTIFY changed)
+    // Proton for every game: nosteam | firstrun | running | off | on | unknown
+    Q_PROPERTY(QString protonState READ protonState NOTIFY steamChanged)
+    Q_PROPERTY(QString protonTool READ protonTool NOTIFY steamChanged)
+    Q_PROPERTY(bool gamemodeInstalled READ gamemodeInstalled NOTIFY changed)
+    // The gamemode group exists but the user isn't in it (needed to change the CPU governor)
+    Q_PROPERTY(bool gamemodeGroupMissing READ gamemodeGroupMissing NOTIFY changed)
 
 public:
     GamesManager(Catalog *catalog, Installer *installer, QObject *parent = nullptr);
@@ -53,11 +59,21 @@ public:
     Q_INVOKABLE QStringList plannedPackages() const;
     Q_INVOKABLE bool prepare();
 
+    QString protonState() const { return m_protonState; }
+    QString protonTool() const { return m_protonTool; }
+    bool gamemodeInstalled() const;
+    bool gamemodeGroupMissing() const;
+    // Sets Proton Experimental for "all other titles" in Steam's config.vdf (a
+    // backup is kept). Returns an error message, empty on success.
+    Q_INVOKABLE QString enableProtonForAll();
+    Q_INVOKABLE void refreshSteam();
+
 public Q_SLOTS:
     void detect();
 
 Q_SIGNALS:
     void changed();
+    void steamChanged();
 
 private:
     struct Item {
@@ -78,4 +94,7 @@ private:
     QStringList m_vendors;  // nvidia, amd, intel
     QStringList m_gpuNames;
     QStringList m_lastPackages;
+    QString m_protonState = QStringLiteral("unknown");
+    QString m_protonTool;
+    bool m_fakeGroupAdded = false;
 };

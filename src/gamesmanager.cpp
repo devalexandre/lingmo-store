@@ -20,9 +20,20 @@
 #include "gamesmanager.h"
 #include "catalog.h"
 #include "installer.h"
+#include "steamconfig.h"
 
+#include <QDateTime>
+#include <QDebug>
+#include <QFile>
 #include <QProcess>
 #include <QRegularExpression>
+#include <QSaveFile>
+
+#include <grp.h>
+#include <pwd.h>
+#include <unistd.h>
+
+static const QString ProtonTool = QStringLiteral("proton_experimental");
 
 GamesManager::GamesManager(Catalog *catalog, Installer *installer, QObject *parent)
     : QObject(parent)
@@ -31,6 +42,8 @@ GamesManager::GamesManager(Catalog *catalog, Installer *installer, QObject *pare
 {
     connect(m_catalog, &Catalog::changed, this, &GamesManager::changed);
     connect(m_catalog, &Catalog::installedChanged, this, &GamesManager::changed);
+    connect(m_catalog, &Catalog::installedChanged, this, &GamesManager::refreshSteam);
+    connect(m_catalog, &Catalog::changed, this, &GamesManager::refreshSteam);
     connect(m_installer, &Installer::finished, this,
             [this](const QString &, const QString &, const QString &action, bool ok, const QString &) {
                 if (action != QLatin1String("gaming") || !ok)
@@ -40,6 +53,8 @@ GamesManager::GamesManager(Catalog *catalog, Installer *installer, QObject *pare
                     // re-read the (copied) pacman.conf the fake helper edited
                     for (const QString &pkg : std::as_const(m_lastPackages))
                         m_catalog->setFakePackageInstalled(pkg);
+                    if (m_lastPackages.contains(QLatin1String("gamemode")))
+                        m_fakeGroupAdded = true;
                     m_catalog->reload();
                 }
             });
@@ -150,7 +165,9 @@ QList<GamesManager::Item> GamesManager::plan() const
          gpu.isEmpty() ? tr("32-bit video drivers (Vulkan)") : tr("32-bit video drivers (Vulkan, %1)").arg(gpu),
          tr("Let games talk to your video card."), driverPackages(), false},
         {QStringLiteral("gamemode"), tr("GameMode"),
-         tr("Puts the computer in performance mode while you play."),
+         gamemodeGroupMissing() && m_catalog->isPackageInstalled(QStringLiteral("gamemode"))
+             ? tr("Puts the computer in performance mode while you play. Your user still needs to join the gamemode group.")
+             : tr("Puts the computer in performance mode while you play."),
          {QStringLiteral("gamemode"), QStringLiteral("lib32-gamemode")}, false},
         {QStringLiteral("mangohud"), tr("MangoHud (optional)"),
          tr("Shows FPS, temperatures and usage on top of the game."),
@@ -162,6 +179,8 @@ bool GamesManager::installed(const Item &item) const
 {
     if (item.id == QLatin1String("multilib"))
         return m_catalog->multilibEnabled();
+    if (item.id == QLatin1String("gamemode") && gamemodeGroupMissing())
+        return false;
     return std::all_of(item.packages.cbegin(), item.packages.cend(),
                        [this](const QString &pkg) { return m_catalog->isPackageInstalled(pkg); });
 }
@@ -215,4 +234,96 @@ bool GamesManager::prepare()
 {
     m_lastPackages = plannedPackages();
     return m_installer->prepareGaming(m_lastPackages);
+}
+
+bool GamesManager::gamemodeInstalled() const
+{
+    return m_catalog->isPackageInstalled(QStringLiteral("gamemode"));
+}
+
+bool GamesManager::gamemodeGroupMissing() const
+{
+    if (m_fakeGroupAdded)
+        return false;
+    // The gamemode package creates the group (sysusers.d); its polkit rule lets members
+    // switch the CPU to performance mode without a password
+    const group *gr = getgrnam("gamemode");
+    if (!gr)
+        return false;
+    const passwd *pw = getpwuid(getuid());
+    if (!pw)
+        return false;
+    if (pw->pw_gid == gr->gr_gid)
+        return false;
+    for (char **member = gr->gr_mem; member && *member; ++member) {
+        if (qstrcmp(*member, pw->pw_name) == 0)
+            return false;
+    }
+    return true;
+}
+
+void GamesManager::refreshSteam()
+{
+    QString state;
+    QString tool;
+    const QString dir = SteamConfig::steamDir();
+    const bool steamInstalled = m_catalog->isPackageInstalled(QStringLiteral("steam"))
+        || m_catalog->isFlatpakInstalled(QStringLiteral("com.valvesoftware.Steam")) || SteamConfig::isInstalledDir(dir);
+    if (!steamInstalled) {
+        state = QStringLiteral("nosteam");
+    } else if (!SteamConfig::isInstalledDir(dir)) {
+        state = QStringLiteral("firstrun");
+    } else {
+        QFile file(SteamConfig::configPath());
+        bool ok = false;
+        if (file.open(QIODevice::ReadOnly))
+            tool = SteamConfig::defaultTool(QString::fromUtf8(file.readAll()), &ok);
+        if (!ok)
+            state = QStringLiteral("unknown");
+        else if (!tool.isEmpty())
+            state = QStringLiteral("on");
+        else
+            state = SteamConfig::steamRunning() ? QStringLiteral("running") : QStringLiteral("off");
+    }
+    if (state == m_protonState && tool == m_protonTool)
+        return;
+    m_protonState = state;
+    m_protonTool = tool;
+    Q_EMIT steamChanged();
+}
+
+QString GamesManager::enableProtonForAll()
+{
+    refreshSteam();
+    if (m_protonState == QLatin1String("on"))
+        return {};
+    if (m_protonState == QLatin1String("nosteam"))
+        return tr("Install Steam first.");
+    if (m_protonState == QLatin1String("firstrun"))
+        return tr("Open Steam once and sign in, then close it and try again.");
+    if (SteamConfig::steamRunning())
+        return tr("Close Steam first (Steam menu, Exit), then try again.");
+
+    const QString path = SteamConfig::configPath();
+    QFile file(path);
+    if (!file.open(QIODevice::ReadOnly))
+        return tr("Could not read Steam's settings.");
+    const QString original = QString::fromUtf8(file.readAll());
+    file.close();
+    QString error;
+    const QString edited = SteamConfig::withDefaultTool(original, ProtonTool, &error);
+    if (edited.isEmpty()) {
+        qWarning().noquote() << "Steam settings:" << error;
+        return tr("Steam's settings are in a format the store doesn't know. Turn it on in Steam instead.");
+    }
+    const QString backup = path + QStringLiteral(".lingmo-store-%1.bak")
+                                      .arg(QDateTime::currentDateTime().toString(QStringLiteral("yyyyMMdd-HHmmss")));
+    if (!QFile::copy(path, backup))
+        return tr("Could not save a copy of Steam's settings, so nothing was changed.");
+    QSaveFile out(path);
+    if (!out.open(QIODevice::WriteOnly) || out.write(edited.toUtf8()) < 0 || !out.commit())
+        return tr("Could not save Steam's settings.");
+    qInfo().noquote() << "Steam Play enabled for all titles in" << path << "(backup:" << backup + ")";
+    refreshSteam();
+    return {};
 }
