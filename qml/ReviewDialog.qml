@@ -53,6 +53,7 @@ Popup {
     modal: true
     focus: true
     padding: LingmoUI.Units.largeSpacing * 2
+    font.pointSize: LingmoUI.Units.fontBody
     closePolicy: reviews.submitting ? Popup.NoAutoClose : Popup.CloseOnEscape
 
     Overlay.modal: Rectangle {
@@ -60,18 +61,25 @@ Popup {
     }
 
     enter: Transition {
-        NumberAnimation { property: "opacity"; from: 0; to: 1; duration: 120 }
-        NumberAnimation { property: "scale"; from: 0.96; to: 1; duration: 120; easing.type: Easing.OutCubic }
+        NumberAnimation { property: "opacity"; from: 0; to: 1; duration: LingmoUI.Units.shortDuration }
+        NumberAnimation { property: "scale"; from: 0.96; to: 1; duration: LingmoUI.Units.shortDuration; easing.type: LingmoUI.Units.easing }
     }
     exit: Transition {
-        NumberAnimation { property: "opacity"; from: 1; to: 0; duration: 100 }
+        NumberAnimation { property: "opacity"; from: 1; to: 0; duration: LingmoUI.Units.veryShortDuration }
     }
 
     background: Rectangle {
         radius: LingmoUI.Theme.hugeRadius
         color: LingmoUI.Theme.secondBackgroundColor
         border.width: 1
-        border.color: LingmoUI.Theme.darkMode ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0, 0, 0, 0.08)
+        border.color: LingmoUI.Theme.borderColor
+
+        LingmoUI.Elevation {
+            z: -1
+            anchors.fill: parent
+            radius: parent.radius
+            level: 3
+        }
     }
 
     Connections {
@@ -93,7 +101,7 @@ Popup {
 
         Label {
             text: qsTr("Review %1").arg(control.appName)
-            font.pointSize: LingmoUI.Theme.fontSize * 1.25
+            font.pointSize: LingmoUI.Units.fontHeading
             font.bold: true
             color: LingmoUI.Theme.textColor
             wrapMode: Text.Wrap
@@ -111,7 +119,7 @@ Popup {
             Label {
                 text: [qsTr("Tap a star to rate"), qsTr("Terrible"), qsTr("Bad"), qsTr("OK"), qsTr("Good"),
                        qsTr("Excellent")][control.stars]
-                color: LingmoUI.Theme.disabledTextColor
+                color: LingmoUI.Theme.secondaryTextColor
             }
         }
 
@@ -159,40 +167,34 @@ Popup {
             text: textArea.text.trim().length > 0 && textArea.text.trim().length < 15
                   ? qsTr("Write a little more (at least 15 letters).")
                   : qsTr("Your review is public and shared with other Linux app stores. It's linked to an anonymous code of this computer, not to your account.")
-            color: LingmoUI.Theme.disabledTextColor
-            font.pointSize: LingmoUI.Theme.fontSize * 0.88
+            color: LingmoUI.Theme.secondaryTextColor
+            font.pointSize: LingmoUI.Units.fontCaption
             wrapMode: Text.Wrap
             Layout.fillWidth: true
         }
 
-        Label {
-            visible: control.error !== ""
-            text: control.error
-            color: LingmoUI.Theme.redColor
-            wrapMode: Text.Wrap
+        LingmoUI.Banner {
             Layout.fillWidth: true
+            type: LingmoUI.Banner.Error
+            closable: false
+            text: control.error
         }
 
         RowLayout {
             Layout.fillWidth: true
             spacing: LingmoUI.Units.largeSpacing
 
-            Spinner {
-                visible: reviews.submitting
-                running: visible
-                Layout.preferredWidth: 22
-                Layout.preferredHeight: 22
-            }
             Item { Layout.fillWidth: true }
-            ActionButton {
+            LingmoUI.ActionButton {
                 text: qsTr("Cancel")
                 enabled: !reviews.submitting
                 onClicked: control.close()
             }
-            ActionButton {
+            LingmoUI.ActionButton {
                 primary: true
                 text: qsTr("Send Review")
-                enabled: control.valid && !reviews.submitting
+                busy: reviews.submitting
+                enabled: control.valid
                 onClicked: {
                     control.error = ""
                     if (!reviews.submit(control.appKey, control.version, control.stars, titleField.text,

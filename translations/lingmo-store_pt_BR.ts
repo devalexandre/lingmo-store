@@ -206,6 +206,18 @@
         <source>Loading…</source>
         <translation>Carregando…</translation>
     </message>
+    <message>
+        <source>No apps here yet</source>
+        <translation>Nenhum aplicativo aqui ainda</translation>
+    </message>
+    <message>
+        <source>Loading the app catalog…</source>
+        <translation>Carregando o catálogo de aplicativos…</translation>
+    </message>
+    <message>
+        <source>Search for an app by name, or look in another category.</source>
+        <translation>Busque um aplicativo pelo nome ou veja outra categoria.</translation>
+    </message>
 </context>
 <context>
     <name>Errors</name>
@@ -898,6 +910,74 @@
         <translation>Modo de teste</translation>
     </message>
     <message>
+        <source>Home</source>
+        <translation>Início</translation>
+    </message>
+    <message>
+        <source>Games</source>
+        <translation>Jogos</translation>
+    </message>
+    <message>
+        <source>Native games</source>
+        <translation>Jogos nativos</translation>
+    </message>
+    <message>
+        <source>Productivity</source>
+        <translation>Produtividade</translation>
+    </message>
+    <message>
+        <source>Categories</source>
+        <translation>Categorias</translation>
+    </message>
+    <message>
+        <source>Internet</source>
+        <translation>Internet</translation>
+    </message>
+    <message>
+        <source>Graphics &amp; Photo</source>
+        <translation>Gráficos e fotos</translation>
+    </message>
+    <message>
+        <source>Audio &amp; Video</source>
+        <translation>Áudio e vídeo</translation>
+    </message>
+    <message>
+        <source>Development</source>
+        <translation>Desenvolvimento</translation>
+    </message>
+    <message>
+        <source>Education</source>
+        <translation>Educação</translation>
+    </message>
+    <message>
+        <source>Utilities</source>
+        <translation>Utilitários</translation>
+    </message>
+    <message>
+        <source>Installed</source>
+        <translation>Instalados</translation>
+    </message>
+    <message>
+        <source>Your computer</source>
+        <translation>Seu computador</translation>
+    </message>
+    <message>
+        <source>Updates</source>
+        <translation>Atualizações</translation>
+    </message>
+    <message>
+        <source>Removing %1</source>
+        <translation>Removendo %1</translation>
+    </message>
+    <message>
+        <source>Preparing for games</source>
+        <translation>Preparando para jogos</translation>
+    </message>
+    <message>
+        <source>Installing %1</source>
+        <translation>Instalando %1</translation>
+    </message>
+    <message>
         <source>Turn on Flathub?</source>
         <translation>Ativar o Flathub?</translation>
     </message>
@@ -1556,77 +1636,6 @@
     <message>
         <source>Check the spelling or try another word, like “music” or “photos”.</source>
         <translation>Confira a digitação ou tente outra palavra, como “música” ou “fotos”.</translation>
-    </message>
-</context>
-<context>
-    <name>SideBar</name>
-    <message>
-        <source>Home</source>
-        <translation>Início</translation>
-    </message>
-    <message>
-        <source>Games</source>
-        <translation>Jogos</translation>
-    </message>
-    <message>
-        <source>Productivity</source>
-        <translation>Produtividade</translation>
-    </message>
-    <message>
-        <source>Categories</source>
-        <translation>Categorias</translation>
-    </message>
-    <message>
-        <source>Internet</source>
-        <translation>Internet</translation>
-    </message>
-    <message>
-        <source>Graphics &amp; Photo</source>
-        <translation>Gráficos e fotos</translation>
-    </message>
-    <message>
-        <source>Audio &amp; Video</source>
-        <translation>Áudio e vídeo</translation>
-    </message>
-    <message>
-        <source>Development</source>
-        <translation>Desenvolvimento</translation>
-    </message>
-    <message>
-        <source>Education</source>
-        <translation>Educação</translation>
-    </message>
-    <message>
-        <source>Utilities</source>
-        <translation>Utilitários</translation>
-    </message>
-    <message>
-        <source>Installed</source>
-        <translation>Instalados</translation>
-    </message>
-    <message>
-        <source>Your computer</source>
-        <translation>Seu computador</translation>
-    </message>
-    <message>
-        <source>Updates</source>
-        <translation>Atualizações</translation>
-    </message>
-    <message>
-        <source>Removing %1</source>
-        <translation>Removendo %1</translation>
-    </message>
-    <message>
-        <source>Preparing for games</source>
-        <translation>Preparando para jogos</translation>
-    </message>
-    <message>
-        <source>Installing %1</source>
-        <translation>Instalando %1</translation>
-    </message>
-    <message>
-        <source>Native games</source>
-        <translation>Jogos nativos</translation>
     </message>
 </context>
 <context>

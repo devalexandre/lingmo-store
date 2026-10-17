@@ -52,7 +52,7 @@ Item {
                 Image {
                     anchors.centerIn: parent
                     readonly property var info: sideBar.categoryInfo(page.category)
-                    source: info ? "qrc:/icons/" + info.iconSource : ""
+                    source: info ? info.iconSource : ""
                     width: 22
                     height: 22
                     sourceSize: Qt.size(44, 44)
@@ -65,13 +65,13 @@ Item {
 
                 Label {
                     text: page.title
-                    font.pointSize: LingmoUI.Theme.fontSize * 1.6
+                    font.pointSize: LingmoUI.Units.fontTitle
                     font.bold: true
                     color: LingmoUI.Theme.textColor
                 }
                 Label {
                     text: catalog.ready ? qsTr("%n app(s)", "", page.apps.length) : qsTr("Loading…")
-                    color: LingmoUI.Theme.disabledTextColor
+                    color: LingmoUI.Theme.secondaryTextColor
                 }
             }
         }
@@ -79,8 +79,24 @@ Item {
         AppGridView {
             Layout.fillWidth: true
             Layout.fillHeight: true
+            visible: page.apps.length > 0
             model: page.apps
             onAppClicked: (key) => rootWindow.openApp(key)
+        }
+
+        // Still loading, or nothing in this category
+        Item {
+            visible: page.apps.length === 0
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            LingmoUI.EmptyState {
+                anchors.centerIn: parent
+                busy: !catalog.ready
+                iconName: "system-software-install"
+                title: catalog.ready ? qsTr("No apps here yet") : qsTr("Loading the app catalog…")
+                text: catalog.ready ? qsTr("Search for an app by name, or look in another category.") : ""
+            }
         }
     }
 }

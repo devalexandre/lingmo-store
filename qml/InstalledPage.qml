@@ -70,29 +70,33 @@ Flickable {
 
             Label {
                 text: qsTr("Installed")
-                font.pointSize: LingmoUI.Theme.fontSize * 1.6
+                font.pointSize: LingmoUI.Units.fontTitle
                 font.bold: true
                 color: LingmoUI.Theme.textColor
             }
             Label {
                 text: catalog.ready ? qsTr("%n app(s) on this computer", "", page.rows.length) : qsTr("Loading…")
-                color: LingmoUI.Theme.disabledTextColor
+                color: LingmoUI.Theme.secondaryTextColor
             }
         }
 
         // Updates live in their own app
-        Card {
+        LingmoUI.Card {
+            id: updatesCard
             Layout.fillWidth: true
+            implicitHeight: updatesRow.implicitHeight + padding * 2
 
             RowLayout {
-                Layout.fillWidth: true
+                id: updatesRow
+                anchors.fill: parent
+                anchors.margins: updatesCard.padding
                 spacing: LingmoUI.Units.largeSpacing
 
                 Rectangle {
                     Layout.preferredWidth: 36
                     Layout.preferredHeight: 36
-                    radius: 10
-                    color: "#FF9F0A"
+                    radius: LingmoUI.Theme.mediumRadius
+                    color: LingmoUI.Theme.warningColor
                     Image {
                         anchors.centerIn: parent
                         source: "qrc:/icons/updates.svg"
@@ -107,19 +111,17 @@ Flickable {
                     wrapMode: Text.Wrap
                     Layout.fillWidth: true
                 }
-                ActionButton {
+                LingmoUI.ActionButton {
                     text: qsTr("Open Updates")
                     onClicked: store.openUpdater()
                 }
             }
         }
 
-        Rectangle {
+        LingmoUI.Card {
             visible: page.rows.length > 0
             Layout.fillWidth: true
             implicitHeight: list.implicitHeight + LingmoUI.Units.smallSpacing * 2
-            radius: LingmoUI.Theme.bigRadius
-            color: LingmoUI.Theme.secondBackgroundColor
 
             ColumnLayout {
                 id: list
@@ -135,7 +137,8 @@ Flickable {
                         Layout.fillWidth: true
                         implicitHeight: 64
                         radius: LingmoUI.Theme.mediumRadius
-                        color: rowMouse.containsMouse ? LingmoUI.Theme.alternateBackgroundColor : "transparent"
+                        color: rowMouse.containsMouse ? LingmoUI.Theme.hoverColor : "transparent"
+                        Behavior on color { ColorAnimation { duration: LingmoUI.Units.veryShortDuration } }
 
                         readonly property var app: modelData.app
                         readonly property bool busy: installer.busy && installer.currentKey === app.key
@@ -175,7 +178,7 @@ Flickable {
                                 }
                                 Label {
                                     text: row.busy ? installer.statusText : row.app.summary
-                                    color: LingmoUI.Theme.disabledTextColor
+                                    color: LingmoUI.Theme.secondaryTextColor
                                     elide: Text.ElideRight
                                     Layout.fillWidth: true
                                 }
@@ -184,12 +187,13 @@ Flickable {
                             Label {
                                 visible: modelData.source === "arch" && (row.app.size || "") !== ""
                                 text: row.app.size || ""
-                                color: LingmoUI.Theme.disabledTextColor
+                                color: LingmoUI.Theme.secondaryTextColor
+                                font.pointSize: LingmoUI.Units.fontCaption
                             }
 
-                            Badge {
+                            LingmoUI.Badge {
                                 text: modelData.source === "flathub" ? "Flathub" : modelData.source === "archlingmo" ? "ArchLingmo" : "Arch"
-                                tint: modelData.source === "flathub" ? "#4A86CF" : "#1793D1"
+                                subtle: true
                             }
 
                             ProgressBar {
@@ -199,17 +203,18 @@ Flickable {
                                 value: Math.max(0, installer.progress)
                             }
 
-                            ActionButton {
+                            LingmoUI.ActionButton {
                                 visible: !row.busy
                                 text: qsTr("Open")
                                 onClicked: modelData.source === "archlingmo" ? store.launchPackage(modelData.pkg)
                                                                              : store.launch(row.app.key, modelData.source)
                             }
 
-                            ActionButton {
+                            LingmoUI.ActionButton {
                                 visible: !row.busy && !(modelData.source === "arch" && row.app.protected)
                                 text: qsTr("Remove")
                                 destructive: true
+                                subtle: true
                                 enabled: !installer.busy
                                 onClicked: modelData.source === "archlingmo" ? rootWindow.askRemovePackage(modelData.pkg, row.app.name)
                                                                              : rootWindow.askRemove(row.app.key, modelData.source, row.app.name)
@@ -221,25 +226,14 @@ Flickable {
         }
 
         // Nothing yet
-        ColumnLayout {
+        LingmoUI.EmptyState {
             visible: catalog.ready && page.rows.length === 0
             Layout.fillWidth: true
             Layout.topMargin: 60
-            spacing: LingmoUI.Units.largeSpacing
-
-            Label {
-                text: qsTr("No apps installed from the store yet")
-                font.pointSize: LingmoUI.Theme.fontSize * 1.2
-                font.bold: true
-                color: LingmoUI.Theme.textColor
-                Layout.alignment: Qt.AlignHCenter
-            }
-            ActionButton {
-                primary: true
-                text: qsTr("Discover apps")
-                Layout.alignment: Qt.AlignHCenter
-                onClicked: rootWindow.showHome()
-            }
+            iconName: "system-software-install"
+            title: qsTr("No apps installed from the store yet")
+            actionText: qsTr("Discover apps")
+            onActionTriggered: rootWindow.showHome()
         }
     }
 }

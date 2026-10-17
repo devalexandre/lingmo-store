@@ -28,9 +28,9 @@ Rectangle {
     property alias text: textEdit.text
 
     radius: LingmoUI.Theme.smallRadius
-    color: LingmoUI.Theme.darkMode ? "#161618" : "#F6F7FA"
+    color: LingmoUI.Theme.backgroundColor
     border.width: 1
-    border.color: LingmoUI.Theme.darkMode ? Qt.rgba(1, 1, 1, 0.06) : Qt.rgba(0, 0, 0, 0.06)
+    border.color: LingmoUI.Theme.dividerColor
 
     Flickable {
         id: flick
@@ -51,7 +51,7 @@ Rectangle {
             selectByMouse: true
             wrapMode: TextEdit.WrapAnywhere
             font.family: fixedFontFamily
-            font.pointSize: LingmoUI.Theme.fontSize * 0.9
+            font.pointSize: LingmoUI.Units.fontCaption
             color: LingmoUI.Theme.textColor
             selectionColor: LingmoUI.Theme.highlightColor
             selectedTextColor: LingmoUI.Theme.highlightedTextColor

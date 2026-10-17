@@ -54,6 +54,7 @@ Flickable {
                 Layout.preferredWidth: 40
                 Layout.preferredHeight: 40
                 radius: 11
+                // Same tile colour as "Native games" in the sidebar
                 gradient: Gradient {
                     GradientStop { position: 0.0; color: Qt.lighter("#E0457B", 1.15) }
                     GradientStop { position: 1.0; color: "#E0457B" }
@@ -73,13 +74,13 @@ Flickable {
 
                 Label {
                     text: qsTr("Native games")
-                    font.pointSize: LingmoUI.Theme.fontSize * 1.6
+                    font.pointSize: LingmoUI.Units.fontTitle
                     font.bold: true
                     color: LingmoUI.Theme.textColor
                 }
                 Label {
                     text: qsTr("Classic games rebuilt as native Linux programs by fan projects")
-                    color: LingmoUI.Theme.disabledTextColor
+                    color: LingmoUI.Theme.secondaryTextColor
                     wrapMode: Text.Wrap
                     Layout.fillWidth: true
                 }
@@ -87,50 +88,17 @@ Flickable {
         }
 
         // Bring your own game
-        Rectangle {
+        LingmoUI.Banner {
             Layout.fillWidth: true
-            implicitHeight: info.implicitHeight + LingmoUI.Units.largeSpacing * 2.5
-            radius: LingmoUI.Theme.bigRadius
-            color: Qt.rgba(LingmoUI.Theme.orangeColor.r, LingmoUI.Theme.orangeColor.g, LingmoUI.Theme.orangeColor.b,
-                           LingmoUI.Theme.darkMode ? 0.16 : 0.1)
+            type: LingmoUI.Banner.Warning
+            closable: false
+            iconName: "dialog-information"
+            title: qsTr("The programs are free. The games are yours.")
+            text: qsTr("Most of these need the data of a game you own, such as a copy of your own cartridge. The store never includes or downloads game data.")
 
-            RowLayout {
-                id: info
-                anchors.fill: parent
-                anchors.margins: LingmoUI.Units.largeSpacing * 1.25
-                spacing: LingmoUI.Units.largeSpacing
-
-                LingmoUI.IconItem {
-                    source: "dialog-information"
-                    Layout.preferredWidth: 28
-                    Layout.preferredHeight: 28
-                    Layout.alignment: Qt.AlignTop
-                }
-
-                ColumnLayout {
-                    Layout.fillWidth: true
-                    spacing: 2
-
-                    Label {
-                        text: qsTr("The programs are free. The games are yours.")
-                        font.bold: true
-                        color: LingmoUI.Theme.textColor
-                        Layout.fillWidth: true
-                        wrapMode: Text.Wrap
-                    }
-                    Label {
-                        text: qsTr("Most of these need the data of a game you own, such as a copy of your own cartridge. The store never includes or downloads game data.")
-                        color: LingmoUI.Theme.textColor
-                        opacity: 0.8
-                        wrapMode: Text.Wrap
-                        Layout.fillWidth: true
-                    }
-                }
-
-                ActionButton {
-                    text: qsTr("How does it work?")
-                    onClicked: rootWindow.showOwnCopy({}, false)
-                }
+            LingmoUI.ActionButton {
+                text: qsTr("How does it work?")
+                onClicked: rootWindow.showOwnCopy({}, false)
             }
         }
 

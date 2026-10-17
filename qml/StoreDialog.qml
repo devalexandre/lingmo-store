@@ -41,6 +41,7 @@ Popup {
     modal: true
     focus: true
     padding: LingmoUI.Units.largeSpacing * 2
+    font.pointSize: LingmoUI.Units.fontBody
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
     Overlay.modal: Rectangle {
@@ -48,18 +49,25 @@ Popup {
     }
 
     enter: Transition {
-        NumberAnimation { property: "opacity"; from: 0; to: 1; duration: 120 }
-        NumberAnimation { property: "scale"; from: 0.96; to: 1; duration: 120; easing.type: Easing.OutCubic }
+        NumberAnimation { property: "opacity"; from: 0; to: 1; duration: LingmoUI.Units.shortDuration }
+        NumberAnimation { property: "scale"; from: 0.96; to: 1; duration: LingmoUI.Units.shortDuration; easing.type: LingmoUI.Units.easing }
     }
     exit: Transition {
-        NumberAnimation { property: "opacity"; from: 1; to: 0; duration: 100 }
+        NumberAnimation { property: "opacity"; from: 1; to: 0; duration: LingmoUI.Units.veryShortDuration }
     }
 
     background: Rectangle {
         radius: LingmoUI.Theme.hugeRadius
         color: LingmoUI.Theme.secondBackgroundColor
         border.width: 1
-        border.color: LingmoUI.Theme.darkMode ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0, 0, 0, 0.08)
+        border.color: LingmoUI.Theme.borderColor
+
+        LingmoUI.Elevation {
+            z: -1
+            anchors.fill: parent
+            radius: parent.radius
+            level: 3
+        }
     }
 
     contentItem: ColumnLayout {
@@ -82,7 +90,7 @@ Popup {
 
                 Label {
                     text: control.title
-                    font.pointSize: LingmoUI.Theme.fontSize * 1.25
+                    font.pointSize: LingmoUI.Units.fontHeading
                     font.bold: true
                     color: LingmoUI.Theme.textColor
                     wrapMode: Text.Wrap
@@ -90,7 +98,7 @@ Popup {
                 }
                 Label {
                     text: control.text
-                    color: LingmoUI.Theme.disabledTextColor
+                    color: LingmoUI.Theme.secondaryTextColor
                     wrapMode: Text.Wrap
                     textFormat: Text.StyledText
                     Layout.fillWidth: true
@@ -105,7 +113,7 @@ Popup {
 
             Item { Layout.fillWidth: true }
 
-            ActionButton {
+            LingmoUI.ActionButton {
                 visible: control.showReject
                 text: control.rejectText
                 onClicked: {
@@ -113,7 +121,7 @@ Popup {
                     control.rejected()
                 }
             }
-            ActionButton {
+            LingmoUI.ActionButton {
                 text: control.acceptText
                 primary: true
                 destructive: control.destructive

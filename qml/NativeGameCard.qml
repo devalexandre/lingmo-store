@@ -22,7 +22,7 @@ import QtQuick.Layouts
 import LingmoUI.CompatibleModule 3.0 as LingmoUI
 
 // A game of the "Native games" collection
-Rectangle {
+LingmoUI.Card {
     id: control
 
     property var game: ({})
@@ -31,26 +31,17 @@ Rectangle {
 
     implicitHeight: 158
     radius: LingmoUI.Theme.bigRadius
-    color: mouse.containsMouse && control.flathub
-           ? (LingmoUI.Theme.darkMode ? Qt.lighter(LingmoUI.Theme.secondBackgroundColor, 1.18)
-                                      : Qt.darker(LingmoUI.Theme.secondBackgroundColor, 1.02))
-           : LingmoUI.Theme.secondBackgroundColor
-    border.width: 1
-    border.color: LingmoUI.Theme.darkMode ? Qt.rgba(1, 1, 1, 0.04) : Qt.rgba(0, 0, 0, 0.05)
+    // Flathub games open their app page
+    clickable: control.flathub
+    liftOnHover: true
+    onClicked: rootWindow.openApp(control.game.key)
 
+    // Console tile colours (illustration, not theme)
     function consoleColor(name) {
         if (name.indexOf("64") >= 0) return "#D83A34"
         if (name.indexOf("Super Nintendo") >= 0) return "#6D5BD0"
         if (name.indexOf("Mega Drive") >= 0) return "#1E6FD9"
         return "#546E7A"
-    }
-
-    MouseArea {
-        id: mouse
-        anchors.fill: parent
-        hoverEnabled: true
-        cursorShape: control.flathub ? Qt.PointingHandCursor : Qt.ArrowCursor
-        onClicked: if (control.flathub) rootWindow.openApp(control.game.key)
     }
 
     ColumnLayout {
@@ -102,15 +93,15 @@ Rectangle {
                 Label {
                     text: control.game.name || ""
                     font.bold: true
-                    font.pointSize: LingmoUI.Theme.fontSize * 1.05
+                    font.pointSize: LingmoUI.Units.fontBody
                     color: LingmoUI.Theme.textColor
                     elide: Text.ElideRight
                     Layout.fillWidth: true
                 }
                 Label {
                     text: (control.game.console || "") + "  ·  " + (control.game.project || "")
-                    color: LingmoUI.Theme.disabledTextColor
-                    font.pointSize: LingmoUI.Theme.fontSize * 0.92
+                    color: LingmoUI.Theme.secondaryTextColor
+                    font.pointSize: LingmoUI.Units.fontCaption
                     elide: Text.ElideRight
                     Layout.fillWidth: true
                 }
@@ -119,8 +110,8 @@ Rectangle {
 
         Label {
             text: control.busy ? installer.statusText : (control.game.note || "")
-            color: LingmoUI.Theme.disabledTextColor
-            font.pointSize: LingmoUI.Theme.fontSize * 0.92
+            color: LingmoUI.Theme.secondaryTextColor
+            font.pointSize: LingmoUI.Units.fontCaption
             wrapMode: Text.Wrap
             maximumLineCount: 2
             elide: Text.ElideRight
@@ -141,10 +132,10 @@ Rectangle {
             Layout.fillWidth: true
             spacing: 4
 
-            Badge {
+            LingmoUI.Badge {
                 visible: !!control.game.needsOwnCopy
                 text: qsTr("Needs your copy") + "  ⓘ"
-                tint: LingmoUI.Theme.orangeColor
+                tone: LingmoUI.Theme.warningColor
 
                 MouseArea {
                     anchors.fill: parent
@@ -152,27 +143,27 @@ Rectangle {
                     onClicked: rootWindow.showOwnCopy(control.game, false)
                 }
             }
-            Badge {
+            LingmoUI.Badge {
                 visible: control.flathub
                 text: "Flathub"
-                tint: "#4A86CF"
+                subtle: true
             }
-            Badge {
+            LingmoUI.Badge {
                 visible: !control.flathub && control.game.available
                 text: "ArchLingmo"
-                tint: "#1793D1"
+                subtle: true
             }
-            Badge {
+            LingmoUI.Badge {
                 visible: !control.flathub && !control.game.available
                 text: qsTr("Coming soon")
-                tint: LingmoUI.Theme.disabledTextColor
+                subtle: true
             }
 
             Item { Layout.fillWidth: true }
 
-            ActionButton {
+            LingmoUI.ActionButton {
                 visible: control.flathub
-                implicitHeight: 30
+                implicitHeight: LingmoUI.Units.smallControlHeight
                 text: control.game.installed ? qsTr("Open") : qsTr("See")
                 onClicked: {
                     if (control.game.installed)
@@ -181,9 +172,9 @@ Rectangle {
                         rootWindow.openApp(control.game.key)
                 }
             }
-            ActionButton {
+            LingmoUI.ActionButton {
                 visible: !control.flathub && control.game.available
-                implicitHeight: 30
+                implicitHeight: LingmoUI.Units.smallControlHeight
                 primary: !control.game.installed
                 enabled: control.game.installed || !installer.busy
                 text: control.game.installed ? qsTr("Open") : qsTr("Install")

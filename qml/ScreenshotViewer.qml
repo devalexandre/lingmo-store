@@ -43,8 +43,8 @@ Popup {
         radius: rootWindow.windowRadius
     }
 
-    enter: Transition { NumberAnimation { property: "opacity"; from: 0; to: 1; duration: 140 } }
-    exit: Transition { NumberAnimation { property: "opacity"; from: 1; to: 0; duration: 100 } }
+    enter: Transition { NumberAnimation { property: "opacity"; from: 0; to: 1; duration: LingmoUI.Units.shortDuration } }
+    exit: Transition { NumberAnimation { property: "opacity"; from: 1; to: 0; duration: LingmoUI.Units.veryShortDuration } }
 
     contentItem: Item {
         focus: true
@@ -67,12 +67,10 @@ Popup {
             mipmap: true
         }
 
-        Spinner {
+        LingmoUI.Spinner {
             anchors.centerIn: parent
             running: image.status === Image.Loading
-            visible: running
-            width: 40
-            height: 40
+            size: 40
         }
 
         Label {
@@ -96,6 +94,7 @@ Popup {
                 height: 40
                 radius: 20
                 color: Qt.rgba(1, 1, 1, arrowMouse.containsMouse ? 0.3 : 0.15)
+                Behavior on color { ColorAnimation { duration: LingmoUI.Units.veryShortDuration } }
                 visible: modelData.dx < 0 ? control.index > 0 : control.index < control.shots.length - 1
 
                 Label {
@@ -103,7 +102,7 @@ Popup {
                     anchors.verticalCenterOffset: -2
                     text: modelData.glyph
                     color: "white"
-                    font.pointSize: 22
+                    font.pointSize: LingmoUI.Units.fontTitle
                 }
                 MouseArea {
                     id: arrowMouse
@@ -120,7 +119,7 @@ Popup {
             anchors.margins: 20
             text: "✕"
             color: "white"
-            font.pointSize: 16
+            font.pointSize: LingmoUI.Units.fontHeading
 
             MouseArea {
                 anchors.fill: parent

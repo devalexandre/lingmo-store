@@ -77,11 +77,11 @@ Flickable {
 
     function verdictColor(verdict) {
         switch (verdict) {
-        case "great": return "#2EB67D"
-        case "tweaks": return "#E8A317"
+        case "great": return LingmoUI.Theme.successColor
+        case "tweaks": return LingmoUI.Theme.warningColor
         case "anticheat":
-        case "broken": return "#E5484D"
-        default: return "#8E8E93"
+        case "broken": return LingmoUI.Theme.errorColor
+        default: return LingmoUI.Theme.greyColor
         }
     }
 
@@ -139,7 +139,7 @@ Flickable {
                             text: games.allDone ? qsTr("Ready for games!") : qsTr("Get ready for games")
                             color: "white"
                             font.bold: true
-                            font.pointSize: LingmoUI.Theme.fontSize * 2
+                            font.pointSize: LingmoUI.Units.fontTitle
                         }
                         Label {
                             text: games.allDone
@@ -153,7 +153,7 @@ Flickable {
                             visible: games.gpuName !== "" || games.detecting
                             text: games.detecting ? qsTr("Detecting your video card…") : qsTr("Video card: %1").arg(games.gpuName)
                             color: Qt.rgba(1, 1, 1, 0.65)
-                            font.pointSize: LingmoUI.Theme.fontSize * 0.92
+                            font.pointSize: LingmoUI.Units.fontCaption
                             Layout.fillWidth: true
                             elide: Text.ElideRight
                         }
@@ -188,7 +188,7 @@ Flickable {
                                     Layout.preferredHeight: 22
                                     Layout.alignment: Qt.AlignTop
                                     radius: 11
-                                    color: modelData.done ? "#2EB67D" : "transparent"
+                                    color: modelData.done ? LingmoUI.Theme.successColor : "transparent"
                                     border.width: modelData.done ? 0 : 2
                                     border.color: Qt.rgba(1, 1, 1, 0.5)
 
@@ -216,7 +216,7 @@ Flickable {
                                     Label {
                                         text: modelData.detail
                                         color: Qt.rgba(1, 1, 1, 0.7)
-                                        font.pointSize: LingmoUI.Theme.fontSize * 0.9
+                                        font.pointSize: LingmoUI.Units.fontCaption
                                         wrapMode: Text.Wrap
                                         Layout.fillWidth: true
                                     }
@@ -265,8 +265,7 @@ Flickable {
                     Layout.fillWidth: true
                     spacing: LingmoUI.Units.largeSpacing
 
-                    ActionButton {
-                        light: true
+                    LightButton {
                         visible: !games.allDone
                         enabled: catalog.ready && !installer.busy && !games.detecting
                         text: page.lastError !== "" ? qsTr("Try Again") : qsTr("Get Ready for Games")
@@ -275,8 +274,7 @@ Flickable {
                             games.prepare()
                         }
                     }
-                    ActionButton {
-                        light: true
+                    LightButton {
                         visible: games.allDone
                         text: qsTr("Open Steam")
                         onClicked: store.launch(catalog.resolve("steam"), "arch")
@@ -316,441 +314,457 @@ Flickable {
             columnSpacing: LingmoUI.Units.largeSpacing
             rowSpacing: LingmoUI.Units.largeSpacing
 
-            Card {
+            LingmoUI.Card {
+                id: card1
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 Layout.preferredWidth: 1
                 Layout.alignment: Qt.AlignTop
+                implicitHeight: card1Content.implicitHeight + padding * 2
 
-                RowLayout {
-                    Layout.fillWidth: true
-                    spacing: LingmoUI.Units.smallSpacing
+                ColumnLayout {
+                    id: card1Content
+                    anchors.fill: parent
+                    anchors.margins: card1.padding
+                    spacing: LingmoUI.Units.largeSpacing
 
-                    Label {
-                        text: qsTr("Proton for all games")
-                        font.bold: true
-                        font.pointSize: LingmoUI.Theme.fontSize * 1.2
-                        color: LingmoUI.Theme.textColor
+                    RowLayout {
                         Layout.fillWidth: true
-                        elide: Text.ElideRight
-                    }
-                    Badge {
-                        visible: games.protonState === "on" || games.protonState === "off" || games.protonState === "running"
-                        text: games.protonState === "on" ? qsTr("On") : qsTr("Off")
-                        tint: games.protonState === "on" ? LingmoUI.Theme.greenColor : LingmoUI.Theme.greyColor
-                        filled: games.protonState === "on"
-                    }
-                }
-                Label {
-                    text: qsTr("Proton is what lets Steam run Windows games. Steam already uses it for the games Valve tested; turned on for all titles, you can install and try any other Windows game too.")
-                    color: LingmoUI.Theme.disabledTextColor
-                    wrapMode: Text.Wrap
-                    Layout.fillWidth: true
-                }
-                Label {
-                    text: {
-                        switch (games.protonState) {
-                        case "on": return qsTr("Turned on with %1: Steam uses it for every Windows game.").arg(page.toolName(games.protonTool))
-                        case "off": return qsTr("Turned off: only the games Valve tested can be installed.")
-                        case "running": return qsTr("Close Steam (Steam menu, Exit) to change this setting.")
-                        case "firstrun": return qsTr("Open Steam once and sign in, then close it and come back here.")
-                        case "nosteam": return qsTr("Get ready for games above first: it installs Steam.")
-                        default: return qsTr("Turn it on in Steam instead (see below).")
+                        spacing: LingmoUI.Units.smallSpacing
+
+                        Label {
+                            text: qsTr("Proton for all games")
+                            font.bold: true
+                            font.pointSize: LingmoUI.Units.fontSubheading
+                            color: LingmoUI.Theme.textColor
+                            Layout.fillWidth: true
+                            elide: Text.ElideRight
+                        }
+                        LingmoUI.Badge {
+                            visible: games.protonState === "on" || games.protonState === "off" || games.protonState === "running"
+                            text: games.protonState === "on" ? qsTr("On") : qsTr("Off")
+                            tone: LingmoUI.Theme.successColor
+                            subtle: games.protonState !== "on"
                         }
                     }
-                    color: games.protonState === "on" ? LingmoUI.Theme.greenColor : LingmoUI.Theme.textColor
-                    font.bold: games.protonState === "on"
-                    wrapMode: Text.Wrap
-                    Layout.fillWidth: true
-                }
-                Label {
-                    visible: page.protonError !== ""
-                    text: page.protonError
-                    color: LingmoUI.Theme.redColor
-                    wrapMode: Text.Wrap
-                    Layout.fillWidth: true
-                }
-                RowLayout {
-                    spacing: LingmoUI.Units.largeSpacing
-                    ActionButton {
-                        visible: games.protonState === "off"
-                        primary: true
-                        text: qsTr("Turn On for All Games")
-                        onClicked: page.protonError = games.enableProtonForAll()
+                    Label {
+                        text: qsTr("Proton is what lets Steam run Windows games. Steam already uses it for the games Valve tested; turned on for all titles, you can install and try any other Windows game too.")
+                        color: LingmoUI.Theme.secondaryTextColor
+                        wrapMode: Text.Wrap
+                        Layout.fillWidth: true
                     }
-                    ActionButton {
-                        visible: games.protonState === "firstrun"
-                        text: qsTr("Open Steam")
-                        onClicked: store.launch(catalog.resolve("steam"), "arch")
+                    Label {
+                        text: {
+                            switch (games.protonState) {
+                            case "on": return qsTr("Turned on with %1: Steam uses it for every Windows game.").arg(page.toolName(games.protonTool))
+                            case "off": return qsTr("Turned off: only the games Valve tested can be installed.")
+                            case "running": return qsTr("Close Steam (Steam menu, Exit) to change this setting.")
+                            case "firstrun": return qsTr("Open Steam once and sign in, then close it and come back here.")
+                            case "nosteam": return qsTr("Get ready for games above first: it installs Steam.")
+                            default: return qsTr("Turn it on in Steam instead (see below).")
+                            }
+                        }
+                        color: games.protonState === "on" ? LingmoUI.Theme.successColor : LingmoUI.Theme.textColor
+                        font.bold: games.protonState === "on"
+                        wrapMode: Text.Wrap
+                        Layout.fillWidth: true
                     }
-                }
-                Label {
-                    visible: games.protonState !== "on"
-                    text: qsTr("Or in Steam: Settings › Compatibility › “Enable Steam Play for all other titles”.")
-                    color: LingmoUI.Theme.disabledTextColor
-                    font.pointSize: LingmoUI.Theme.fontSize * 0.88
-                    wrapMode: Text.Wrap
-                    Layout.fillWidth: true
+                    Label {
+                        visible: page.protonError !== ""
+                        text: page.protonError
+                        color: LingmoUI.Theme.errorColor
+                        wrapMode: Text.Wrap
+                        Layout.fillWidth: true
+                    }
+                    RowLayout {
+                        spacing: LingmoUI.Units.largeSpacing
+                        LingmoUI.ActionButton {
+                            visible: games.protonState === "off"
+                            primary: true
+                            text: qsTr("Turn On for All Games")
+                            onClicked: page.protonError = games.enableProtonForAll()
+                        }
+                        LingmoUI.ActionButton {
+                            visible: games.protonState === "firstrun"
+                            text: qsTr("Open Steam")
+                            onClicked: store.launch(catalog.resolve("steam"), "arch")
+                        }
+                    }
+                    Label {
+                        visible: games.protonState !== "on"
+                        text: qsTr("Or in Steam: Settings › Compatibility › “Enable Steam Play for all other titles”.")
+                        color: LingmoUI.Theme.secondaryTextColor
+                        font.pointSize: LingmoUI.Units.fontCaption
+                        wrapMode: Text.Wrap
+                        Layout.fillWidth: true
+                    }
                 }
             }
 
-            Card {
+            LingmoUI.Card {
+                id: card2
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 Layout.preferredWidth: 1
                 Layout.alignment: Qt.AlignTop
+                implicitHeight: card2Content.implicitHeight + padding * 2
 
-                RowLayout {
-                    Layout.fillWidth: true
-                    spacing: LingmoUI.Units.smallSpacing
-
-                    Label {
-                        text: qsTr("Game mode (GameMode)")
-                        font.bold: true
-                        font.pointSize: LingmoUI.Theme.fontSize * 1.2
-                        color: LingmoUI.Theme.textColor
-                        Layout.fillWidth: true
-                        elide: Text.ElideRight
-                    }
-                    Badge {
-                        text: games.gamemodeInstalled ? qsTr("Installed") : qsTr("Not installed")
-                        tint: games.gamemodeInstalled ? LingmoUI.Theme.greenColor : LingmoUI.Theme.greyColor
-                        filled: games.gamemodeInstalled
-                    }
-                }
-                Label {
-                    text: qsTr("Puts the processor in performance mode while a game runs and back to normal when you stop, so games run smoother without wasting power the rest of the time.")
-                    color: LingmoUI.Theme.disabledTextColor
-                    wrapMode: Text.Wrap
-                    Layout.fillWidth: true
-                }
-                Label {
-                    text: games.gamemodeInstalled
-                          ? qsTr("To use it with a Steam game: right-click the game › Properties › Launch options, and type:")
-                          : qsTr("Get ready for games above to install it. Then, in Steam, right-click a game › Properties › Launch options, and type:")
-                    color: LingmoUI.Theme.textColor
-                    wrapMode: Text.Wrap
-                    Layout.fillWidth: true
-                }
-                RowLayout {
-                    Layout.fillWidth: true
+                ColumnLayout {
+                    id: card2Content
+                    anchors.fill: parent
+                    anchors.margins: card2.padding
                     spacing: LingmoUI.Units.largeSpacing
 
-                    Rectangle {
+                    RowLayout {
                         Layout.fillWidth: true
-                        implicitHeight: launchOption.implicitHeight + LingmoUI.Units.smallSpacing * 2
-                        radius: LingmoUI.Theme.smallRadius
-                        color: LingmoUI.Theme.alternateBackgroundColor
+                        spacing: LingmoUI.Units.smallSpacing
 
                         Label {
-                            id: launchOption
-                            anchors.verticalCenter: parent.verticalCenter
-                            x: LingmoUI.Units.largeSpacing
-                            text: "gamemoderun %command%"
-                            font.family: fixedFontFamily
+                            text: qsTr("Game mode (GameMode)")
+                            font.bold: true
+                            font.pointSize: LingmoUI.Units.fontSubheading
                             color: LingmoUI.Theme.textColor
+                            Layout.fillWidth: true
+                            elide: Text.ElideRight
+                        }
+                        LingmoUI.Badge {
+                            text: games.gamemodeInstalled ? qsTr("Installed") : qsTr("Not installed")
+                            tone: LingmoUI.Theme.successColor
+                            subtle: !games.gamemodeInstalled
                         }
                     }
-                    ActionButton {
-                        id: copyButton
-                        property bool copied: false
-                        text: copied ? qsTr("Copied") : qsTr("Copy")
-                        onClicked: {
-                            store.copyText("gamemoderun %command%")
-                            copied = true
-                            copiedTimer.restart()
+                    Label {
+                        text: qsTr("Puts the processor in performance mode while a game runs and back to normal when you stop, so games run smoother without wasting power the rest of the time.")
+                        color: LingmoUI.Theme.secondaryTextColor
+                        wrapMode: Text.Wrap
+                        Layout.fillWidth: true
+                    }
+                    Label {
+                        text: games.gamemodeInstalled
+                              ? qsTr("To use it with a Steam game: right-click the game › Properties › Launch options, and type:")
+                              : qsTr("Get ready for games above to install it. Then, in Steam, right-click a game › Properties › Launch options, and type:")
+                        color: LingmoUI.Theme.textColor
+                        wrapMode: Text.Wrap
+                        Layout.fillWidth: true
+                    }
+                    RowLayout {
+                        Layout.fillWidth: true
+                        spacing: LingmoUI.Units.largeSpacing
+
+                        Rectangle {
+                            Layout.fillWidth: true
+                            implicitHeight: launchOption.implicitHeight + LingmoUI.Units.smallSpacing * 2
+                            radius: LingmoUI.Theme.smallRadius
+                            color: LingmoUI.Theme.alternateBackgroundColor
+
+                            Label {
+                                id: launchOption
+                                anchors.verticalCenter: parent.verticalCenter
+                                x: LingmoUI.Units.largeSpacing
+                                text: "gamemoderun %command%"
+                                font.family: fixedFontFamily
+                                color: LingmoUI.Theme.textColor
+                            }
                         }
-                        Timer {
-                            id: copiedTimer
-                            interval: 2000
-                            onTriggered: copyButton.copied = false
+                        LingmoUI.ActionButton {
+                            id: copyButton
+                            property bool copied: false
+                            text: copied ? qsTr("Copied") : qsTr("Copy")
+                            onClicked: {
+                                store.copyText("gamemoderun %command%")
+                                copied = true
+                                copiedTimer.restart()
+                            }
+                            Timer {
+                                id: copiedTimer
+                                interval: 2000
+                                onTriggered: copyButton.copied = false
+                            }
                         }
                     }
-                }
-                Label {
-                    visible: games.gamemodeInstalled && games.gamemodeGroupMissing
-                    text: qsTr("Your user is not in the “gamemode” group yet, so it can't switch the processor's mode. “Get ready for games” above adds it; then sign out and back in once.")
-                    color: LingmoUI.Theme.orangeColor
-                    wrapMode: Text.Wrap
-                    Layout.fillWidth: true
+                    Label {
+                        visible: games.gamemodeInstalled && games.gamemodeGroupMissing
+                        text: qsTr("Your user is not in the “gamemode” group yet, so it can't switch the processor's mode. “Get ready for games” above adds it; then sign out and back in once.")
+                        color: LingmoUI.Theme.warningColor
+                        wrapMode: Text.Wrap
+                        Layout.fillWidth: true
+                    }
                 }
             }
         }
 
         // Does my game work?
-        Card {
+        LingmoUI.Card {
+            id: card3
             Layout.fillWidth: true
+            implicitHeight: card3Content.implicitHeight + padding * 2
 
             ColumnLayout {
-                spacing: 2
-                Layout.fillWidth: true
+                id: card3Content
+                anchors.fill: parent
+                anchors.margins: card3.padding
+                spacing: LingmoUI.Units.largeSpacing
+
+                ColumnLayout {
+                    spacing: 2
+                    Layout.fillWidth: true
+
+                    Label {
+                        text: qsTr("Does your game work?")
+                        font.bold: true
+                        font.pointSize: LingmoUI.Units.fontHeading
+                        color: LingmoUI.Theme.textColor
+                    }
+                    Label {
+                        text: qsTr("Type the name of a Windows game to see how well it runs on Linux.")
+                        color: LingmoUI.Theme.secondaryTextColor
+                        wrapMode: Text.Wrap
+                        Layout.fillWidth: true
+                    }
+                }
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: LingmoUI.Units.largeSpacing
+
+                    TextField {
+                        id: gameField
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: LingmoUI.Units.controlHeight
+                        placeholderText: qsTr("For example: Elden Ring, Counter-Strike 2, Fortnite")
+                        selectByMouse: true
+                        onAccepted: compat.search(text)
+                    }
+                    LingmoUI.ActionButton {
+                        primary: true
+                        text: qsTr("Check")
+                        enabled: gameField.text.trim() !== ""
+                        onClicked: compat.search(gameField.text)
+                    }
+                }
+
+                RowLayout {
+                    visible: compat.busy && compat.results.length === 0 && compat.query !== ""
+                    spacing: LingmoUI.Units.largeSpacing
+                    LingmoUI.Spinner {
+                        running: parent.visible
+                    }
+                    Label {
+                        text: qsTr("Looking it up…")
+                        color: LingmoUI.Theme.secondaryTextColor
+                    }
+                }
 
                 Label {
-                    text: qsTr("Does your game work?")
-                    font.bold: true
-                    font.pointSize: LingmoUI.Theme.fontSize * 1.35
-                    color: LingmoUI.Theme.textColor
+                    visible: compat.errorMessage !== ""
+                    text: compat.errorMessage
+                    color: LingmoUI.Theme.errorColor
+                    wrapMode: Text.Wrap
+                    Layout.fillWidth: true
                 }
+
+                Repeater {
+                    model: compat.results
+
+                    delegate: Rectangle {
+                        Layout.fillWidth: true
+                        implicitHeight: resultRow.implicitHeight + LingmoUI.Units.largeSpacing * 1.5
+                        radius: LingmoUI.Theme.mediumRadius
+                        color: LingmoUI.Theme.alternateBackgroundColor
+
+                        RowLayout {
+                            id: resultRow
+                            anchors.fill: parent
+                            anchors.margins: LingmoUI.Units.largeSpacing * 0.75
+                            spacing: LingmoUI.Units.largeSpacing
+
+                            Rectangle {
+                                id: capsule
+                                Layout.preferredWidth: 138
+                                Layout.preferredHeight: 52
+                                radius: LingmoUI.Theme.smallRadius
+                                color: LingmoUI.Theme.secondBackgroundColor
+                                layer.enabled: true
+                                layer.effect: OpacityMask {
+                                    maskSource: Rectangle {
+                                        width: capsule.width
+                                        height: capsule.height
+                                        radius: capsule.radius
+                                    }
+                                }
+
+                                Image {
+                                    anchors.fill: parent
+                                    source: modelData.image
+                                    fillMode: Image.PreserveAspectCrop
+                                    asynchronous: true
+                                }
+                                Image {
+                                    anchors.centerIn: parent
+                                    visible: !modelData.image
+                                    source: "qrc:/icons/games.svg"
+                                    width: 28
+                                    height: 28
+                                    sourceSize: Qt.size(56, 56)
+                                    opacity: 0.8
+                                    layer.enabled: true
+                                    layer.effect: ColorOverlay { color: LingmoUI.Theme.secondaryTextColor }
+                                }
+                            }
+
+                            ColumnLayout {
+                                Layout.fillWidth: true
+                                spacing: 3
+
+                                RowLayout {
+                                    Layout.fillWidth: true
+                                    spacing: LingmoUI.Units.smallSpacing
+
+                                    Label {
+                                        text: modelData.name
+                                        font.bold: true
+                                        color: LingmoUI.Theme.textColor
+                                        elide: Text.ElideRight
+                                        Layout.fillWidth: true
+                                    }
+                                }
+                                Label {
+                                    visible: text !== ""
+                                    text: modelData.notes || ""
+                                    color: LingmoUI.Theme.secondaryTextColor
+                                    wrapMode: Text.Wrap
+                                    font.pointSize: LingmoUI.Units.fontCaption
+                                    Layout.fillWidth: true
+                                }
+                                Label {
+                                    text: modelData.antiCheatOnly ? qsTr("See details on Are We Anti-Cheat Yet")
+                                                                  : qsTr("See the reports on ProtonDB")
+                                    color: LingmoUI.Theme.highlightColor
+                                    font.pointSize: LingmoUI.Units.fontCaption
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        cursorShape: Qt.PointingHandCursor
+                                        onClicked: store.openUrl(modelData.url)
+                                    }
+                                }
+                            }
+
+                            LingmoUI.Badge {
+                                Layout.alignment: Qt.AlignVCenter
+                                text: modelData.verdictText || ""
+                                tone: page.verdictColor(modelData.verdict)
+                                font.pointSize: LingmoUI.Units.fontBody
+                            }
+                        }
+                    }
+                }
+
                 Label {
-                    text: qsTr("Type the name of a Windows game to see how well it runs on Linux.")
-                    color: LingmoUI.Theme.disabledTextColor
+                    text: qsTr("Ratings come from the ProtonDB community and from Are We Anti-Cheat Yet.")
+                    color: LingmoUI.Theme.secondaryTextColor
+                    font.pointSize: LingmoUI.Units.fontCaption
                     wrapMode: Text.Wrap
                     Layout.fillWidth: true
                 }
             }
+        }
 
-            RowLayout {
-                Layout.fillWidth: true
+        // Online games whose anti-cheat keeps Linux out
+        LingmoUI.Card {
+            id: card4
+            visible: compat.blockedGames.length > 0
+            Layout.fillWidth: true
+            implicitHeight: card4Content.implicitHeight + padding * 2
+
+            ColumnLayout {
+                id: card4Content
+                anchors.fill: parent
+                anchors.margins: card4.padding
                 spacing: LingmoUI.Units.largeSpacing
 
-                TextField {
-                    id: gameField
+                RowLayout {
                     Layout.fillWidth: true
-                    Layout.preferredHeight: 36
-                    placeholderText: qsTr("For example: Elden Ring, Counter-Strike 2, Fortnite")
-                    selectByMouse: true
-                    color: LingmoUI.Theme.textColor
-                    placeholderTextColor: LingmoUI.Theme.disabledTextColor
-                    leftPadding: 14
-                    background: Rectangle {
-                        radius: height / 2
-                        color: LingmoUI.Theme.darkMode ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0, 0, 0, 0.05)
-                        border.width: gameField.activeFocus ? 2 : 0
-                        border.color: LingmoUI.Theme.highlightColor
+                    spacing: LingmoUI.Units.largeSpacing
+
+                    LingmoUI.IconItem {
+                        source: "dialog-warning"
+                        Layout.preferredWidth: LingmoUI.Units.iconSizes.medium
+                        Layout.preferredHeight: LingmoUI.Units.iconSizes.medium
+                        Layout.alignment: Qt.AlignTop
                     }
-                    onAccepted: compat.search(text)
-                }
-                ActionButton {
-                    primary: true
-                    text: qsTr("Check")
-                    enabled: gameField.text.trim() !== ""
-                    onClicked: compat.search(gameField.text)
-                }
-            }
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        spacing: 2
 
-            RowLayout {
-                visible: compat.busy && compat.results.length === 0 && compat.query !== ""
-                spacing: LingmoUI.Units.largeSpacing
-                Spinner {
-                    running: visible
-                    Layout.preferredWidth: 22
-                    Layout.preferredHeight: 22
-                }
-                Label {
-                    text: qsTr("Looking it up…")
-                    color: LingmoUI.Theme.disabledTextColor
-                }
-            }
-
-            Label {
-                visible: compat.errorMessage !== ""
-                text: compat.errorMessage
-                color: LingmoUI.Theme.redColor
-                wrapMode: Text.Wrap
-                Layout.fillWidth: true
-            }
-
-            Repeater {
-                model: compat.results
-
-                delegate: Rectangle {
-                    Layout.fillWidth: true
-                    implicitHeight: resultRow.implicitHeight + LingmoUI.Units.largeSpacing * 1.5
-                    radius: LingmoUI.Theme.mediumRadius
-                    color: LingmoUI.Theme.alternateBackgroundColor
-
-                    RowLayout {
-                        id: resultRow
-                        anchors.fill: parent
-                        anchors.margins: LingmoUI.Units.largeSpacing * 0.75
-                        spacing: LingmoUI.Units.largeSpacing
-
-                        Rectangle {
-                            id: capsule
-                            Layout.preferredWidth: 138
-                            Layout.preferredHeight: 52
-                            radius: LingmoUI.Theme.smallRadius
-                            color: LingmoUI.Theme.darkMode ? "#202024" : "#dfe1e6"
-                            layer.enabled: true
-                            layer.effect: OpacityMask {
-                                maskSource: Rectangle {
-                                    width: capsule.width
-                                    height: capsule.height
-                                    radius: capsule.radius
-                                }
-                            }
-
-                            Image {
-                                anchors.fill: parent
-                                source: modelData.image
-                                fillMode: Image.PreserveAspectCrop
-                                asynchronous: true
-                            }
-                            Image {
-                                anchors.centerIn: parent
-                                visible: !modelData.image
-                                source: "qrc:/icons/games.svg"
-                                width: 28
-                                height: 28
-                                sourceSize: Qt.size(56, 56)
-                                opacity: 0.8
-                                layer.enabled: true
-                                layer.effect: ColorOverlay { color: LingmoUI.Theme.disabledTextColor }
-                            }
-                        }
-
-                        ColumnLayout {
+                        Label {
+                            text: qsTr("Popular games that don't work on Linux")
+                            font.bold: true
+                            font.pointSize: LingmoUI.Units.fontSubheading
+                            color: LingmoUI.Theme.textColor
+                            wrapMode: Text.Wrap
                             Layout.fillWidth: true
-                            spacing: 3
+                        }
+                        Label {
+                            text: qsTr("Their anti-cheat blocks Linux, so they can't be played online here, not even with Proton. Check before buying.")
+                            color: LingmoUI.Theme.secondaryTextColor
+                            wrapMode: Text.Wrap
+                            Layout.fillWidth: true
+                        }
+                    }
+                }
 
-                            RowLayout {
-                                Layout.fillWidth: true
-                                spacing: LingmoUI.Units.smallSpacing
+                Flow {
+                    Layout.fillWidth: true
+                    spacing: LingmoUI.Units.smallSpacing
+
+                    Repeater {
+                        model: compat.blockedGames
+
+                        delegate: Rectangle {
+                            width: blockedCol.implicitWidth + LingmoUI.Units.largeSpacing * 2
+                            height: blockedCol.implicitHeight + LingmoUI.Units.smallSpacing * 2
+                            radius: LingmoUI.Theme.mediumRadius
+                            color: blockedMouse.containsMouse
+                                   ? Qt.rgba(LingmoUI.Theme.errorColor.r, LingmoUI.Theme.errorColor.g, LingmoUI.Theme.errorColor.b, LingmoUI.Theme.darkMode ? 0.3 : 0.18)
+                                   : Qt.rgba(LingmoUI.Theme.errorColor.r, LingmoUI.Theme.errorColor.g, LingmoUI.Theme.errorColor.b, LingmoUI.Theme.darkMode ? 0.18 : 0.1)
+
+                            Behavior on color { ColorAnimation { duration: LingmoUI.Units.veryShortDuration } }
+
+                            Column {
+                                id: blockedCol
+                                anchors.centerIn: parent
+                                spacing: 1
 
                                 Label {
                                     text: modelData.name
                                     font.bold: true
                                     color: LingmoUI.Theme.textColor
-                                    elide: Text.ElideRight
-                                    Layout.fillWidth: true
+                                }
+                                Label {
+                                    text: modelData.reason + (modelData.anticheats ? " · " + modelData.anticheats : "")
+                                    color: LingmoUI.Theme.secondaryTextColor
+                                    font.pointSize: LingmoUI.Units.fontCaption
                                 }
                             }
-                            Label {
-                                visible: text !== ""
-                                text: modelData.notes || ""
-                                color: LingmoUI.Theme.disabledTextColor
-                                wrapMode: Text.Wrap
-                                font.pointSize: LingmoUI.Theme.fontSize * 0.92
-                                Layout.fillWidth: true
-                            }
-                            Label {
-                                text: modelData.antiCheatOnly ? qsTr("See details on Are We Anti-Cheat Yet")
-                                                              : qsTr("See the reports on ProtonDB")
-                                color: LingmoUI.Theme.highlightColor
-                                font.pointSize: LingmoUI.Theme.fontSize * 0.92
-                                MouseArea {
-                                    anchors.fill: parent
-                                    cursorShape: Qt.PointingHandCursor
-                                    onClicked: store.openUrl(modelData.url)
-                                }
-                            }
-                        }
 
-                        Rectangle {
-                            Layout.alignment: Qt.AlignVCenter
-                            implicitWidth: verdictLabel.implicitWidth + 24
-                            implicitHeight: 30
-                            radius: 15
-                            color: page.verdictColor(modelData.verdict)
-
-                            Label {
-                                id: verdictLabel
-                                anchors.centerIn: parent
-                                text: modelData.verdictText || ""
-                                color: "white"
-                                font.bold: true
+                            MouseArea {
+                                id: blockedMouse
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: store.openUrl(modelData.url)
                             }
                         }
                     }
                 }
-            }
 
-            Label {
-                text: qsTr("Ratings come from the ProtonDB community and from Are We Anti-Cheat Yet.")
-                color: LingmoUI.Theme.disabledTextColor
-                font.pointSize: LingmoUI.Theme.fontSize * 0.85
-                wrapMode: Text.Wrap
-                Layout.fillWidth: true
-            }
-        }
-
-        // Online games whose anti-cheat keeps Linux out
-        Card {
-            visible: compat.blockedGames.length > 0
-            Layout.fillWidth: true
-
-            RowLayout {
-                Layout.fillWidth: true
-                spacing: LingmoUI.Units.largeSpacing
-
-                LingmoUI.IconItem {
-                    source: "dialog-warning"
-                    Layout.preferredWidth: LingmoUI.Units.iconSizes.medium
-                    Layout.preferredHeight: LingmoUI.Units.iconSizes.medium
-                    Layout.alignment: Qt.AlignTop
-                }
-                ColumnLayout {
+                Label {
+                    text: qsTr("Status from Are We Anti-Cheat Yet. Search any other game above.")
+                    color: LingmoUI.Theme.secondaryTextColor
+                    font.pointSize: LingmoUI.Units.fontCaption
+                    wrapMode: Text.Wrap
                     Layout.fillWidth: true
-                    spacing: 2
-
-                    Label {
-                        text: qsTr("Popular games that don't work on Linux")
-                        font.bold: true
-                        font.pointSize: LingmoUI.Theme.fontSize * 1.2
-                        color: LingmoUI.Theme.textColor
-                        wrapMode: Text.Wrap
-                        Layout.fillWidth: true
-                    }
-                    Label {
-                        text: qsTr("Their anti-cheat blocks Linux, so they can't be played online here, not even with Proton. Check before buying.")
-                        color: LingmoUI.Theme.disabledTextColor
-                        wrapMode: Text.Wrap
-                        Layout.fillWidth: true
-                    }
                 }
-            }
-
-            Flow {
-                Layout.fillWidth: true
-                spacing: LingmoUI.Units.smallSpacing
-
-                Repeater {
-                    model: compat.blockedGames
-
-                    delegate: Rectangle {
-                        width: blockedCol.implicitWidth + LingmoUI.Units.largeSpacing * 2
-                        height: blockedCol.implicitHeight + LingmoUI.Units.smallSpacing * 2
-                        radius: LingmoUI.Theme.mediumRadius
-                        color: blockedMouse.containsMouse
-                               ? Qt.rgba(LingmoUI.Theme.redColor.r, LingmoUI.Theme.redColor.g, LingmoUI.Theme.redColor.b, LingmoUI.Theme.darkMode ? 0.3 : 0.18)
-                               : Qt.rgba(LingmoUI.Theme.redColor.r, LingmoUI.Theme.redColor.g, LingmoUI.Theme.redColor.b, LingmoUI.Theme.darkMode ? 0.18 : 0.1)
-
-                        Behavior on color { ColorAnimation { duration: 120 } }
-
-                        Column {
-                            id: blockedCol
-                            anchors.centerIn: parent
-                            spacing: 1
-
-                            Label {
-                                text: modelData.name
-                                font.bold: true
-                                color: LingmoUI.Theme.textColor
-                            }
-                            Label {
-                                text: modelData.reason + (modelData.anticheats ? " · " + modelData.anticheats : "")
-                                color: LingmoUI.Theme.disabledTextColor
-                                font.pointSize: LingmoUI.Theme.fontSize * 0.82
-                            }
-                        }
-
-                        MouseArea {
-                            id: blockedMouse
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: store.openUrl(modelData.url)
-                        }
-                    }
-                }
-            }
-
-            Label {
-                text: qsTr("Status from Are We Anti-Cheat Yet. Search any other game above.")
-                color: LingmoUI.Theme.disabledTextColor
-                font.pointSize: LingmoUI.Theme.fontSize * 0.85
-                wrapMode: Text.Wrap
-                Layout.fillWidth: true
             }
         }
 

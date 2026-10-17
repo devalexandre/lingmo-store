@@ -47,26 +47,15 @@ Flickable {
         spacing: LingmoUI.Units.largeSpacing * 1.5
 
         // First start: the catalog is still being read
-        Card {
+        LingmoUI.Card {
             visible: !catalog.ready
             Layout.fillWidth: true
             Layout.preferredHeight: 200
 
-            ColumnLayout {
-                Layout.alignment: Qt.AlignCenter
-                spacing: LingmoUI.Units.largeSpacing
-
-                Spinner {
-                    running: visible
-                    Layout.alignment: Qt.AlignHCenter
-                    Layout.preferredWidth: 36
-                    Layout.preferredHeight: 36
-                }
-                Label {
-                    text: qsTr("Loading the app catalog…")
-                    color: LingmoUI.Theme.disabledTextColor
-                    Layout.alignment: Qt.AlignHCenter
-                }
+            LingmoUI.EmptyState {
+                anchors.centerIn: parent
+                busy: true
+                text: qsTr("Loading the app catalog…")
             }
         }
 
@@ -110,7 +99,7 @@ Flickable {
                     name: modelData
                     title: info ? info.title : ""
                     iconSource: info ? info.iconSource : ""
-                    tint: info ? info.iconColor : "grey"
+                    tint: info ? info.iconColor : LingmoUI.Theme.greyColor
                     Layout.fillWidth: true
                 }
             }
@@ -148,9 +137,9 @@ Flickable {
 
                     Label {
                         text: qsTr("Play on Linux")
-                        color: "white"
+                        color: LingmoUI.Theme.highlightedTextColor
                         font.bold: true
-                        font.pointSize: LingmoUI.Theme.fontSize * 1.4
+                        font.pointSize: LingmoUI.Units.fontHeading
                     }
                     Label {
                         text: qsTr("Get Steam and the right drivers in one click, and check whether your game works.")
@@ -160,8 +149,7 @@ Flickable {
                     }
                 }
 
-                ActionButton {
-                    light: true
+                LightButton {
                     text: qsTr("Go to Games")
                     onClicked: rootWindow.showGames()
                 }

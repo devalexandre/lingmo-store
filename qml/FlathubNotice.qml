@@ -23,29 +23,32 @@ import LingmoUI.CompatibleModule 3.0 as LingmoUI
 import Lingmo.Store
 
 // What's up with Flathub: off (offer to turn it on), downloading its catalog, failed
-Card {
+LingmoUI.Card {
     id: control
 
     readonly property int st: flatpak.state
     visible: st === Flatpak.NoRemote || st === Flatpak.AddingRemote || st === Flatpak.Refreshing
              || st === Flatpak.Error || st === Flatpak.Unavailable
+    implicitHeight: content.implicitHeight + padding * 2
 
     RowLayout {
+        id: content
+        anchors.fill: parent
+        anchors.margins: control.padding
         spacing: LingmoUI.Units.largeSpacing * 1.5
-        Layout.fillWidth: true
 
         Rectangle {
             Layout.preferredWidth: 44
             Layout.preferredHeight: 44
-            radius: 12
-            color: "#4A86CF"
+            radius: LingmoUI.Theme.bigRadius
+            color: "#4A86CF"   // Flathub's brand blue
 
             Label {
                 anchors.centerIn: parent
                 text: "F"
                 color: "white"
                 font.bold: true
-                font.pointSize: 18
+                font.pointSize: LingmoUI.Units.fontTitle
             }
         }
 
@@ -70,7 +73,7 @@ Card {
             }
             Label {
                 Layout.fillWidth: true
-                color: control.st === Flatpak.Error ? LingmoUI.Theme.redColor : LingmoUI.Theme.disabledTextColor
+                color: control.st === Flatpak.Error ? LingmoUI.Theme.errorColor : LingmoUI.Theme.secondaryTextColor
                 wrapMode: Text.Wrap
                 text: {
                     switch (control.st) {
@@ -85,21 +88,19 @@ Card {
             }
         }
 
-        Spinner {
-            visible: control.st === Flatpak.AddingRemote || control.st === Flatpak.Refreshing
-            running: visible
-            Layout.preferredWidth: 28
-            Layout.preferredHeight: 28
+        LingmoUI.Spinner {
+            running: control.st === Flatpak.AddingRemote || control.st === Flatpak.Refreshing
+            size: 28
         }
 
-        ActionButton {
+        LingmoUI.ActionButton {
             visible: control.st === Flatpak.NoRemote
             primary: true
             text: qsTr("Turn On Flathub")
             onClicked: flatpak.addFlathub()
         }
 
-        ActionButton {
+        LingmoUI.ActionButton {
             visible: control.st === Flatpak.Error
             text: qsTr("Try Again")
             onClicked: flatpak.refreshAppstream(true)

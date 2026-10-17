@@ -41,7 +41,7 @@ Item {
 
             Label {
                 text: qsTr("Results for “%1”").arg(page.query)
-                font.pointSize: LingmoUI.Theme.fontSize * 1.6
+                font.pointSize: LingmoUI.Units.fontTitle
                 font.bold: true
                 color: LingmoUI.Theme.textColor
                 elide: Text.ElideRight
@@ -50,7 +50,7 @@ Item {
             Label {
                 visible: page.results.length > 0
                 text: qsTr("%n app(s) found", "", page.results.length)
-                color: LingmoUI.Theme.disabledTextColor
+                color: LingmoUI.Theme.secondaryTextColor
             }
         }
 
@@ -63,37 +63,18 @@ Item {
         }
 
         // Nothing found
-        ColumnLayout {
+        Item {
             visible: page.results.length === 0
             Layout.fillWidth: true
             Layout.fillHeight: true
-            spacing: LingmoUI.Units.largeSpacing
 
-            Item { Layout.fillHeight: true }
-
-            Image {
-                source: "qrc:/icons/search.svg"
-                Layout.alignment: Qt.AlignHCenter
-                Layout.preferredWidth: 64
-                Layout.preferredHeight: 64
-                sourceSize: Qt.size(128, 128)
-                opacity: 0.5
+            LingmoUI.EmptyState {
+                anchors.centerIn: parent
+                busy: !catalog.ready
+                iconName: "edit-find"
+                title: catalog.ready ? qsTr("No apps found") : qsTr("Loading the app catalog…")
+                text: catalog.ready ? qsTr("Check the spelling or try another word, like “music” or “photos”.") : ""
             }
-            Label {
-                text: catalog.ready ? qsTr("No apps found") : qsTr("Loading the app catalog…")
-                font.pointSize: LingmoUI.Theme.fontSize * 1.3
-                font.bold: true
-                color: LingmoUI.Theme.textColor
-                Layout.alignment: Qt.AlignHCenter
-            }
-            Label {
-                visible: catalog.ready
-                text: qsTr("Check the spelling or try another word, like “music” or “photos”.")
-                color: LingmoUI.Theme.disabledTextColor
-                Layout.alignment: Qt.AlignHCenter
-            }
-
-            Item { Layout.fillHeight: true }
         }
     }
 }

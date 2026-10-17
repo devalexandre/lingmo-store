@@ -272,29 +272,16 @@ LingmoUI.Window {
             spacing: LingmoUI.Units.largeSpacing
 
             // Back
-            Rectangle {
-                Layout.preferredWidth: 32
-                Layout.preferredHeight: 32
-                radius: 16
+            LingmoUI.IconButton {
                 visible: stack.depth > 1
-                color: backMouse.containsMouse ? LingmoUI.Theme.alternateBackgroundColor : "transparent"
-
-                Image {
-                    anchors.centerIn: parent
-                    source: "qrc:/icons/back.svg"
-                    width: 18
-                    height: 18
-                    sourceSize: Qt.size(36, 36)
-                }
-                MouseArea {
-                    id: backMouse
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    onClicked: {
-                        if (stack.currentItem && stack.currentItem.pageName === "search")
-                            searchField.clearSilently()
-                        stack.pop()
-                    }
+                iconName: "qrc:/icons/back.svg"
+                size: 32
+                iconSize: 18
+                round: true
+                onClicked: {
+                    if (stack.currentItem && stack.currentItem.pageName === "search")
+                        searchField.clearSilently()
+                    stack.pop()
                 }
             }
 
@@ -303,14 +290,14 @@ LingmoUI.Window {
             TextField {
                 id: searchField
                 Layout.preferredWidth: Math.min(460, headerBar.width * 0.5)
-                Layout.preferredHeight: 34
+                Layout.preferredHeight: LingmoUI.Units.controlHeight
                 placeholderText: qsTr("Search apps")
                 leftPadding: 36
                 rightPadding: 30
                 selectByMouse: true
                 color: LingmoUI.Theme.textColor
-                placeholderTextColor: LingmoUI.Theme.disabledTextColor
-                font.pointSize: LingmoUI.Theme.fontSize
+                placeholderTextColor: LingmoUI.Theme.secondaryTextColor
+                font.pointSize: LingmoUI.Units.fontBody
 
                 property bool silent: false
                 function clearSilently() {
@@ -324,6 +311,7 @@ LingmoUI.Window {
                     color: LingmoUI.Theme.darkMode ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0, 0, 0, 0.05)
                     border.width: searchField.activeFocus ? 2 : 0
                     border.color: LingmoUI.Theme.highlightColor
+                    Behavior on color { ColorAnimation { duration: LingmoUI.Units.veryShortDuration } }
 
                     Image {
                         anchors.left: parent.left
@@ -342,7 +330,7 @@ LingmoUI.Window {
                     anchors.verticalCenter: parent.verticalCenter
                     visible: searchField.text !== ""
                     text: "✕"
-                    color: LingmoUI.Theme.disabledTextColor
+                    color: LingmoUI.Theme.secondaryTextColor
 
                     MouseArea {
                         anchors.fill: parent
@@ -362,11 +350,10 @@ LingmoUI.Window {
 
             Item { Layout.fillWidth: true }
 
-            Badge {
+            LingmoUI.Badge {
                 visible: store.fakeMode
                 text: qsTr("Test mode")
-                tint: LingmoUI.Theme.orangeColor
-                filled: true
+                tone: LingmoUI.Theme.warningColor
             }
 
             Item {
@@ -386,10 +373,103 @@ LingmoUI.Window {
         anchors.fill: parent
         spacing: 0
 
-        SideBar {
+        LingmoUI.SettingsSideBar {
             id: sideBar
             Layout.fillHeight: true
-            onActivated: (name) => rootWindow.navigate(name)
+
+            property string currentName: "home"
+
+            function select(name) {
+                for (let i = 0; i < model.count; ++i) {
+                    if (model.get(i).name === name) {
+                        currentIndex = i
+                        currentName = name
+                        return
+                    }
+                }
+                currentIndex = -1
+                currentName = name
+            }
+
+            // Categories and their tile colors, also used by the home page
+            function categoryInfo(name) {
+                for (let i = 0; i < model.count; ++i) {
+                    if (model.get(i).name === name)
+                        return model.get(i)
+                }
+                return null
+            }
+
+            onItemClicked: (index) => {
+                const name = model.get(index).name
+                // Updates opens another app: keep the current page selected
+                if (name === "updates")
+                    select(currentName)
+                else
+                    currentName = name
+                rootWindow.navigate(name)
+            }
+
+            model: ListModel {
+                ListElement { title: qsTr("Home"); name: "home"; iconSource: "qrc:/icons/home.svg"; iconColor: "#0A84FF"; section: ""; trailing: "" }
+                ListElement { title: qsTr("Games"); name: "games"; iconSource: "qrc:/icons/games.svg"; iconColor: "#BF5AF2"; section: ""; trailing: "" }
+                ListElement { title: qsTr("Native games"); name: "native"; iconSource: "qrc:/icons/native.svg"; iconColor: "#E0457B"; section: ""; trailing: "" }
+                ListElement { title: qsTr("Productivity"); name: "office"; iconSource: "qrc:/icons/office.svg"; iconColor: "#FF9500"; section: qsTr("Categories"); trailing: "" }
+                ListElement { title: qsTr("Internet"); name: "internet"; iconSource: "qrc:/icons/internet.svg"; iconColor: "#32ADE6"; section: qsTr("Categories"); trailing: "" }
+                ListElement { title: qsTr("Graphics & Photo"); name: "graphics"; iconSource: "qrc:/icons/graphics.svg"; iconColor: "#FF375F"; section: qsTr("Categories"); trailing: "" }
+                ListElement { title: qsTr("Audio & Video"); name: "multimedia"; iconSource: "qrc:/icons/multimedia.svg"; iconColor: "#FF6B3A"; section: qsTr("Categories"); trailing: "" }
+                ListElement { title: qsTr("Development"); name: "development"; iconSource: "qrc:/icons/development.svg"; iconColor: "#5E5CE6"; section: qsTr("Categories"); trailing: "" }
+                ListElement { title: qsTr("Education"); name: "education"; iconSource: "qrc:/icons/education.svg"; iconColor: "#30B0C7"; section: qsTr("Categories"); trailing: "" }
+                ListElement { title: qsTr("Utilities"); name: "utilities"; iconSource: "qrc:/icons/utilities.svg"; iconColor: "#8E8E93"; section: qsTr("Categories"); trailing: "" }
+                ListElement { title: qsTr("Installed"); name: "installed"; iconSource: "qrc:/icons/installed.svg"; iconColor: "#34C759"; section: qsTr("Your computer"); trailing: "" }
+                ListElement { title: qsTr("Updates"); name: "updates"; iconSource: "qrc:/icons/updates.svg"; iconColor: "#FF9F0A"; section: qsTr("Your computer"); trailing: "↗" }
+            }
+
+            // What's being installed right now, from any page
+            footer: Component {
+                LingmoUI.Card {
+                    id: activity
+                    visible: installer.busy
+                    implicitHeight: visible ? activityLayout.implicitHeight + LingmoUI.Units.largeSpacing * 2 : 0
+                    clickable: true
+                    onClicked: {
+                        if (installer.currentAction === "gaming")
+                            rootWindow.showGames()
+                        else if (installer.currentKey !== "")
+                            rootWindow.openApp(installer.currentKey)
+                    }
+
+                    ColumnLayout {
+                        id: activityLayout
+                        anchors.fill: parent
+                        anchors.margins: LingmoUI.Units.largeSpacing
+                        spacing: LingmoUI.Units.smallSpacing
+
+                        Label {
+                            Layout.fillWidth: true
+                            text: installer.currentAction === "remove" ? qsTr("Removing %1").arg(installer.currentName)
+                                : installer.currentAction === "gaming" ? qsTr("Preparing for games")
+                                : qsTr("Installing %1").arg(installer.currentName)
+                            font.pointSize: LingmoUI.Units.fontBody
+                            font.bold: true
+                            elide: Text.ElideRight
+                            color: LingmoUI.Theme.textColor
+                        }
+                        ProgressBar {
+                            Layout.fillWidth: true
+                            indeterminate: installer.progress < 0
+                            value: Math.max(0, installer.progress)
+                        }
+                        Label {
+                            Layout.fillWidth: true
+                            text: installer.statusText
+                            elide: Text.ElideRight
+                            color: LingmoUI.Theme.secondaryTextColor
+                            font.pointSize: LingmoUI.Units.fontCaption
+                        }
+                    }
+                }
+            }
         }
 
         Item {
@@ -402,18 +482,20 @@ LingmoUI.Window {
                 anchors.topMargin: rootWindow.header.height
                 clip: true
                 initialItem: "qrc:/qml/HomePage.qml"
+                // Body text one step above the default size; captions and titles set their own
+                font.pointSize: LingmoUI.Units.fontBody
 
                 pushEnter: Transition {
-                    NumberAnimation { property: "opacity"; from: 0; to: 1; duration: 140 }
+                    NumberAnimation { property: "opacity"; from: 0; to: 1; duration: LingmoUI.Units.shortDuration }
                 }
                 pushExit: Transition {
-                    NumberAnimation { property: "opacity"; from: 1; to: 0; duration: 100 }
+                    NumberAnimation { property: "opacity"; from: 1; to: 0; duration: LingmoUI.Units.veryShortDuration }
                 }
                 popEnter: Transition {
-                    NumberAnimation { property: "opacity"; from: 0; to: 1; duration: 140 }
+                    NumberAnimation { property: "opacity"; from: 0; to: 1; duration: LingmoUI.Units.shortDuration }
                 }
                 popExit: Transition {
-                    NumberAnimation { property: "opacity"; from: 1; to: 0; duration: 100 }
+                    NumberAnimation { property: "opacity"; from: 1; to: 0; duration: LingmoUI.Units.veryShortDuration }
                 }
                 replaceEnter: Transition {}
                 replaceExit: Transition {}

@@ -22,33 +22,17 @@ import QtQuick.Layouts
 import LingmoUI.CompatibleModule 3.0 as LingmoUI
 
 // An app in a grid: icon, name, one-line summary and where it comes from
-Rectangle {
+LingmoUI.Card {
     id: control
 
     property var app: ({})
-    signal clicked()
 
     readonly property var rating: { reviews.revision; return reviews.rating(app.key || "") }
 
     implicitHeight: 104
     radius: LingmoUI.Theme.bigRadius
-    color: mouse.containsMouse ? (LingmoUI.Theme.darkMode ? Qt.lighter(LingmoUI.Theme.secondBackgroundColor, 1.18)
-                                                          : Qt.darker(LingmoUI.Theme.secondBackgroundColor, 1.02))
-                               : LingmoUI.Theme.secondBackgroundColor
-    border.width: 1
-    border.color: mouse.containsMouse ? Qt.rgba(LingmoUI.Theme.highlightColor.r, LingmoUI.Theme.highlightColor.g,
-                                                LingmoUI.Theme.highlightColor.b, 0.45)
-                                      : (LingmoUI.Theme.darkMode ? Qt.rgba(1, 1, 1, 0.04) : Qt.rgba(0, 0, 0, 0.05))
-
-    Behavior on color { ColorAnimation { duration: 120 } }
-
-    MouseArea {
-        id: mouse
-        anchors.fill: parent
-        hoverEnabled: true
-        cursorShape: Qt.PointingHandCursor
-        onClicked: control.clicked()
-    }
+    clickable: true
+    liftOnHover: true
 
     RowLayout {
         anchors.fill: parent
@@ -73,7 +57,7 @@ Rectangle {
 
                 Label {
                     text: control.app.name || ""
-                    font.pointSize: LingmoUI.Theme.fontSize * 1.08
+                    font.pointSize: LingmoUI.Units.fontBody
                     font.bold: true
                     color: LingmoUI.Theme.textColor
                     elide: Text.ElideRight
@@ -93,16 +77,16 @@ Rectangle {
                           ? "%1 (%2)".arg(Number(control.rating.average).toLocaleString(Qt.locale(), 'f', 1))
                                      .arg(Number(control.rating.count).toLocaleString(Qt.locale(), 'f', 0))
                           : ""
-                    color: LingmoUI.Theme.disabledTextColor
-                    font.pointSize: LingmoUI.Theme.fontSize * 0.8
+                    color: LingmoUI.Theme.secondaryTextColor
+                    font.pointSize: LingmoUI.Units.fontCaption
                     Layout.alignment: Qt.AlignVCenter
                 }
             }
 
             Label {
                 text: control.app.summary || ""
-                color: LingmoUI.Theme.disabledTextColor
-                font.pointSize: LingmoUI.Theme.fontSize * 0.92
+                color: LingmoUI.Theme.secondaryTextColor
+                font.pointSize: LingmoUI.Units.fontCaption
                 wrapMode: Text.Wrap
                 maximumLineCount: 2
                 elide: Text.ElideRight
@@ -113,23 +97,20 @@ Rectangle {
                 spacing: 4
                 Layout.topMargin: 2
 
-                Badge {
+                LingmoUI.Badge {
                     visible: !!control.app.installed
                     text: qsTr("Installed")
-                    tint: LingmoUI.Theme.greenColor
-                    icon: "qrc:/icons/check.svg"
-                    filled: true
+                    tone: LingmoUI.Theme.successColor
                 }
-                Badge {
+                LingmoUI.Badge {
                     visible: !!control.app.hasFlathub
                     text: "Flathub"
-                    tint: "#4A86CF"
+                    subtle: true
                 }
-                Badge {
+                LingmoUI.Badge {
                     visible: !!control.app.hasArch
                     text: "Arch"
-                    tint: "#1793D1"
-                    filled: false
+                    subtle: true
                 }
             }
         }

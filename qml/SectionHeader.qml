@@ -40,7 +40,7 @@ RowLayout {
 
         Label {
             id: title
-            font.pointSize: LingmoUI.Theme.fontSize * 1.35
+            font.pointSize: LingmoUI.Units.fontHeading
             font.bold: true
             color: LingmoUI.Theme.textColor
             Layout.fillWidth: true
@@ -49,7 +49,7 @@ RowLayout {
         Label {
             id: sub
             visible: text !== ""
-            color: LingmoUI.Theme.disabledTextColor
+            color: LingmoUI.Theme.secondaryTextColor
             Layout.fillWidth: true
             wrapMode: Text.Wrap
         }

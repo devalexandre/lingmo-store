@@ -53,12 +53,12 @@ Item {
             GradientStop {
                 position: 0.0
                 color: control.hero && control.hero.colors ? control.hero.colors[0] : LingmoUI.Theme.highlightColor
-                Behavior on color { ColorAnimation { duration: 450 } }
+                Behavior on color { ColorAnimation { duration: LingmoUI.Units.veryLongDuration; easing.type: LingmoUI.Units.easing } }
             }
             GradientStop {
                 position: 1.0
                 color: control.hero && control.hero.colors ? control.hero.colors[1] : Qt.darker(LingmoUI.Theme.highlightColor, 1.3)
-                Behavior on color { ColorAnimation { duration: 450 } }
+                Behavior on color { ColorAnimation { duration: LingmoUI.Units.veryLongDuration; easing.type: LingmoUI.Units.easing } }
             }
         }
 
@@ -94,7 +94,7 @@ Item {
             spacing: LingmoUI.Units.largeSpacing * 2
 
             opacity: 1
-            Behavior on opacity { NumberAnimation { duration: 180 } }
+            Behavior on opacity { NumberAnimation { duration: LingmoUI.Units.shortDuration } }
 
             ColumnLayout {
                 Layout.fillWidth: true
@@ -107,26 +107,25 @@ Item {
                     font.bold: true
                     font.capitalization: Font.AllUppercase
                     font.letterSpacing: 1.2
-                    font.pointSize: LingmoUI.Theme.fontSize * 0.9
+                    font.pointSize: LingmoUI.Units.fontCaption
                 }
                 Label {
                     text: control.hero ? control.hero.title : ""
                     color: "white"
                     font.bold: true
-                    font.pointSize: LingmoUI.Theme.fontSize * 2.1
+                    font.pointSize: LingmoUI.Units.fontTitle
                     wrapMode: Text.Wrap
                     Layout.fillWidth: true
                 }
                 Label {
                     text: control.hero ? control.hero.text : ""
                     color: Qt.rgba(1, 1, 1, 0.88)
-                    font.pointSize: LingmoUI.Theme.fontSize * 1.05
+                    font.pointSize: LingmoUI.Units.fontBody
                     wrapMode: Text.Wrap
                     Layout.fillWidth: true
                     Layout.maximumWidth: 520
                 }
-                ActionButton {
-                    light: true
+                LightButton {
                     text: qsTr("See App")
                     Layout.topMargin: LingmoUI.Units.smallSpacing
                     onClicked: rootWindow.openApp(control.hero.key)
@@ -157,7 +156,7 @@ Item {
                     height: 7
                     radius: 3.5
                     color: index === control.current ? "white" : Qt.rgba(1, 1, 1, 0.45)
-                    Behavior on width { NumberAnimation { duration: 180 } }
+                    Behavior on width { NumberAnimation { duration: LingmoUI.Units.shortDuration; easing.type: LingmoUI.Units.easing } }
 
                     MouseArea {
                         anchors.fill: parent

@@ -108,9 +108,9 @@ Flickable {
     }
     function safetyColor() {
         if (source === "arch")
-            return LingmoUI.Theme.disabledTextColor
-        return perms.level === "high" ? LingmoUI.Theme.redColor
-             : perms.level === "medium" ? LingmoUI.Theme.orangeColor : LingmoUI.Theme.greenColor
+            return LingmoUI.Theme.secondaryTextColor
+        return perms.level === "high" ? LingmoUI.Theme.errorColor
+             : perms.level === "medium" ? LingmoUI.Theme.warningColor : LingmoUI.Theme.successColor
     }
 
     function licenseText() {
@@ -142,26 +142,13 @@ Flickable {
         spacing: LingmoUI.Units.largeSpacing * 1.5
 
         // Unknown app
-        ColumnLayout {
+        LingmoUI.EmptyState {
             visible: !page.found
             Layout.fillWidth: true
             Layout.topMargin: 80
-            spacing: LingmoUI.Units.largeSpacing
-
-            Spinner {
-                visible: !catalog.ready
-                running: visible
-                Layout.alignment: Qt.AlignHCenter
-                Layout.preferredWidth: 36
-                Layout.preferredHeight: 36
-            }
-            Label {
-                text: catalog.ready ? qsTr("This app was not found") : qsTr("Loading the app catalog…")
-                font.pointSize: LingmoUI.Theme.fontSize * 1.3
-                font.bold: true
-                color: LingmoUI.Theme.textColor
-                Layout.alignment: Qt.AlignHCenter
-            }
+            busy: !catalog.ready
+            iconName: "system-software-install"
+            title: catalog.ready ? qsTr("This app was not found") : qsTr("Loading the app catalog…")
         }
 
         // Header: icon, name, developer, action
@@ -184,7 +171,7 @@ Flickable {
 
                 Label {
                     text: page.app.name || ""
-                    font.pointSize: LingmoUI.Theme.fontSize * 2
+                    font.pointSize: LingmoUI.Units.fontTitle
                     font.bold: true
                     color: LingmoUI.Theme.textColor
                     wrapMode: Text.Wrap
@@ -202,20 +189,18 @@ Flickable {
                         font.bold: true
                         elide: Text.ElideRight
                     }
-                    Badge {
+                    LingmoUI.Badge {
                         visible: page.source === "flathub" && !!page.app.flathub && page.app.flathub.verified
                         text: qsTr("Verified")
-                        tint: "#1f9d55"
-                        filled: true
-                        icon: "qrc:/icons/shield.svg"
+                        tone: LingmoUI.Theme.successColor
                     }
                     Item { Layout.fillWidth: true }
                 }
 
                 Label {
                     text: page.app.summary || ""
-                    color: LingmoUI.Theme.disabledTextColor
-                    font.pointSize: LingmoUI.Theme.fontSize * 1.1
+                    color: LingmoUI.Theme.secondaryTextColor
+                    font.pointSize: LingmoUI.Units.fontBody
                     wrapMode: Text.Wrap
                     Layout.fillWidth: true
                 }
@@ -235,7 +220,7 @@ Flickable {
                     }
                     Label {
                         text: qsTr("%n rating(s)", "", page.rating.count || 0)
-                        color: LingmoUI.Theme.disabledTextColor
+                        color: LingmoUI.Theme.secondaryTextColor
                     }
                 }
             }
@@ -263,7 +248,7 @@ Flickable {
                         indeterminate: installer.progress < 0
                         value: Math.max(0, installer.progress)
                     }
-                    ActionButton {
+                    LingmoUI.ActionButton {
                         visible: installer.canCancel
                         text: qsTr("Cancel")
                         Layout.alignment: Qt.AlignRight
@@ -276,20 +261,21 @@ Flickable {
                     spacing: LingmoUI.Units.smallSpacing
                     Layout.alignment: Qt.AlignRight
 
-                    ActionButton {
+                    LingmoUI.ActionButton {
                         visible: page.installed && !(page.source === "arch" && page.app.arch && page.app.arch.protected)
                         text: qsTr("Remove")
                         destructive: true
+                        subtle: true
                         enabled: !installer.busy
                         onClicked: rootWindow.askRemove(page.appKey, page.source, page.app.name)
                     }
-                    ActionButton {
+                    LingmoUI.ActionButton {
                         visible: page.installed
                         primary: true
                         text: qsTr("Open")
                         onClicked: store.launch(page.appKey, page.source)
                     }
-                    ActionButton {
+                    LingmoUI.ActionButton {
                         visible: !page.installed
                         primary: true
                         implicitWidth: 150
@@ -306,8 +292,8 @@ Flickable {
                 Label {
                     visible: page.busyElsewhere
                     text: qsTr("Waiting for %1 to finish…").arg(installer.currentName)
-                    color: LingmoUI.Theme.disabledTextColor
-                    font.pointSize: LingmoUI.Theme.fontSize * 0.9
+                    color: LingmoUI.Theme.secondaryTextColor
+                    font.pointSize: LingmoUI.Units.fontCaption
                     horizontalAlignment: Text.AlignRight
                     wrapMode: Text.Wrap
                     Layout.fillWidth: true
@@ -316,8 +302,8 @@ Flickable {
                     visible: !page.busyHere && page.found && page.source !== ""
                     text: page.bothSources ? qsTr("From: %1").arg(page.sourceName(page.source))
                                            : page.source === "flathub" ? qsTr("From Flathub") : qsTr("From the Arch repositories")
-                    color: LingmoUI.Theme.disabledTextColor
-                    font.pointSize: LingmoUI.Theme.fontSize * 0.9
+                    color: LingmoUI.Theme.secondaryTextColor
+                    font.pointSize: LingmoUI.Units.fontCaption
                     Layout.alignment: Qt.AlignRight
                 }
                 // How isolated it is, next to the button that installs it
@@ -343,7 +329,7 @@ Flickable {
                     Label {
                         text: page.safetyText()
                         color: page.safetyColor()
-                        font.pointSize: LingmoUI.Theme.fontSize * 0.9
+                        font.pointSize: LingmoUI.Units.fontCaption
                         font.bold: page.source === "flathub" && page.perms.level === "high"
                         wrapMode: Text.Wrap
                         horizontalAlignment: Text.AlignRight
@@ -354,94 +340,44 @@ Flickable {
         }
 
         // What went wrong
-        Rectangle {
+        ColumnLayout {
             visible: page.lastError !== "" && !page.busyHere
             Layout.fillWidth: true
-            implicitHeight: errorLayout.implicitHeight + LingmoUI.Units.largeSpacing * 2
-            radius: LingmoUI.Theme.bigRadius
-            color: Qt.rgba(LingmoUI.Theme.redColor.r, LingmoUI.Theme.redColor.g, LingmoUI.Theme.redColor.b,
-                           LingmoUI.Theme.darkMode ? 0.2 : 0.1)
+            spacing: LingmoUI.Units.smallSpacing
 
-            ColumnLayout {
-                id: errorLayout
-                anchors.fill: parent
-                anchors.margins: LingmoUI.Units.largeSpacing
-                spacing: LingmoUI.Units.smallSpacing
+            LingmoUI.Banner {
+                Layout.fillWidth: true
+                type: LingmoUI.Banner.Error
+                closable: false
+                text: page.lastError
 
-                RowLayout {
-                    Layout.fillWidth: true
-                    LingmoUI.IconItem {
-                        source: "dialog-error"
-                        Layout.preferredWidth: 22
-                        Layout.preferredHeight: 22
-                    }
-                    Label {
-                        text: page.lastError
-                        color: LingmoUI.Theme.textColor
-                        wrapMode: Text.Wrap
-                        Layout.fillWidth: true
-                    }
-                    Label {
-                        visible: installer.log !== ""
-                        text: page.showLog ? qsTr("Hide details") : qsTr("Details")
-                        color: LingmoUI.Theme.highlightColor
-                        font.bold: true
-                        MouseArea {
-                            anchors.fill: parent
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: page.showLog = !page.showLog
-                        }
-                    }
+                LingmoUI.ActionButton {
+                    visible: installer.log !== ""
+                    text: page.showLog ? qsTr("Hide details") : qsTr("Details")
+                    onClicked: page.showLog = !page.showLog
                 }
-                LogView {
-                    visible: page.showLog
-                    text: installer.log
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 200
-                }
+            }
+            LogView {
+                visible: page.showLog
+                text: installer.log
+                Layout.fillWidth: true
+                Layout.preferredHeight: 200
             }
         }
 
         // Native games that need the user's own game data
-        Rectangle {
+        LingmoUI.Banner {
             visible: page.found && !!page.app.nativeGame && page.app.nativeGame.needsOwnCopy
             Layout.fillWidth: true
-            implicitHeight: ownCopy.implicitHeight + LingmoUI.Units.largeSpacing * 2
-            radius: LingmoUI.Theme.bigRadius
-            color: Qt.rgba(LingmoUI.Theme.orangeColor.r, LingmoUI.Theme.orangeColor.g, LingmoUI.Theme.orangeColor.b,
-                           LingmoUI.Theme.darkMode ? 0.16 : 0.1)
+            type: LingmoUI.Banner.Warning
+            closable: false
+            iconName: "dialog-information"
+            title: qsTr("You need your own copy of the game")
+            text: page.app.nativeGame ? page.app.nativeGame.note : ""
 
-            RowLayout {
-                id: ownCopy
-                anchors.fill: parent
-                anchors.margins: LingmoUI.Units.largeSpacing
-                spacing: LingmoUI.Units.largeSpacing
-
-                LingmoUI.IconItem {
-                    source: "dialog-information"
-                    Layout.preferredWidth: 24
-                    Layout.preferredHeight: 24
-                }
-                ColumnLayout {
-                    Layout.fillWidth: true
-                    spacing: 1
-                    Label {
-                        text: qsTr("You need your own copy of the game")
-                        font.bold: true
-                        color: LingmoUI.Theme.textColor
-                    }
-                    Label {
-                        text: page.app.nativeGame ? page.app.nativeGame.note : ""
-                        color: LingmoUI.Theme.textColor
-                        opacity: 0.8
-                        wrapMode: Text.Wrap
-                        Layout.fillWidth: true
-                    }
-                }
-                ActionButton {
-                    text: qsTr("How does it work?")
-                    onClicked: rootWindow.showOwnCopy({}, false)
-                }
+            LingmoUI.ActionButton {
+                text: qsTr("How does it work?")
+                onClicked: rootWindow.showOwnCopy({}, false)
             }
         }
 
@@ -454,6 +390,7 @@ Flickable {
             Label {
                 text: qsTr("Choose where to install from")
                 font.bold: true
+                font.pointSize: LingmoUI.Units.fontSubheading
                 color: LingmoUI.Theme.textColor
             }
 
@@ -521,7 +458,7 @@ Flickable {
                     id: frame
                     anchors.fill: parent
                     radius: LingmoUI.Theme.bigRadius
-                    color: LingmoUI.Theme.darkMode ? "#252528" : "#E9EAEE"
+                    color: LingmoUI.Theme.secondBackgroundColor
                     layer.enabled: true
                     layer.effect: OpacityMask {
                         maskSource: Rectangle {
@@ -541,18 +478,16 @@ Flickable {
                         mipmap: true
                     }
 
-                    Spinner {
+                    LingmoUI.Spinner {
                         anchors.centerIn: parent
-                        width: 28
-                        height: 28
+                        size: 28
                         running: shot.status === Image.Loading
-                        visible: running
                     }
                     Label {
                         anchors.centerIn: parent
                         visible: shot.status === Image.Error
                         text: qsTr("Picture unavailable")
-                        color: LingmoUI.Theme.disabledTextColor
+                        color: LingmoUI.Theme.secondaryTextColor
                     }
                 }
 
@@ -573,56 +508,65 @@ Flickable {
         }
 
         // Description
-        Card {
+        LingmoUI.Card {
+            id: card1
             visible: page.found && (page.app.description || "") !== ""
             Layout.fillWidth: true
+            implicitHeight: card1Content.implicitHeight + padding * 2
 
-            Label {
-                text: qsTr("About this app")
-                font.bold: true
-                font.pointSize: LingmoUI.Theme.fontSize * 1.15
-                color: LingmoUI.Theme.textColor
-            }
-
-            Item {
-                id: descriptionBox
-                Layout.fillWidth: true
-                readonly property bool isLong: description.implicitHeight > 240
-                implicitHeight: isLong && !page.descriptionExpanded ? 240 : description.implicitHeight
-                clip: true
+            ColumnLayout {
+                id: card1Content
+                anchors.fill: parent
+                anchors.margins: card1.padding
+                spacing: LingmoUI.Units.largeSpacing
 
                 Label {
-                    id: description
-                    width: parent.width
-                    text: page.app.description || ""
-                    textFormat: Text.RichText
-                    wrapMode: Text.Wrap
+                    text: qsTr("About this app")
+                    font.bold: true
+                    font.pointSize: LingmoUI.Units.fontSubheading
                     color: LingmoUI.Theme.textColor
-                    lineHeight: 1.15
-                    onLinkActivated: (link) => store.openUrl(link)
                 }
 
-                Rectangle {
-                    visible: descriptionBox.isLong && !page.descriptionExpanded
-                    anchors.bottom: parent.bottom
-                    width: parent.width
-                    height: 60
-                    gradient: Gradient {
-                        GradientStop { position: 0.0; color: "transparent" }
-                        GradientStop { position: 1.0; color: LingmoUI.Theme.secondBackgroundColor }
+                Item {
+                    id: descriptionBox
+                    Layout.fillWidth: true
+                    readonly property bool isLong: description.implicitHeight > 240
+                    implicitHeight: isLong && !page.descriptionExpanded ? 240 : description.implicitHeight
+                    clip: true
+
+                    Label {
+                        id: description
+                        width: parent.width
+                        text: page.app.description || ""
+                        textFormat: Text.RichText
+                        wrapMode: Text.Wrap
+                        color: LingmoUI.Theme.textColor
+                        lineHeight: 1.15
+                        onLinkActivated: (link) => store.openUrl(link)
+                    }
+
+                    Rectangle {
+                        visible: descriptionBox.isLong && !page.descriptionExpanded
+                        anchors.bottom: parent.bottom
+                        width: parent.width
+                        height: 60
+                        gradient: Gradient {
+                            GradientStop { position: 0.0; color: "transparent" }
+                            GradientStop { position: 1.0; color: LingmoUI.Theme.secondBackgroundColor }
+                        }
                     }
                 }
-            }
 
-            Label {
-                visible: descriptionBox.isLong
-                text: page.descriptionExpanded ? qsTr("Show less") : qsTr("Show more")
-                color: LingmoUI.Theme.highlightColor
-                font.bold: true
-                MouseArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: page.descriptionExpanded = !page.descriptionExpanded
+                Label {
+                    visible: descriptionBox.isLong
+                    text: page.descriptionExpanded ? qsTr("Show less") : qsTr("Show more")
+                    color: LingmoUI.Theme.highlightColor
+                    font.bold: true
+                    MouseArea {
+                        anchors.fill: parent
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: page.descriptionExpanded = !page.descriptionExpanded
+                    }
                 }
             }
         }
@@ -637,74 +581,83 @@ Flickable {
         }
 
         // Details
-        Card {
+        LingmoUI.Card {
+            id: card2
             visible: page.found
             Layout.fillWidth: true
+            implicitHeight: card2Content.implicitHeight + padding * 2
 
-            Label {
-                text: qsTr("Details")
-                font.bold: true
-                font.pointSize: LingmoUI.Theme.fontSize * 1.15
-                color: LingmoUI.Theme.textColor
-            }
+            ColumnLayout {
+                id: card2Content
+                anchors.fill: parent
+                anchors.margins: card2.padding
+                spacing: LingmoUI.Units.largeSpacing
 
-            GridLayout {
-                Layout.fillWidth: true
-                columns: 2
-                columnSpacing: LingmoUI.Units.largeSpacing * 2
-                rowSpacing: LingmoUI.Units.smallSpacing * 1.5
+                Label {
+                    text: qsTr("Details")
+                    font.bold: true
+                    font.pointSize: LingmoUI.Units.fontSubheading
+                    color: LingmoUI.Theme.textColor
+                }
 
-                Repeater {
-                    model: [
-                        { label: qsTr("Version"), value: page.src ? (page.src.version || qsTr("Unknown")) : "" },
-                        { label: qsTr("Developer"), value: page.app.developer || qsTr("Unknown") },
-                        { label: qsTr("License"), value: page.licenseText() },
-                        { label: qsTr("Size"), value: page.sizeText() },
-                        { label: qsTr("Source"), value: page.source === "arch"
-                                    ? qsTr("Arch Linux repositories (%1)").arg(page.app.arch ? page.app.arch.repo || "local" : "")
-                                    : page.source === "flathub" ? (page.app.flathub.verified ? qsTr("Flathub, verified developer") : "Flathub") : "" },
-                        { label: qsTr("Package"), value: page.source === "arch" ? (page.app.arch ? page.app.arch.pkgname : "")
-                                                                                : (page.app.flathub ? page.app.flathub.flatpakId : "") },
-                    ]
+                GridLayout {
+                    Layout.fillWidth: true
+                    columns: 2
+                    columnSpacing: LingmoUI.Units.largeSpacing * 2
+                    rowSpacing: LingmoUI.Units.smallSpacing * 1.5
 
-                    delegate: RowLayout {
+                    Repeater {
+                        model: [
+                            { label: qsTr("Version"), value: page.src ? (page.src.version || qsTr("Unknown")) : "" },
+                            { label: qsTr("Developer"), value: page.app.developer || qsTr("Unknown") },
+                            { label: qsTr("License"), value: page.licenseText() },
+                            { label: qsTr("Size"), value: page.sizeText() },
+                            { label: qsTr("Source"), value: page.source === "arch"
+                                        ? qsTr("Arch Linux repositories (%1)").arg(page.app.arch ? page.app.arch.repo || "local" : "")
+                                        : page.source === "flathub" ? (page.app.flathub.verified ? qsTr("Flathub, verified developer") : "Flathub") : "" },
+                            { label: qsTr("Package"), value: page.source === "arch" ? (page.app.arch ? page.app.arch.pkgname : "")
+                                                                                    : (page.app.flathub ? page.app.flathub.flatpakId : "") },
+                        ]
+
+                        delegate: RowLayout {
+                            Layout.fillWidth: true
+                            Layout.columnSpan: 1
+                            spacing: LingmoUI.Units.largeSpacing
+
+                            Label {
+                                text: modelData.label
+                                color: LingmoUI.Theme.secondaryTextColor
+                                Layout.preferredWidth: 110
+                            }
+                            Label {
+                                text: modelData.value
+                                color: LingmoUI.Theme.textColor
+                                wrapMode: Text.Wrap
+                                Layout.fillWidth: true
+                            }
+                        }
+                    }
+
+                    RowLayout {
+                        visible: (page.app.homepage || "") !== ""
                         Layout.fillWidth: true
-                        Layout.columnSpan: 1
                         spacing: LingmoUI.Units.largeSpacing
 
                         Label {
-                            text: modelData.label
-                            color: LingmoUI.Theme.disabledTextColor
+                            text: qsTr("Website")
+                            color: LingmoUI.Theme.secondaryTextColor
                             Layout.preferredWidth: 110
                         }
                         Label {
-                            text: modelData.value
-                            color: LingmoUI.Theme.textColor
-                            wrapMode: Text.Wrap
+                            text: (page.app.homepage || "").replace(/^https?:\/\//, "").replace(/\/$/, "")
+                            color: LingmoUI.Theme.highlightColor
+                            elide: Text.ElideRight
                             Layout.fillWidth: true
-                        }
-                    }
-                }
-
-                RowLayout {
-                    visible: (page.app.homepage || "") !== ""
-                    Layout.fillWidth: true
-                    spacing: LingmoUI.Units.largeSpacing
-
-                    Label {
-                        text: qsTr("Website")
-                        color: LingmoUI.Theme.disabledTextColor
-                        Layout.preferredWidth: 110
-                    }
-                    Label {
-                        text: (page.app.homepage || "").replace(/^https?:\/\//, "").replace(/\/$/, "")
-                        color: LingmoUI.Theme.highlightColor
-                        elide: Text.ElideRight
-                        Layout.fillWidth: true
-                        MouseArea {
-                            anchors.fill: parent
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: store.openUrl(page.app.homepage)
+                            MouseArea {
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: store.openUrl(page.app.homepage)
+                            }
                         }
                     }
                 }

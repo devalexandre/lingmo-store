@@ -40,8 +40,9 @@ Rectangle {
                               LingmoUI.Theme.highlightColor.b, LingmoUI.Theme.darkMode ? 0.18 : 0.08)
                     : LingmoUI.Theme.secondBackgroundColor
     border.width: selected ? 2 : 1
-    border.color: selected ? LingmoUI.Theme.highlightColor
-                           : (LingmoUI.Theme.darkMode ? Qt.rgba(1, 1, 1, 0.08) : Qt.rgba(0, 0, 0, 0.08))
+    border.color: selected ? LingmoUI.Theme.highlightColor : LingmoUI.Theme.borderColor
+
+    Behavior on color { ColorAnimation { duration: LingmoUI.Units.shortDuration } }
 
     MouseArea {
         anchors.fill: parent
@@ -64,7 +65,7 @@ Rectangle {
             radius: 9
             color: "transparent"
             border.width: 2
-            border.color: control.selected ? LingmoUI.Theme.highlightColor : LingmoUI.Theme.disabledTextColor
+            border.color: control.selected ? LingmoUI.Theme.highlightColor : LingmoUI.Theme.secondaryTextColor
 
             Rectangle {
                 anchors.centerIn: parent
@@ -89,37 +90,36 @@ Rectangle {
                     font.bold: true
                     color: LingmoUI.Theme.textColor
                 }
-                Badge {
+                LingmoUI.Badge {
                     visible: control.recommended
                     text: qsTr("Recommended")
-                    tint: LingmoUI.Theme.highlightColor
                 }
-                Badge {
+                LingmoUI.Badge {
                     visible: control.installed
                     text: qsTr("Installed")
-                    tint: LingmoUI.Theme.greenColor
+                    tone: LingmoUI.Theme.successColor
                 }
                 Item { Layout.fillWidth: true }
             }
             Label {
                 text: control.text
-                color: LingmoUI.Theme.disabledTextColor
+                color: LingmoUI.Theme.secondaryTextColor
                 wrapMode: Text.Wrap
                 Layout.fillWidth: true
             }
             Label {
                 visible: control.version !== ""
                 text: qsTr("Version %1").arg(control.version)
-                color: LingmoUI.Theme.disabledTextColor
-                font.pointSize: LingmoUI.Theme.fontSize * 0.9
+                color: LingmoUI.Theme.secondaryTextColor
+                font.pointSize: LingmoUI.Units.fontCaption
                 elide: Text.ElideRight
                 Layout.fillWidth: true
             }
             Label {
                 visible: control.note !== ""
                 text: control.note
-                color: LingmoUI.Theme.orangeColor
-                font.pointSize: LingmoUI.Theme.fontSize * 0.9
+                color: LingmoUI.Theme.warningColor
+                font.pointSize: LingmoUI.Units.fontCaption
                 wrapMode: Text.Wrap
                 Layout.fillWidth: true
             }

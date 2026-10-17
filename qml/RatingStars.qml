@@ -54,7 +54,7 @@ Row {
             ColorOverlay {
                 anchors.fill: parent
                 source: shape
-                color: LingmoUI.Theme.disabledTextColor
+                color: LingmoUI.Theme.secondaryTextColor
                 opacity: 0.35
             }
             Item {

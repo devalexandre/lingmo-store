@@ -32,10 +32,19 @@ Rectangle {
 
     implicitHeight: 72
     radius: LingmoUI.Theme.bigRadius
+    // Lighter while hovered
     gradient: Gradient {
         orientation: Gradient.Horizontal
-        GradientStop { position: 0.0; color: Qt.lighter(control.tint, mouse.containsMouse ? 1.28 : 1.15) }
-        GradientStop { position: 1.0; color: mouse.containsMouse ? Qt.lighter(control.tint, 1.08) : control.tint }
+        GradientStop {
+            position: 0.0
+            color: Qt.lighter(control.tint, mouse.containsMouse ? 1.28 : 1.15)
+            Behavior on color { ColorAnimation { duration: LingmoUI.Units.shortDuration; easing.type: LingmoUI.Units.easing } }
+        }
+        GradientStop {
+            position: 1.0
+            color: mouse.containsMouse ? Qt.lighter(control.tint, 1.08) : control.tint
+            Behavior on color { ColorAnimation { duration: LingmoUI.Units.shortDuration; easing.type: LingmoUI.Units.easing } }
+        }
     }
 
     MouseArea {
@@ -53,7 +62,7 @@ Rectangle {
         spacing: LingmoUI.Units.largeSpacing
 
         Image {
-            source: "qrc:/icons/" + control.iconSource
+            source: control.iconSource
             Layout.preferredWidth: 28
             Layout.preferredHeight: 28
             sourceSize: Qt.size(56, 56)
@@ -61,9 +70,9 @@ Rectangle {
 
         Label {
             text: control.title
-            color: "white"
+            color: LingmoUI.Theme.highlightedTextColor
             font.bold: true
-            font.pointSize: LingmoUI.Theme.fontSize * 1.1
+            font.pointSize: LingmoUI.Units.fontSubheading
             elide: Text.ElideRight
             Layout.fillWidth: true
         }
