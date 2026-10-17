@@ -46,6 +46,7 @@ static void applyIconTheme()
     const bool dark = theme.value(QStringLiteral("DarkMode"), false).toBool();
     const QStringList candidates = {
         theme.value(dark ? QStringLiteral("DarkIconTheme") : QStringLiteral("IconTheme")).toString(),
+        dark ? QStringLiteral("Lingmo-dark") : QStringLiteral("Lingmo"),
         dark ? QStringLiteral("Crule-dark") : QStringLiteral("Crule"),
         QStringLiteral("breeze"),
     };
@@ -94,7 +95,7 @@ int main(int argc, char *argv[])
     }
 
     applyIconTheme();
-    app.setWindowIcon(QIcon::fromTheme(QStringLiteral("system-software-install")));
+    app.setWindowIcon(QIcon::fromTheme(QStringLiteral("lingmo-store"), QIcon::fromTheme(QStringLiteral("system-software-install"))));
 
     // Installed location first, then next to the binary (build tree, staged installs)
     QTranslator translator;

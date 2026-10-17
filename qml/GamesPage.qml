@@ -264,8 +264,8 @@ Flickable {
                     visible: !page.preparing
                     Layout.fillWidth: true
                     spacing: LingmoUI.Units.largeSpacing
-
-                    LightButton {
+                    LingmoUI.ActionButton {
+                        light: true
                         visible: !games.allDone
                         enabled: catalog.ready && !installer.busy && !games.detecting
                         text: page.lastError !== "" ? qsTr("Try Again") : qsTr("Get Ready for Games")
@@ -274,7 +274,8 @@ Flickable {
                             games.prepare()
                         }
                     }
-                    LightButton {
+                    LingmoUI.ActionButton {
+                        light: true
                         visible: games.allDone
                         text: qsTr("Open Steam")
                         onClicked: store.launch(catalog.resolve("steam"), "arch")
@@ -599,16 +600,14 @@ Flickable {
                                     fillMode: Image.PreserveAspectCrop
                                     asynchronous: true
                                 }
-                                Image {
+                                LingmoUI.IconItem {
                                     anchors.centerIn: parent
                                     visible: !modelData.image
                                     source: "qrc:/icons/games.svg"
                                     width: 28
                                     height: 28
-                                    sourceSize: Qt.size(56, 56)
                                     opacity: 0.8
-                                    layer.enabled: true
-                                    layer.effect: ColorOverlay { color: LingmoUI.Theme.secondaryTextColor }
+                                    color: LingmoUI.Theme.secondaryTextColor
                                 }
                             }
 

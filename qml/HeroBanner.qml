@@ -103,7 +103,7 @@ Item {
 
                 Label {
                     text: control.hero ? control.hero.name : ""
-                    color: Qt.rgba(1, 1, 1, 0.75)
+                    color: LingmoUI.Theme.overlaySecondaryTextColor
                     font.bold: true
                     font.capitalization: Font.AllUppercase
                     font.letterSpacing: 1.2
@@ -111,7 +111,7 @@ Item {
                 }
                 Label {
                     text: control.hero ? control.hero.title : ""
-                    color: "white"
+                    color: LingmoUI.Theme.overlayTextColor
                     font.bold: true
                     font.pointSize: LingmoUI.Units.fontTitle
                     wrapMode: Text.Wrap
@@ -125,7 +125,8 @@ Item {
                     Layout.fillWidth: true
                     Layout.maximumWidth: 520
                 }
-                LightButton {
+                LingmoUI.ActionButton {
+                    light: true
                     text: qsTr("See App")
                     Layout.topMargin: LingmoUI.Units.smallSpacing
                     onClicked: rootWindow.openApp(control.hero.key)
@@ -155,7 +156,7 @@ Item {
                     width: index === control.current ? 18 : 7
                     height: 7
                     radius: 3.5
-                    color: index === control.current ? "white" : Qt.rgba(1, 1, 1, 0.45)
+                    color: index === control.current ? LingmoUI.Theme.overlayTextColor : Qt.rgba(1, 1, 1, 0.45)
                     Behavior on width { NumberAnimation { duration: LingmoUI.Units.shortDuration; easing.type: LingmoUI.Units.easing } }
 
                     MouseArea {

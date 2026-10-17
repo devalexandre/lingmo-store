@@ -148,8 +148,8 @@ Flickable {
                         Layout.fillWidth: true
                     }
                 }
-
-                LightButton {
+                LingmoUI.ActionButton {
+                    light: true
                     text: qsTr("Go to Games")
                     onClicked: rootWindow.showGames()
                 }

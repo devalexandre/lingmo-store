@@ -78,7 +78,7 @@ Popup {
             anchors.bottomMargin: 24
             anchors.horizontalCenter: parent.horizontalCenter
             text: control.shots.length > 0 ? (control.shots[control.index].caption || "") : ""
-            color: "white"
+            color: LingmoUI.Theme.overlayTextColor
             visible: text !== ""
         }
 
@@ -93,7 +93,7 @@ Popup {
                 width: 40
                 height: 40
                 radius: 20
-                color: Qt.rgba(1, 1, 1, arrowMouse.containsMouse ? 0.3 : 0.15)
+                color: arrowMouse.containsMouse ? LingmoUI.Theme.overlayPressedColor : LingmoUI.Theme.overlayHoverColor
                 Behavior on color { ColorAnimation { duration: LingmoUI.Units.veryShortDuration } }
                 visible: modelData.dx < 0 ? control.index > 0 : control.index < control.shots.length - 1
 
@@ -101,7 +101,7 @@ Popup {
                     anchors.centerIn: parent
                     anchors.verticalCenterOffset: -2
                     text: modelData.glyph
-                    color: "white"
+                    color: LingmoUI.Theme.overlayTextColor
                     font.pointSize: LingmoUI.Units.fontTitle
                 }
                 MouseArea {
@@ -118,7 +118,7 @@ Popup {
             anchors.right: parent.right
             anchors.margins: 20
             text: "✕"
-            color: "white"
+            color: LingmoUI.Theme.overlayTextColor
             font.pointSize: LingmoUI.Units.fontHeading
 
             MouseArea {

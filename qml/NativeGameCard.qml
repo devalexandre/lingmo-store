@@ -134,8 +134,9 @@ LingmoUI.Card {
 
             LingmoUI.Badge {
                 visible: !!control.game.needsOwnCopy
-                text: qsTr("Needs your copy") + "  ⓘ"
+                text: qsTr("Needs your copy")
                 tone: LingmoUI.Theme.warningColor
+                iconName: "dialog-information-symbolic"
 
                 MouseArea {
                     anchors.fill: parent

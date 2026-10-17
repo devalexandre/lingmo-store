@@ -312,16 +312,8 @@ Flickable {
                     Layout.alignment: Qt.AlignRight
                     spacing: 4
 
-                    Image {
-                        id: safetyIcon
+                    LingmoUI.IconItem {
                         source: "qrc:/icons/shield.svg"
-                        sourceSize: Qt.size(28, 28)
-                        Layout.preferredWidth: 14
-                        Layout.preferredHeight: 14
-                        visible: false
-                    }
-                    ColorOverlay {
-                        source: safetyIcon
                         color: page.safetyColor()
                         Layout.preferredWidth: 14
                         Layout.preferredHeight: 14

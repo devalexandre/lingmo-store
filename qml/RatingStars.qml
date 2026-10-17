@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import QtQuick
-import Qt5Compat.GraphicalEffects
 import LingmoUI.CompatibleModule 3.0 as LingmoUI
 
 // Five stars filled up to `value` (0–5, fractions allowed). With `interactive`,
@@ -44,16 +43,9 @@ Row {
             height: control.size
             readonly property real fill: Math.max(0, Math.min(1, control.shown - index))
 
-            Image {
-                id: shape
+            LingmoUI.IconItem {
                 anchors.fill: parent
                 source: "qrc:/icons/star.svg"
-                sourceSize: Qt.size(control.size * 2, control.size * 2)
-                visible: false
-            }
-            ColorOverlay {
-                anchors.fill: parent
-                source: shape
                 color: LingmoUI.Theme.secondaryTextColor
                 opacity: 0.35
             }
@@ -62,10 +54,10 @@ Row {
                 height: parent.height
                 clip: true
 
-                ColorOverlay {
+                LingmoUI.IconItem {
                     width: control.size
                     height: control.size
-                    source: shape
+                    source: "qrc:/icons/star.svg"
                     color: LingmoUI.Theme.orangeColor
                 }
             }

@@ -12,7 +12,6 @@
         <file alias="qml/HeroBanner.qml">qml/HeroBanner.qml</file>
         <file alias="qml/HomePage.qml">qml/HomePage.qml</file>
         <file alias="qml/InstalledPage.qml">qml/InstalledPage.qml</file>
-        <file alias="qml/LightButton.qml">qml/LightButton.qml</file>
         <file alias="qml/LogView.qml">qml/LogView.qml</file>
         <file alias="qml/Main.qml">qml/Main.qml</file>
         <file alias="qml/NativeGameCard.qml">qml/NativeGameCard.qml</file>
