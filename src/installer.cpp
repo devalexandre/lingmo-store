@@ -74,8 +74,12 @@ void Installer::begin(const QString &key, const QString &source, const QString &
 void Installer::end(bool ok, const QString &message)
 {
     const QString key = m_key, source = m_source, action = m_action;
-    if (ok && fakeMode() && key.startsWith(QLatin1String("pkg:")))
-        m_catalog->setFakePackageInstalled(key.mid(4), action == QLatin1String("install"));
+    const bool repoAdded = !m_enablingRepo.isEmpty();
+    m_enablingRepo.clear();
+    if (ok && fakeMode() && key.startsWith(QLatin1String("pkg:"))) {
+        for (const QString &pkg : key.mid(4).split(QLatin1Char(','), Qt::SkipEmptyParts))
+            m_catalog->setFakePackageInstalled(pkg, action == QLatin1String("install"));
+    }
     else if (ok && fakeMode() && action != QLatin1String("gaming"))
         m_catalog->setFakeInstalled(key, source, action == QLatin1String("install"));
     m_action.clear();
@@ -86,7 +90,10 @@ void Installer::end(bool ok, const QString &message)
     m_logTimer.stop();
     Q_EMIT logChanged();
     Q_EMIT finished(key, source, action, ok, message);
-    if (ok && !fakeMode()) {
+    if (repoAdded) {
+        // pacman.conf may list the repository now, even if the sync or install failed
+        m_catalog->reload();
+    } else if (ok && !fakeMode()) {
         if (action == QLatin1String("gaming"))
             m_catalog->reload(); // [multilib] may have been enabled
         else
@@ -123,8 +130,10 @@ bool Installer::install(const QString &key, const QString &source)
         m_flatpak->install(app->flathub->flatpakRef.section(QLatin1Char('/'), 1, 1));
         return true;
     }
-    if (!app->arch || app->arch->repo.isEmpty())
+    if (!app->arch || !app->arch->offered())
         return false;
+    if (app->arch->repo.isEmpty())
+        return needsRepo(app->arch->needsRepo, key, {app->arch->pkgname}, app->name);
     begin(key, source, QStringLiteral("install"), app->name);
     runHelper({QStringLiteral("install"), app->arch->pkgname});
     return true;
@@ -158,6 +167,42 @@ bool Installer::installPackage(const QString &pkgname, const QString &name)
         return false;
     begin(QStringLiteral("pkg:") + pkgname, QStringLiteral("arch"), QStringLiteral("install"), name);
     runHelper({QStringLiteral("install"), pkgname});
+    return true;
+}
+
+bool Installer::installPackages(const QStringList &pkgnames, const QString &name)
+{
+    if (busy() || pkgnames.isEmpty())
+        return false;
+    const QString key = QStringLiteral("pkg:") + pkgnames.join(QLatin1Char(','));
+    // Packages of a repository that isn't enabled yet: all of the bundle comes from it
+    for (const QString &pkg : pkgnames) {
+        const AppEntry *app = m_catalog->entry(m_catalog->resolve(pkg));
+        if (app && app->arch && app->arch->pkgname == pkg && app->arch->repo.isEmpty() && !app->arch->needsRepo.isEmpty())
+            return needsRepo(app->arch->needsRepo, key, pkgnames, name);
+    }
+    begin(key, QStringLiteral("arch"), QStringLiteral("install"), name);
+    runHelper(QStringList{QStringLiteral("install")} + pkgnames);
+    return true;
+}
+
+bool Installer::needsRepo(const QString &repo, const QString &key, const QStringList &packages, const QString &name)
+{
+    if (m_catalog->repoEnabled(repo))
+        return enableRepoAndInstall(repo, key, packages, name);
+    Q_EMIT repoConsentNeeded(repo, key, packages, name);
+    return false;
+}
+
+bool Installer::enableRepoAndInstall(const QString &repo, const QString &key, const QStringList &packages,
+                                     const QString &name)
+{
+    if (busy() || repo.isEmpty() || packages.isEmpty())
+        return false;
+    begin(key, QStringLiteral("arch"), QStringLiteral("install"), name);
+    m_enablingRepo = repo;
+    // The helper only knows its own fixed list of repositories and their sections
+    runHelper(QStringList{QStringLiteral("enable-repo"), repo} + packages);
     return true;
 }
 
@@ -266,6 +311,8 @@ void Installer::parseLine(const QString &line)
 
     if (line == QLatin1String("@@STEP multilib")) {
         setStep(0.02, tr("Enabling the 32-bit games repository (multilib)…"));
+    } else if (line == QLatin1String("@@STEP repo")) {
+        setStep(0.02, tr("Enabling the %1 repository…").arg(m_enablingRepo));
     } else if (line == QLatin1String("@@STEP sync") || line.startsWith(QLatin1String(":: Synchronizing package databases"))) {
         setStep(0.05, tr("Updating the list of available software…"));
     } else if (line.startsWith(QLatin1String(":: Starting full system upgrade"))) {
@@ -306,6 +353,8 @@ QString Installer::helperError(int exitCode) const
         return Errors::busy();
     if (m_markers.contains(QLatin1String("@@ERROR protected")))
         return tr("This is an essential part of the system and can't be removed.");
+    if (m_markers.contains(QLatin1String("@@ERROR config")) && !m_enablingRepo.isEmpty())
+        return tr("Could not enable the %1 repository in /etc/pacman.conf. Nothing was changed.").arg(m_enablingRepo);
     if (m_markers.contains(QLatin1String("@@ERROR config")))
         return tr("Could not enable the multilib repository in /etc/pacman.conf. Nothing was changed.");
     if (m_log.contains(QLatin1String("breaks dependency")) || m_log.contains(QLatin1String("required by")))

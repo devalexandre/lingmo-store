@@ -319,7 +319,18 @@ void addReviewIds(AsComponent *cpt, QStringList *ids)
     }
 }
 
+// An app of featured.json "curated": its store entry is written there, because the
+// repository it comes from ([archlingmo]) has no AppStream data
+struct CuratedApp {
+    AppEntry entry;        // metadata, already in the user's language
+    QString pkgname;
+    QString version;       // the version featured.json describes (fake mode only)
+    QString repo;          // the ArchLingmo repository that carries it, when not [archlingmo]
+};
+
 struct LoadConfig {
+    QList<CuratedApp> curated;
+    QStringList fakeRepoPackages; // fake mode: pretend their repository has these ("all": every curated one)
     QStringList extraDirs;
     QString locale;
     QString pacmanConf;
@@ -469,6 +480,38 @@ std::shared_ptr<CatalogData> loadCatalog(const LoadConfig &config)
         }
     }
 
+    // Curated apps: offered when a repository has them (or they're installed)
+    for (const CuratedApp &curated : config.curated) {
+        AppEntry app = curated.entry;
+        if (byKey.contains(app.key))
+            continue; // AppStream knows it after all: its own data wins
+        std::optional<PackageInfo> info = pacman.find(curated.pkgname, true);
+        const QString home = curated.repo.isEmpty() ? QStringLiteral("archlingmo") : curated.repo;
+        // (a separate repository has to be enabled in the pacman.conf copy first)
+        if (!info && (curated.repo.isEmpty() || data->syncRepos.contains(home))
+            && (config.fakeRepoPackages.contains(QStringLiteral("all")) || config.fakeRepoPackages.contains(curated.pkgname)))
+            info = PackageInfo{home, curated.version + QStringLiteral("-1"), -1, -1};
+        AppSource src;
+        src.pkgname = curated.pkgname;
+        src.componentId = app.id;
+        src.desktopId = app.id + QStringLiteral(".desktop");
+        if (info) {
+            src.repo = info->repo;
+            src.version = info->version;
+            src.downloadSize = info->size;
+            src.installedSize = info->isize;
+        } else if (!curated.repo.isEmpty()) {
+            // Its own repository isn't enabled yet (or its database not synced): the
+            // store offers to enable it (lingmo-store-helper enable-repo)
+            src.needsRepo = curated.repo;
+            src.version = curated.version;
+        }
+        app.arch = src;
+        byKey.insert(app.key, apps.size());
+        data->byPkgname.insert(curated.pkgname, apps.size());
+        apps.append(app);
+    }
+
     for (const QString &pkg : config.nativePackages) {
         if (const auto info = pacman.find(pkg, true))
             data->nativePackages.insert(pkg, info->repo + QLatin1Char(' ') + info->version);
@@ -534,6 +577,11 @@ QString Catalog::pacmanConf() const
     return QStringLiteral("/etc/pacman.conf");
 }
 
+bool Catalog::repoEnabled(const QString &repo) const
+{
+    return m_data && m_data->syncRepos.contains(repo);
+}
+
 bool Catalog::multilibEnabled() const
 {
     return m_data && m_data->syncRepos.contains(QStringLiteral("multilib"));
@@ -553,6 +601,52 @@ void Catalog::reload()
     config.locale = QLocale().name();
     config.pacmanConf = pacmanConf() == QLatin1String("/etc/pacman.conf") ? QString() : pacmanConf();
     config.aliases = m_aliases;
+    for (const QJsonValue &v : m_featured.value(QStringLiteral("curated")).toArray()) {
+        const QJsonObject o = v.toObject();
+        CuratedApp c;
+        c.pkgname = o.value(QStringLiteral("pkg")).toString();
+        c.version = o.value(QStringLiteral("version")).toString();
+        c.repo = o.value(QStringLiteral("repo")).toString();
+        AppEntry &app = c.entry;
+        app.id = o.value(QStringLiteral("id")).toString();
+        app.key = keyFor(app.id);
+        if (c.pkgname.isEmpty() || app.key.isEmpty())
+            continue;
+        app.curated = true;
+        app.name = o.value(QStringLiteral("name")).toString();
+        app.summary = localized(o.value(QStringLiteral("summary")));
+        app.description = localized(o.value(QStringLiteral("description")));
+        app.developer = o.value(QStringLiteral("developer")).toString();
+        app.license = o.value(QStringLiteral("license")).toString();
+        app.homepage = o.value(QStringLiteral("homepage")).toString();
+        app.iconUrl = o.value(QStringLiteral("icon")).toString();
+        app.iconName = o.value(QStringLiteral("iconName")).toString();
+        app.experimental = o.value(QStringLiteral("experimental")).toBool();
+        app.replaces = localized(o.value(QStringLiteral("replaces")));
+        app.reviewIds = {app.id, app.id + QStringLiteral(".desktop")};
+        for (const QJsonValue &cat : o.value(QStringLiteral("categories")).toArray())
+            app.categories << cat.toString();
+        for (const QJsonValue &type : o.value(QStringLiteral("opens")).toArray())
+            app.opens << type.toString();
+        for (const QJsonValue &shot : o.value(QStringLiteral("screenshots")).toArray()) {
+            const QJsonObject so = shot.toObject();
+            app.screenshots << QVariantMap{
+                {QStringLiteral("thumbnail"), so.value(QStringLiteral("url")).toString()},
+                {QStringLiteral("source"), so.value(QStringLiteral("url")).toString()},
+                {QStringLiteral("caption"), localized(so.value(QStringLiteral("caption")))},
+            };
+        }
+        // Both languages: "editor de texto" and "word processor" find it
+        const QJsonObject kw = o.value(QStringLiteral("keywords")).toObject();
+        QStringList words;
+        for (auto it = kw.constBegin(); it != kw.constEnd(); ++it)
+            words << it.value().toString();
+        app.keywordsFold = fold(words.join(QLatin1Char(' ')) + QLatin1Char(' ') + app.opens.join(QLatin1Char(' '))
+                                + QLatin1Char(' ') + app.replaces);
+        config.curated << c;
+    }
+    if (m_fake)
+        config.fakeRepoPackages = qEnvironmentVariable("LINGMO_STORE_FAKE_ARCHLINGMO").split(QLatin1Char(','), Qt::SkipEmptyParts);
     for (const QJsonValue &v : m_featured.value(QStringLiteral("nativeGames")).toArray()) {
         const QString pkg = v.toObject().value(QStringLiteral("pkg")).toString();
         if (!pkg.isEmpty())
@@ -702,7 +796,7 @@ QVariantMap Catalog::summaryMap(const AppEntry &app) const
 {
     const bool archInstalled = app.arch && isPackageInstalled(app.arch->pkgname);
     const bool flatpakInstalled = app.flathub && isFlatpakInstalled(app.flathub->flatpakRef.section(QLatin1Char('/'), 1, 1));
-    const bool archAvailable = app.arch && !app.arch->repo.isEmpty();
+    const bool archAvailable = app.arch && app.arch->offered();
     return {
         {QStringLiteral("key"), app.key},
         {QStringLiteral("id"), app.id},
@@ -714,6 +808,8 @@ QVariantMap Catalog::summaryMap(const AppEntry &app) const
         {QStringLiteral("hasFlathub"), bool(app.flathub)},
         {QStringLiteral("verified"), app.flathub && app.flathub->verified},
         {QStringLiteral("installed"), archInstalled || flatpakInstalled},
+        {QStringLiteral("experimental"), app.experimental},
+        {QStringLiteral("needsRepo"), app.arch && app.arch->repo.isEmpty() ? app.arch->needsRepo : QString()},
     };
 }
 
@@ -731,16 +827,21 @@ QVariantMap Catalog::app(const QString &key) const
     map.insert(QStringLiteral("homepage"), app->homepage);
     map.insert(QStringLiteral("screenshots"), app->screenshots);
     map.insert(QStringLiteral("categories"), app->categories);
+    map.insert(QStringLiteral("curated"), app->curated);
+    map.insert(QStringLiteral("opens"), app->opens);
+    map.insert(QStringLiteral("replaces"), app->replaces);
 
     QString recommended;
     if (app->arch) {
         const AppSource &a = *app->arch;
         const bool installed = isPackageInstalled(a.pkgname);
         map.insert(QStringLiteral("arch"), QVariantMap{
-            {QStringLiteral("available"), !a.repo.isEmpty()},
+            {QStringLiteral("available"), a.offered()},
             {QStringLiteral("installed"), installed},
             {QStringLiteral("version"), a.version},
-            {QStringLiteral("repo"), a.repo},
+            {QStringLiteral("repo"), a.repo.isEmpty() ? a.needsRepo : a.repo},
+            // set while that repository still has to be enabled: "Enable and Install"
+            {QStringLiteral("needsRepo"), a.repo.isEmpty() ? a.needsRepo : QString()},
             {QStringLiteral("pkgname"), a.pkgname},
             {QStringLiteral("downloadSize"), sizeText(a.downloadSize)},
             {QStringLiteral("installedSize"), sizeText(a.installedSize)},
@@ -764,7 +865,7 @@ QVariantMap Catalog::app(const QString &key) const
 
     // Which one the store suggests: whatever is installed, else the Arch package when
     // it is in the official repositories and not older than Flathub's
-    const bool archOk = app->arch && !app->arch->repo.isEmpty();
+    const bool archOk = app->arch && app->arch->offered();
     const bool archInstalled = app->arch && isPackageInstalled(app->arch->pkgname);
     const bool flatInstalled = app->flathub && isFlatpakInstalled(app->flathub->flatpakRef.section(QLatin1Char('/'), 1, 1));
     if (archInstalled && !flatInstalled) {
@@ -848,6 +949,65 @@ QVariantList Catalog::heroes() const
     return list;
 }
 
+QVariantList Catalog::collections() const
+{
+    QVariantList list;
+    if (!m_data)
+        return list;
+    for (const QJsonValue &v : m_featured.value(QStringLiteral("collections")).toArray()) {
+        const QJsonObject c = v.toObject();
+        QStringList ids;
+        for (const QJsonValue &id : c.value(QStringLiteral("apps")).toArray())
+            ids << id.toString();
+        QVariantList apps;
+        for (const QVariant &app : listFor(ids)) {
+            if (app.toMap().value(QStringLiteral("hasArch")).toBool() || app.toMap().value(QStringLiteral("hasFlathub")).toBool())
+                apps << app;
+        }
+        if (apps.isEmpty())
+            continue; // nothing installable yet (e.g. not published to the repository)
+        QVariantMap map{
+            {QStringLiteral("id"), c.value(QStringLiteral("id")).toString()},
+            {QStringLiteral("title"), localized(c.value(QStringLiteral("title")))},
+            {QStringLiteral("text"), localized(c.value(QStringLiteral("text")))},
+            {QStringLiteral("colors"), c.value(QStringLiteral("colors")).toVariant()},
+            {QStringLiteral("experimental"), c.value(QStringLiteral("experimental")).toBool()},
+            {QStringLiteral("apps"), apps},
+        };
+        // One click for several apps: their Arch packages in one transaction
+        const QJsonObject bundle = c.value(QStringLiteral("bundle")).toObject();
+        if (!bundle.isEmpty()) {
+            QStringList packages, missing, names;
+            QString needsRepo;
+            bool available = true;
+            for (const QJsonValue &id : bundle.value(QStringLiteral("apps")).toArray()) {
+                const AppEntry *app = entry(resolve(id.toString()));
+                if (!app || !app->arch || !app->arch->offered()) {
+                    available = false;
+                    continue;
+                }
+                if (app->arch->repo.isEmpty())
+                    needsRepo = app->arch->needsRepo;
+                packages << app->arch->pkgname;
+                names << app->name;
+                if (!isPackageInstalled(app->arch->pkgname))
+                    missing << app->arch->pkgname;
+            }
+            map.insert(QStringLiteral("bundle"), QVariantMap{
+                {QStringLiteral("label"), localized(bundle.value(QStringLiteral("label")))},
+                {QStringLiteral("name"), localized(bundle.value(QStringLiteral("name")))},
+                {QStringLiteral("apps"), names},
+                {QStringLiteral("packages"), missing},
+                {QStringLiteral("available"), available && !packages.isEmpty()},
+                {QStringLiteral("installed"), !packages.isEmpty() && missing.isEmpty()},
+                {QStringLiteral("needsRepo"), needsRepo},
+            });
+        }
+        list << map;
+    }
+    return list;
+}
+
 QVariantList Catalog::category(const QString &category) const
 {
     if (!m_data)
@@ -856,6 +1016,7 @@ QVariantList Catalog::category(const QString &category) const
         {QStringLiteral("office"), {QStringLiteral("Office")}},
         {QStringLiteral("internet"), {QStringLiteral("Network")}},
         {QStringLiteral("graphics"), {QStringLiteral("Graphics")}},
+        {QStringLiteral("engineering"), {QStringLiteral("Engineering")}},
         {QStringLiteral("multimedia"), {QStringLiteral("AudioVideo"), QStringLiteral("Audio"), QStringLiteral("Video")}},
         {QStringLiteral("games"), {QStringLiteral("Game")}},
         {QStringLiteral("development"), {QStringLiteral("Development")}},
@@ -871,7 +1032,7 @@ QVariantList Catalog::category(const QString &category) const
 
     QList<const AppEntry *> matches;
     for (const AppEntry &app : m_data->apps) {
-        if (!app.flathub && !(app.arch && !app.arch->repo.isEmpty()))
+        if (!app.flathub && !(app.arch && app.arch->offered()))
             continue;
         if (std::any_of(wanted.cbegin(), wanted.cend(), [&](const QString &c) { return app.categories.contains(c); }))
             matches << &app;
@@ -1039,7 +1200,7 @@ QVariantList Catalog::search(const QString &text, int limit) const
 
     QList<std::pair<int, const AppEntry *>> scored;
     for (const AppEntry &app : m_data->apps) {
-        if (!app.flathub && !(app.arch && !app.arch->repo.isEmpty()) && !(app.arch && isPackageInstalled(app.arch->pkgname)))
+        if (!app.flathub && !(app.arch && app.arch->offered()) && !(app.arch && isPackageInstalled(app.arch->pkgname)))
             continue;
         int score = 0;
         int matched = 0;

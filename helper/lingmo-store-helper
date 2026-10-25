@@ -16,19 +16,27 @@
 #   install <pkg>...          pacman -S --needed --noconfirm <pkg>...
 #   remove <pkg>...           pacman -Rns --noconfirm <pkg>...
 #   enable-multilib           uncomment [multilib] in pacman.conf (a backup is kept)
+#   enable-repo <repo> [<pkg>...]
+#                             add a known ArchLingmo repository to pacman.conf (a
+#                             backup is kept; nothing is done when it's already
+#                             there), sync only that repository's database and, when
+#                             packages are given, pacman -S --needed --noconfirm
+#                             <repo>/<pkg>... Only the repositories of KNOWN_REPOS
+#                             below, with their fixed sections: no name or URL
+#                             comes from the caller.
 #   prepare-gaming <pkg>...   enable-multilib when needed, then
 #                             pacman -Syu --needed --noconfirm <pkg>...
 #                             and, when gamemode is among them, adds the user who
 #                             ran pkexec (PKEXEC_UID) to the "gamemode" group
 #
 # Besides pacman's own output it prints "@@" lines the store turns into progress:
-#   @@STEP <name>   multilib | sync | install | remove | done
+#   @@STEP <name>   multilib | repo | sync | install | remove | done
 #   @@ERROR <code>  lock | name | protected | config | usage
 #
 # Testing without root: when not running as root and LINGMO_STORE_FAKE is set, pacman
 # is simulated (LINGMO_STORE_FAKE: 1|ok, fail, offline, lock, cancel) and
-# enable-multilib edits LINGMO_STORE_PACMAN_CONF (a copy of pacman.conf) instead of
-# /etc/pacman.conf. As root those variables are ignored.
+# enable-multilib and enable-repo edit LINGMO_STORE_PACMAN_CONF (a copy of
+# pacman.conf) instead of /etc/pacman.conf. As root those variables are ignored.
 
 export LC_ALL=C
 PATH=/usr/bin:/bin:/usr/sbin:/sbin
@@ -126,6 +134,90 @@ enable_multilib() {
     cat "$tmp" > "$CONF" || { cp -p "$backup" "$CONF"; rm -f "$tmp"; fail config "cannot write $CONF"; }
     rm -f "$tmp"
     echo ":: Enabled the [multilib] repository in $CONF (backup: $backup)"
+}
+
+# The repositories enable-repo may add, with their exact sections. The Craft apps
+# (storytold) are optional Store apps too big for GitHub Pages: their packages are
+# the assets of a GitHub release (scripts/publish-craft.sh in the lingmo workspace).
+KNOWN_REPOS="archlingmo-craft"
+
+repo_section() {
+    case $1 in
+    archlingmo-craft)
+        echo '[archlingmo-craft]'
+        echo 'SigLevel = Optional TrustAll'
+        echo 'Server = https://github.com/devalexandre/archlingmo-craft/releases/download/$arch' ;;
+    *) return 1 ;;
+    esac
+}
+
+repo_enabled() {
+    [ -n "$CONF" ] && [ -r "$CONF" ] || return 1
+    grep -Eq "^[[:space:]]*\[$1\][[:space:]]*\$" "$CONF"
+}
+
+enable_repo() {
+    repo=$1
+    echo "@@STEP repo"
+    if [ -z "$CONF" ]; then
+        echo ":: Enabling the [$repo] repository (simulated)"
+        return 0
+    fi
+    if repo_enabled "$repo"; then
+        echo ":: [$repo] is already enabled in $CONF"
+        return 0
+    fi
+    [ -w "$CONF" ] || fail config "cannot write $CONF"
+    dir=$(dirname "$CONF")
+    tmp=$(mktemp "$dir/.pacman.conf.lingmo-store.XXXXXX") || fail config "cannot create a temporary file in $dir"
+    {
+        cat "$CONF"
+        # a missing final newline would glue the section to the last line
+        [ -z "$(tail -c 1 "$CONF")" ] || echo
+        echo
+        echo "# Added by Lingmo Store: optional apps from a separate ArchLingmo repository"
+        repo_section "$repo"
+    } > "$tmp" || { rm -f "$tmp"; fail config "could not edit $CONF"; }
+    if ! pacman-conf --config "$tmp" --repo-list 2>/dev/null | grep -qx "$repo"; then
+        rm -f "$tmp"
+        fail config "the edited configuration is not valid; $CONF was not changed"
+    fi
+    backup="$CONF.lingmo-store-$(date +%Y%m%d-%H%M%S).bak"
+    cp -p "$CONF" "$backup" || { rm -f "$tmp"; fail config "cannot back up $CONF"; }
+    cat "$tmp" > "$CONF" || { cp -p "$backup" "$CONF"; rm -f "$tmp"; fail config "cannot write $CONF"; }
+    rm -f "$tmp"
+    echo ":: Enabled the [$repo] repository in $CONF (backup: $backup)"
+}
+
+# pacman -Sy for this repository alone: refreshing every database here would turn
+# the next "pacman -S" into a partial upgrade. A throwaway pacman.conf with the
+# system's [options] and only this repository's section.
+sync_repo() {
+    repo=$1
+    echo "@@STEP sync"
+    echo ":: Synchronizing the [$repo] package database..."
+    if [ -n "$FAKE" ]; then
+        sleep "$SPEED"
+        echo " $repo downloading..."
+        if [ "$FAKE" = offline ]; then
+            echo "error: failed retrieving file '$repo.db' from github.com : Could not resolve host: github.com"
+            echo "error: failed to synchronize all databases (download library error)"
+            exit 1
+        fi
+        return 0
+    fi
+    sconf=$(mktemp /tmp/lingmo-store-sync.XXXXXX) || fail config "cannot create a temporary file"
+    {
+        awk '/^[[:space:]]*\[/ { in_options = ($0 ~ /^[[:space:]]*\[options\][[:space:]]*$/) } in_options' "$CONF"
+        echo
+        repo_section "$repo"
+    } > "$sconf"
+    pacman-conf --config "$sconf" --repo-list 2>/dev/null | grep -qx "$repo" \
+        || { rm -f "$sconf"; fail config "could not prepare the database sync"; }
+    pacman -Sy --config "$sconf"
+    rc=$?
+    rm -f "$sconf"
+    [ $rc = 0 ] || exit $rc
 }
 
 AFTER_GAMEMODE=
@@ -282,6 +374,27 @@ enable-multilib)
     check_lock
     enable_multilib
     echo "@@STEP done" ;;
+enable-repo)
+    repo=$1
+    [ $# -gt 0 ] && shift
+    known=
+    for r in $KNOWN_REPOS; do
+        [ "$repo" = "$r" ] && known=1
+    done
+    [ -n "$known" ] || fail usage "unknown repository: $repo (known: $KNOWN_REPOS)"
+    [ $# -gt 0 ] && check_names "$@"
+    check_lock
+    enable_repo "$repo"
+    sync_repo "$repo"
+    if [ $# -eq 0 ]; then
+        echo "@@STEP done"
+        exit 0
+    fi
+    # <repo>/<pkg>: the packages can only come from the repository just enabled
+    pkgs=
+    for p in "$@"; do pkgs="$pkgs $repo/$p"; done
+    # shellcheck disable=SC2086
+    run_pacman 0 install $pkgs ;;
 prepare-gaming)
     check_names "$@"
     check_lock
@@ -293,5 +406,5 @@ prepare-gaming)
     # bare "pacman -Sy" would be a partial upgrade
     run_pacman 1 install "$@" ;;
 *)
-    fail usage "usage: lingmo-store-helper install|remove|enable-multilib|prepare-gaming [packages]" ;;
+    fail usage "usage: lingmo-store-helper install|remove|enable-multilib|enable-repo|prepare-gaming [args]" ;;
 esac

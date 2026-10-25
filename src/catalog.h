@@ -40,8 +40,13 @@ struct AppSource {
     // Arch
     QString pkgname;
     QString repo;          // sync repository, empty when the package isn't in one
+    // A known ArchLingmo repository that has it but isn't enabled (or synced) yet,
+    // e.g. "archlingmo-craft": offered with "Enable and Install"
+    QString needsRepo;
     qint64 downloadSize = -1;
     qint64 installedSize = -1;
+    // Installable: in a sync repository now, or once needsRepo is enabled
+    bool offered() const { return !repo.isEmpty() || !needsRepo.isEmpty(); }
     // Flathub
     QString flatpakRef;    // app/<id>/<arch>/<branch>
     bool verified = false;
@@ -65,6 +70,11 @@ struct AppEntry {
     int quality = 0;       // ranking hint: metadata completeness
     bool extra = false;    // installed flatpak that isn't in the catalog
     QStringList reviewIds; // every AppStream/desktop id the app is known by (ODRS ratings)
+    // Curated apps of featured.json "curated" (no AppStream data in their repository)
+    bool curated = false;
+    bool experimental = false; // pre-alpha/alpha: shown with a warning badge and banner
+    QStringList opens;        // file types it opens, for the user ("DOCX", "PDF"…)
+    QString replaces;         // the well-known app it's an alternative to
     // accent- and case-folded text for search
     QString nameFold, keywordsFold, summaryFold, idFold;
 };
@@ -112,6 +122,8 @@ public:
     bool isFlatpakInstalled(const QString &id) const;
     QString flatpakInstallation(const QString &id) const;
     QString pacmanConf() const;
+    // Whether pacman.conf lists this repository (as of the last load)
+    Q_INVOKABLE bool repoEnabled(const QString &repo) const;
 
     // Maps what a user or another program passes (--app) to an app key: AppStream id
     // (with or without .desktop), Flathub id or ref (app/<id>/<arch>/<branch>),
@@ -121,6 +133,9 @@ public:
     Q_INVOKABLE QVariantMap app(const QString &key) const;
     Q_INVOKABLE QVariantList featured() const;
     Q_INVOKABLE QVariantList heroes() const;
+    // Featured collections of featured.json "collections" (e.g. the Craft suite):
+    // {id, title, text, colors, experimental, apps, bundle {label, name, packages, available, installed}}
+    Q_INVOKABLE QVariantList collections() const;
     Q_INVOKABLE QVariantList gameApps() const;
     Q_INVOKABLE QVariantList category(const QString &category) const;
     Q_INVOKABLE QVariantList search(const QString &text, int limit = 60) const;

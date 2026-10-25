@@ -28,6 +28,7 @@ Flickable {
     readonly property int margin: LingmoUI.Units.largeSpacing * 2
     readonly property var heroes: { rootWindow.rev; return catalog.heroes() }
     readonly property var featured: { rootWindow.rev; return catalog.featured() }
+    readonly property var collections: { rootWindow.rev; return catalog.collections() }
 
     contentWidth: width
     contentHeight: column.implicitHeight + margin * 2
@@ -68,6 +69,16 @@ Flickable {
             Layout.fillWidth: true
         }
 
+        // Featured collections (the Craft suite): banner plus its apps
+        Repeater {
+            model: page.collections
+
+            CollectionBanner {
+                collection: modelData
+                Layout.fillWidth: true
+            }
+        }
+
         SectionHeader {
             visible: page.featured.length > 0
             text: qsTr("Popular apps")
@@ -92,7 +103,7 @@ Flickable {
             rowSpacing: LingmoUI.Units.largeSpacing
 
             Repeater {
-                model: ["office", "internet", "graphics", "multimedia", "games", "native", "development", "education", "utilities"]
+                model: ["office", "internet", "graphics", "multimedia", "engineering", "games", "native", "development", "education", "utilities"]
 
                 CategoryTile {
                     readonly property var info: sideBar.categoryInfo(modelData)

@@ -42,6 +42,7 @@ LingmoUI.Window {
     property string pendingSearch: ""
     property bool pendingGames: false
     property string consentKey: ""   // Flathub app waiting for the user to enable Flathub
+    property var repoConsent: null   // {repo, key, packages, name}: waiting for a repository to be enabled
     property string removeKey: ""
     property string removeSource: ""
     property string removePackageName: ""   // a native game package instead of an app
@@ -95,6 +96,10 @@ LingmoUI.Window {
         function onFlathubConsentNeeded(key) {
             rootWindow.consentKey = key
             consentDialog.open()
+        }
+        function onRepoConsentNeeded(repo, key, packages, name) {
+            rootWindow.repoConsent = { repo: repo, key: key, packages: packages, name: name }
+            repoConsentDialog.open()
         }
         function onFinished(key, source, action, ok, message) {
             rootWindow.rev++
@@ -200,6 +205,13 @@ LingmoUI.Window {
             showOwnCopy(game, true)
         else
             installer.installPackage(game.pkg, game.name)
+    }
+
+    // A collection's bundle (e.g. the Craft office suite): its missing packages in one go
+    function installBundle(bundle) {
+        if (!bundle || !bundle.available || bundle.packages.length === 0)
+            return
+        installer.installPackages(bundle.packages, bundle.name)
     }
 
     function showCategory(name) {
@@ -417,6 +429,7 @@ LingmoUI.Window {
                 ListElement { title: qsTr("Productivity"); name: "office"; iconSource: "qrc:/icons/office.svg"; iconColor: "#FF9500"; section: qsTr("Categories"); trailing: "" }
                 ListElement { title: qsTr("Internet"); name: "internet"; iconSource: "qrc:/icons/internet.svg"; iconColor: "#32ADE6"; section: qsTr("Categories"); trailing: "" }
                 ListElement { title: qsTr("Graphics & Photo"); name: "graphics"; iconSource: "qrc:/icons/graphics.svg"; iconColor: "#FF375F"; section: qsTr("Categories"); trailing: "" }
+                ListElement { title: qsTr("Engineering & CAD"); name: "engineering"; iconSource: "qrc:/icons/engineering.svg"; iconColor: "#64D2FF"; section: qsTr("Categories"); trailing: "" }
                 ListElement { title: qsTr("Audio & Video"); name: "multimedia"; iconSource: "qrc:/icons/multimedia.svg"; iconColor: "#FF6B3A"; section: qsTr("Categories"); trailing: "" }
                 ListElement { title: qsTr("Development"); name: "development"; iconSource: "qrc:/icons/development.svg"; iconColor: "#5E5CE6"; section: qsTr("Categories"); trailing: "" }
                 ListElement { title: qsTr("Education"); name: "education"; iconSource: "qrc:/icons/education.svg"; iconColor: "#30B0C7"; section: qsTr("Categories"); trailing: "" }
@@ -512,6 +525,23 @@ LingmoUI.Window {
         rejectText: qsTr("Not Now")
         onAccepted: flatpak.addFlathub()
         onRejected: rootWindow.consentKey = ""
+    }
+
+    // Craft apps come from [archlingmo-craft], added to pacman.conf on demand
+    StoreDialog {
+        id: repoConsentDialog
+        iconName: "system-software-install"
+        title: qsTr("Enable the Craft apps repository?")
+        text: qsTr("Craft apps come from a separate ArchLingmo repository. Enable it?")
+        acceptText: qsTr("Enable and Install")
+        rejectText: qsTr("Not Now")
+        onAccepted: {
+            const c = rootWindow.repoConsent
+            rootWindow.repoConsent = null
+            if (c)
+                installer.enableRepoAndInstall(c.repo, c.key, c.packages, c.name)
+        }
+        onRejected: rootWindow.repoConsent = null
     }
 
     StoreDialog {

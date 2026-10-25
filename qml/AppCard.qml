@@ -103,6 +103,11 @@ LingmoUI.Card {
                     tone: LingmoUI.Theme.successColor
                 }
                 LingmoUI.Badge {
+                    visible: !!control.app.experimental
+                    text: qsTr("Experimental")
+                    tone: LingmoUI.Theme.warningColor
+                }
+                LingmoUI.Badge {
                     visible: !!control.app.hasFlathub
                     text: "Flathub"
                     subtle: true

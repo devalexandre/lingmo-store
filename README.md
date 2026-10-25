@@ -31,6 +31,22 @@ repositories second, the AUR not at all.
   English; cached for six hours) and, for installed apps, *Escrever avaliação*. The
   reviewer is identified, like in GNOME Software, by a salted SHA-1 of the login and
   `/etc/machine-id`. Offline, the last answers are shown; nothing waits on the network.
+- **Curated apps and collections** — apps whose repository has no AppStream data
+  (`curated` in `featured.json`: name, texts in English and pt-BR, icon, screenshots,
+  categories, the file types they open and what they replace) are listed once pacman's
+  sync db has their package, or when their `repo` (a separate ArchLingmo repository)
+  isn't in `pacman.conf` yet: then the app page offers *Ativar e instalar*, asks
+  *Os apps Craft vêm de um repositório separado do ArchLingmo. Ativar?* and runs
+  `enable-repo` with the packages in one authorization. The first are the storytold
+  Craft apps (WordCraft, GridCraft, PhotoCraft, CADCraft…), the developers' own Arch
+  packages mirrored into `[archlingmo-craft]` (GitHub release assets; new ISOs list it
+  already) after checking checksums and contents
+  (`packaging/thirdparty/craft-apps` and `scripts/publish-craft.sh` in the workspace). `experimental` apps carry an
+  *Experimental* badge and a *pre-alpha: work on copies of your files* banner; the
+  file types they open are shown as information, never made default handlers.
+  `collections` adds a featured banner to the home page with a one-click `bundle`
+  (*Instalar suíte de escritório*: WordCraft, GridCraft and DeckCraft in one pacman
+  transaction).
 - **Installed** — what was installed from the store, with Open and Remove. Updates are
   left to Lingmo Updater (linked from the sidebar).
 - **Games** — *Preparar para jogos* enables `[multilib]`, installs Steam, the 32-bit
@@ -63,6 +79,7 @@ repositories second, the AUR not at all.
   | `install <pkg>…`         | `pacman -S --needed --noconfirm`                    |
   | `remove <pkg>…`          | `pacman -Rns --noconfirm` (refuses essential ones)  |
   | `enable-multilib`        | uncomments `[multilib]` in `/etc/pacman.conf` after a timestamped backup, validated with `pacman-conf` |
+  | `enable-repo archlingmo-craft [<pkg>…]` | adds the fixed `[archlingmo-craft]` section (GitHub release assets of `devalexandre/archlingmo-craft`) to `/etc/pacman.conf` after a timestamped backup, validated with `pacman-conf` (nothing is done when it's there), syncs that repository alone (`pacman -Sy` with a throwaway config: the system's `[options]` plus that section, so the next `-S` is no partial upgrade), then `pacman -S --needed --noconfirm archlingmo-craft/<pkg>…`. Any other repository name is refused: the sections are hard-coded |
   | `prepare-gaming <pkg>…`  | `enable-multilib` if needed, then `pacman -Syu --needed --noconfirm` (a sync plus install in one transaction, never a partial upgrade); with `gamemode`, `gpasswd -a <user of PKEXEC_UID> gamemode` |
 
   pacman's output is turned into a progress bar and, on failure, into a sentence
@@ -123,6 +140,7 @@ Values: `1`/`ok`, `fail`, `offline`, `lock`, `cancel`.
 | `LINGMO_STORE_FLATPAK_INSTALLATION=user` | use `$XDG_DATA_HOME/flatpak`                  |
 | `LINGMO_STORE_FAKE_GPU=nvidia\|amd\|intel` | skip lspci                                  |
 | `LINGMO_STORE_FAKE_NATIVE=soh,zelda3`  | fake mode: pretend `[archlingmo]` has these native games |
+| `LINGMO_STORE_FAKE_ARCHLINGMO=all\|<pkg>,…` | fake mode: pretend their repository has these curated apps (`all`: every one); one with a `repo` only once the `LINGMO_STORE_PACMAN_CONF` copy lists it (fake `enable-repo` adds it there) |
 | `LINGMO_STORE_FAKE_DELAY`              | seconds between fake pacman steps               |
 | `LINGMO_STORE_ODRS_URL=<url>`          | another ODRS server (e.g. a local stub); in fake mode without it, submitting a review is only logged |
 | `LINGMO_STORE_FLATHUB_API=<url>`       | another Flathub API (permissions fallback)      |

@@ -7,6 +7,10 @@
         <source>Installed</source>
         <translation>Instalado</translation>
     </message>
+    <message>
+        <source>Experimental</source>
+        <translation>Experimental</translation>
+    </message>
 </context>
 <context>
     <name>AppPage</name>
@@ -39,6 +43,10 @@
         <translation>Carregando o catálogo de aplicativos…</translation>
     </message>
     <message>
+        <source>Experimental</source>
+        <translation>Experimental</translation>
+    </message>
+    <message>
         <source>Verified</source>
         <translation>Verificado</translation>
     </message>
@@ -66,6 +74,10 @@
         <translation>Instalar</translation>
     </message>
     <message>
+        <source>Enable and Install</source>
+        <translation>Ativar e instalar</translation>
+    </message>
+    <message>
         <source>Waiting for %1 to finish…</source>
         <translation>Aguardando %1 terminar…</translation>
     </message>
@@ -82,12 +94,24 @@
         <translation>Dos repositórios do Arch</translation>
     </message>
     <message>
+        <source>From the ArchLingmo Craft repository</source>
+        <translation>Do repositório Craft do ArchLingmo</translation>
+    </message>
+    <message>
         <source>Hide details</source>
         <translation>Ocultar detalhes</translation>
     </message>
     <message>
         <source>Details</source>
         <translation>Detalhes</translation>
+    </message>
+    <message>
+        <source>Experimental — pre-alpha: work on copies of your files</source>
+        <translation>Experimental — pré-alfa: trabalhe com cópias dos seus arquivos</translation>
+    </message>
+    <message>
+        <source>This app is in early development. It may crash, lose changes or save files that other programs open differently. Keep the originals and open copies in it.</source>
+        <translation>Este app está no início do desenvolvimento. Ele pode travar, perder alterações ou salvar arquivos que outros programas abrem de outro jeito. Guarde os originais e abra cópias nele.</translation>
     </message>
     <message>
         <source>Choose where to install from</source>
@@ -148,6 +172,14 @@
     <message>
         <source>Flathub, verified developer</source>
         <translation>Flathub, desenvolvedor verificado</translation>
+    </message>
+    <message>
+        <source>Opens files</source>
+        <translation>Abre arquivos</translation>
+    </message>
+    <message>
+        <source>Alternative to</source>
+        <translation>Alternativa a</translation>
     </message>
     <message>
         <source>Package</source>
@@ -217,6 +249,28 @@
     <message>
         <source>Search for an app by name, or look in another category.</source>
         <translation>Busque um aplicativo pelo nome ou veja outra categoria.</translation>
+    </message>
+</context>
+<context>
+    <name>CollectionBanner</name>
+    <message>
+        <source>Experimental — pre-alpha</source>
+        <translation>Experimental — pré-alfa</translation>
+    </message>
+    <message>
+        <source>Office suite installed</source>
+        <translation>Suíte de escritório instalada</translation>
+    </message>
+    <message>
+        <source>Show fewer</source>
+        <translation>Mostrar menos</translation>
+    </message>
+    <message numerus="yes">
+        <source>Show all %n app(s)</source>
+        <translation>
+            <numerusform>Mostrar o %n app</numerusform>
+            <numerusform>Mostrar todos os %n apps</numerusform>
+        </translation>
     </message>
 </context>
 <context>
@@ -811,6 +865,10 @@
         <translation>Ativando o repositório de jogos 32 bits (multilib)…</translation>
     </message>
     <message>
+        <source>Enabling the %1 repository…</source>
+        <translation>Ativando o repositório %1…</translation>
+    </message>
+    <message>
         <source>Updating the list of available software…</source>
         <translation>Atualizando a lista de programas disponíveis…</translation>
     </message>
@@ -853,6 +911,10 @@
     <message>
         <source>This is an essential part of the system and can&apos;t be removed.</source>
         <translation>Esta é uma parte essencial do sistema e não pode ser removida.</translation>
+    </message>
+    <message>
+        <source>Could not enable the %1 repository in /etc/pacman.conf. Nothing was changed.</source>
+        <translation>Não foi possível ativar o repositório %1 em /etc/pacman.conf. Nada foi alterado.</translation>
     </message>
     <message>
         <source>Could not enable the multilib repository in /etc/pacman.conf. Nothing was changed.</source>
@@ -938,6 +1000,10 @@
         <translation>Gráficos e fotos</translation>
     </message>
     <message>
+        <source>Engineering &amp; CAD</source>
+        <translation>Engenharia e CAD</translation>
+    </message>
+    <message>
         <source>Audio &amp; Video</source>
         <translation>Áudio e vídeo</translation>
     </message>
@@ -992,6 +1058,18 @@
     <message>
         <source>Not Now</source>
         <translation>Agora não</translation>
+    </message>
+    <message>
+        <source>Enable the Craft apps repository?</source>
+        <translation>Ativar o repositório dos apps Craft?</translation>
+    </message>
+    <message>
+        <source>Craft apps come from a separate ArchLingmo repository. Enable it?</source>
+        <translation>Os apps Craft vêm de um repositório separado do ArchLingmo. Ativar?</translation>
+    </message>
+    <message>
+        <source>Enable and Install</source>
+        <translation>Ativar e instalar</translation>
     </message>
     <message>
         <source>Your own files and documents are not deleted.</source>
@@ -1423,6 +1501,10 @@
     <message>
         <source>Programs from the Arch repositories run directly on the system, with the same access you have to your files and devices. This one comes from the official Arch Linux repositories (%1), built and signed by its maintainers.</source>
         <translation>Programas dos repositórios do Arch rodam direto no sistema, sem caixa isolada, com o mesmo acesso que você tem aos seus arquivos e dispositivos. Este vem dos repositórios oficiais do Arch Linux (%1), compilado e assinado pelos mantenedores.</translation>
+    </message>
+    <message>
+        <source>Programs from the Arch repositories run directly on the system, with the same access you have to your files and devices. This one is the developer&apos;s own package (%1), copied unchanged into an ArchLingmo repository (%2) after its checksum and contents were checked; it was not built by the ArchLingmo team.</source>
+        <translation>Programas dos repositórios do Arch rodam direto no sistema, com o mesmo acesso que você tem aos seus arquivos e dispositivos. Este é o pacote do próprio desenvolvedor (%1), copiado sem alterações para um repositório do ArchLingmo (%2) depois de conferidos o checksum e o conteúdo; ele não foi compilado pela equipe do ArchLingmo.</translation>
     </message>
     <message>
         <source>Programs from the Arch repositories run directly on the system, with the same access you have to your files and devices. This one comes from the ArchLingmo repository, built and signed by the ArchLingmo team.</source>

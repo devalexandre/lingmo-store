@@ -347,5 +347,869 @@
     "Roblox",
     "Rust",
     "Delta Force: Hawk Ops"
+  ],
+  "_curated": "Curated apps whose repository has no AppStream data (mirrors of the developers' own packages, see packaging/thirdparty/craft-apps). Shown when pacman's sync db has \"pkg\". repo: the ArchLingmo repository that carries it when it isn't [archlingmo] (\"archlingmo-craft\": GitHub release assets, scripts/publish-craft.sh); while pacman.conf doesn't list it the app is still shown, with \"Enable and Install\" (consent, then lingmo-store-helper enable-repo). Media only from the official repos, pinned to the release tag. experimental: badge and warning banner. opens: file types, shown as information (never made default handlers).",
+  "curated": [
+    {
+      "id": "ai.storyteller.wordcraft",
+      "pkg": "ai.storyteller.wordcraft",
+      "repo": "archlingmo-craft",
+      "name": "WordCraft",
+      "version": "0.10.0",
+      "summary": {
+        "en": "Write and design documents; opens and saves Word files",
+        "pt_BR": "Escreva e formate documentos; abre e salva arquivos do Word"
+      },
+      "description": {
+        "en": "<p>WordCraft is a fast, open-source word processor with a familiar ribbon: styles, tables, track changes, references and mail merge.</p><p>A free alternative to Microsoft Word.</p><p><b>Experimental (pre-alpha).</b> Work on copies of your files.</p>",
+        "pt_BR": "<p>O WordCraft é um editor de texto livre e rápido, com a faixa de opções que você já conhece: estilos, tabelas, controle de alterações, referências e mala direta.</p><p>Uma alternativa livre ao Microsoft Word.</p><p><b>Experimental (pré-alfa).</b> Trabalhe com cópias dos seus arquivos.</p>"
+      },
+      "replaces": {
+        "en": "Microsoft Word",
+        "pt_BR": "Microsoft Word"
+      },
+      "developer": "storytold (Learning Machines LLC)",
+      "license": "MIT OR Apache-2.0",
+      "homepage": "https://github.com/storytold/wordcraft",
+      "icon": "https://raw.githubusercontent.com/storytold/wordcraft/v0.10.0/assets/app-icon/hicolor/256x256/apps/ai.storyteller.wordcraft.png",
+      "iconName": "ai.storyteller.wordcraft",
+      "categories": [
+        "Office",
+        "WordProcessor"
+      ],
+      "experimental": true,
+      "opens": [
+        "DOCX",
+        "DOC",
+        "ODT",
+        "RTF",
+        "PDF",
+        "HTML",
+        "Markdown"
+      ],
+      "keywords": {
+        "en": "word processor document writer docx text",
+        "pt_BR": "editor de texto documento processador de texto docx word"
+      },
+      "screenshots": [
+        {
+          "url": "https://raw.githubusercontent.com/storytold/wordcraft/v0.10.0/docs/images/hero.png",
+          "caption": {
+            "en": "A document with the Navigation pane",
+            "pt_BR": "Um documento com o painel de navegação"
+          }
+        },
+        {
+          "url": "https://raw.githubusercontent.com/storytold/wordcraft/v0.10.0/docs/images/design.png",
+          "caption": {
+            "en": "Design tab",
+            "pt_BR": "Guia Design"
+          }
+        },
+        {
+          "url": "https://raw.githubusercontent.com/storytold/wordcraft/v0.10.0/docs/images/review.png",
+          "caption": {
+            "en": "Reviewing with track changes",
+            "pt_BR": "Revisão com controle de alterações"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ai.storyteller.gridcraft",
+      "pkg": "ai.storyteller.gridcraft",
+      "repo": "archlingmo-craft",
+      "name": "GridCraft",
+      "version": "0.11.1",
+      "summary": {
+        "en": "Calculate, analyse and chart data in workbooks",
+        "pt_BR": "Calcule, analise e crie gráficos em planilhas"
+      },
+      "description": {
+        "en": "<p>GridCraft is an open-source spreadsheet. It opens and saves .xlsx workbooks and CSV/TSV files, evaluates hundreds of worksheet functions, and formats, sorts, filters and charts your data.</p><p>A free alternative to Microsoft Excel.</p><p><b>Experimental (pre-alpha).</b> Work on copies of your files.</p>",
+        "pt_BR": "<p>O GridCraft é uma planilha eletrônica livre. Abre e salva pastas de trabalho .xlsx e arquivos CSV/TSV, calcula centenas de funções e formata, ordena, filtra e cria gráficos com os seus dados.</p><p>Uma alternativa livre ao Microsoft Excel.</p><p><b>Experimental (pré-alfa).</b> Trabalhe com cópias dos seus arquivos.</p>"
+      },
+      "replaces": {
+        "en": "Microsoft Excel",
+        "pt_BR": "Microsoft Excel"
+      },
+      "developer": "storytold (Learning Machines LLC)",
+      "license": "MIT OR Apache-2.0",
+      "homepage": "https://github.com/storytold/gridcraft",
+      "icon": "https://raw.githubusercontent.com/storytold/gridcraft/v0.11.1/assets/app-icon/hicolor/256x256/apps/ai.storyteller.gridcraft.png",
+      "iconName": "ai.storyteller.gridcraft",
+      "categories": [
+        "Office",
+        "Spreadsheet"
+      ],
+      "experimental": true,
+      "opens": [
+        "XLSX",
+        "XLSM",
+        "ODS",
+        "CSV",
+        "TSV"
+      ],
+      "keywords": {
+        "en": "spreadsheet workbook excel xlsx csv chart",
+        "pt_BR": "planilha tabela excel xlsx csv grafico calculo"
+      },
+      "screenshots": [
+        {
+          "url": "https://raw.githubusercontent.com/storytold/gridcraft/v0.11.1/docs/images/hero-sales.png",
+          "caption": {
+            "en": "A sales workbook",
+            "pt_BR": "Uma planilha de vendas"
+          }
+        },
+        {
+          "url": "https://raw.githubusercontent.com/storytold/gridcraft/v0.11.1/docs/images/pivot.png",
+          "caption": {
+            "en": "Pivot table",
+            "pt_BR": "Tabela dinâmica"
+          }
+        },
+        {
+          "url": "https://raw.githubusercontent.com/storytold/gridcraft/v0.11.1/docs/images/format-chart.png",
+          "caption": {
+            "en": "Formatting a chart",
+            "pt_BR": "Formatando um gráfico"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ai.storyteller.deckcraft",
+      "pkg": "ai.storyteller.deckcraft",
+      "repo": "archlingmo-craft",
+      "name": "DeckCraft",
+      "version": "0.10.0",
+      "summary": {
+        "en": "Create and present slide decks",
+        "pt_BR": "Crie e apresente slides"
+      },
+      "description": {
+        "en": "<p>DeckCraft builds presentations: themes, layouts, shapes, pictures, tables, charts, transitions and animations. It opens and saves PowerPoint (.pptx) files and presents them full screen with a presenter view.</p><p>A free alternative to Microsoft PowerPoint.</p><p><b>Experimental (pre-alpha).</b> Work on copies of your files.</p>",
+        "pt_BR": "<p>O DeckCraft cria apresentações: temas, layouts, formas, imagens, tabelas, gráficos, transições e animações. Abre e salva arquivos do PowerPoint (.pptx) e apresenta em tela cheia com modo do apresentador.</p><p>Uma alternativa livre ao Microsoft PowerPoint.</p><p><b>Experimental (pré-alfa).</b> Trabalhe com cópias dos seus arquivos.</p>"
+      },
+      "replaces": {
+        "en": "Microsoft PowerPoint",
+        "pt_BR": "Microsoft PowerPoint"
+      },
+      "developer": "storytold (Learning Machines LLC)",
+      "license": "MIT OR Apache-2.0",
+      "homepage": "https://github.com/storytold/deckcraft",
+      "icon": "https://raw.githubusercontent.com/storytold/deckcraft/v0.10.0/assets/app-icon/hicolor/256x256/apps/ai.storyteller.deckcraft.png",
+      "iconName": "ai.storyteller.deckcraft",
+      "categories": [
+        "Office",
+        "Presentation"
+      ],
+      "experimental": true,
+      "opens": [
+        "PPTX",
+        "PPSX",
+        "POTX"
+      ],
+      "keywords": {
+        "en": "presentation slides powerpoint pptx deck",
+        "pt_BR": "apresentacao slides powerpoint pptx"
+      },
+      "screenshots": [
+        {
+          "url": "https://raw.githubusercontent.com/storytold/deckcraft/v0.10.0/docs/images/editor.png",
+          "caption": {
+            "en": "Slide editor with thumbnails and notes",
+            "pt_BR": "Editor de slides com miniaturas e anotações"
+          }
+        },
+        {
+          "url": "https://raw.githubusercontent.com/storytold/deckcraft/v0.10.0/docs/images/slide-sorter.png",
+          "caption": {
+            "en": "Slide sorter",
+            "pt_BR": "Classificação de slides"
+          }
+        },
+        {
+          "url": "https://raw.githubusercontent.com/storytold/deckcraft/v0.10.0/docs/images/format-pane.png",
+          "caption": {
+            "en": "Format pane",
+            "pt_BR": "Painel de formatação"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ai.storyteller.pdfcraft",
+      "pkg": "ai.storyteller.pdfcraft",
+      "repo": "archlingmo-craft",
+      "name": "PdfCraft",
+      "version": "0.13.0",
+      "summary": {
+        "en": "Read, organize, combine, split and secure PDFs",
+        "pt_BR": "Leia, organize, junte, divida e proteja PDFs"
+      },
+      "description": {
+        "en": "<p>PdfCraft is an open-source PDF workbench. Read, comment on, fill in and sign PDFs; organize, combine and split pages; edit, redact, protect and export documents.</p><p>A free alternative to Adobe Acrobat.</p><p><b>Experimental (pre-alpha).</b> Work on copies of your files.</p>",
+        "pt_BR": "<p>O PdfCraft é uma bancada de PDF livre. Leia, comente, preencha e assine PDFs; organize, junte e divida páginas; edite, oculte trechos, proteja e exporte documentos.</p><p>Uma alternativa livre ao Adobe Acrobat.</p><p><b>Experimental (pré-alfa).</b> Trabalhe com cópias dos seus arquivos.</p>"
+      },
+      "replaces": {
+        "en": "Adobe Acrobat",
+        "pt_BR": "Adobe Acrobat"
+      },
+      "developer": "storytold (Learning Machines LLC)",
+      "license": "MIT OR Apache-2.0",
+      "homepage": "https://github.com/storytold/pdfcraft",
+      "icon": "https://raw.githubusercontent.com/storytold/pdfcraft/v0.13.0/assets/app-icon/hicolor/256x256/apps/ai.storyteller.pdfcraft.png",
+      "iconName": "ai.storyteller.pdfcraft",
+      "categories": [
+        "Office",
+        "Viewer"
+      ],
+      "experimental": true,
+      "opens": [
+        "PDF"
+      ],
+      "keywords": {
+        "en": "pdf reader viewer editor acrobat sign merge split",
+        "pt_BR": "pdf leitor visualizador editor assinar juntar dividir"
+      },
+      "screenshots": [
+        {
+          "url": "https://raw.githubusercontent.com/storytold/pdfcraft/v0.13.0/docs/images/pdfcraft-viewer.png",
+          "caption": {
+            "en": "A PDF with its comments",
+            "pt_BR": "Um PDF com seus comentários"
+          }
+        },
+        {
+          "url": "https://raw.githubusercontent.com/storytold/pdfcraft/v0.13.0/docs/images/pdfcraft-organize.png",
+          "caption": {
+            "en": "Organizing pages",
+            "pt_BR": "Organizando páginas"
+          }
+        },
+        {
+          "url": "https://raw.githubusercontent.com/storytold/pdfcraft/v0.13.0/docs/images/pdfcraft-forms.png",
+          "caption": {
+            "en": "Filling in forms",
+            "pt_BR": "Preenchendo formulários"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ai.storyteller.photocraft",
+      "pkg": "ai.storyteller.photocraft",
+      "repo": "archlingmo-craft",
+      "name": "PhotoCraft",
+      "version": "0.15.1",
+      "summary": {
+        "en": "Edit photos and layered PSD documents",
+        "pt_BR": "Edite fotos e documentos PSD com camadas"
+      },
+      "description": {
+        "en": "<p>PhotoCraft is an open-source image editor with the familiar menus, shortcuts, panels and tools: layers, masks, adjustment layers, layer styles, type and brushes. Opens and saves layered PSD and PSB files.</p><p>A free alternative to Adobe Photoshop.</p><p><b>Experimental (pre-alpha).</b> Work on copies of your files.</p>",
+        "pt_BR": "<p>O PhotoCraft é um editor de imagens livre com os menus, atalhos, painéis e ferramentas que você conhece: camadas, máscaras, camadas de ajuste, estilos de camada, texto e pincéis. Abre e salva arquivos PSD e PSB com camadas.</p><p>Uma alternativa livre ao Adobe Photoshop.</p><p><b>Experimental (pré-alfa).</b> Trabalhe com cópias dos seus arquivos.</p>"
+      },
+      "replaces": {
+        "en": "Adobe Photoshop",
+        "pt_BR": "Adobe Photoshop"
+      },
+      "developer": "storytold (Learning Machines LLC)",
+      "license": "MIT OR Apache-2.0",
+      "homepage": "https://github.com/storytold/photocraft",
+      "icon": "https://raw.githubusercontent.com/storytold/photocraft/v0.15.1/assets/app-icon/hicolor/256x256/apps/ai.storyteller.photocraft.png",
+      "iconName": "ai.storyteller.photocraft",
+      "categories": [
+        "Graphics",
+        "2DGraphics",
+        "RasterGraphics",
+        "Photography"
+      ],
+      "experimental": true,
+      "opens": [
+        "PSD",
+        "PSB",
+        "PNG",
+        "JPEG",
+        "TIFF",
+        "WebP",
+        "KRA",
+        "ORA"
+      ],
+      "keywords": {
+        "en": "photo image editor photoshop psd layers",
+        "pt_BR": "foto imagem editor de fotos photoshop psd camadas"
+      },
+      "screenshots": [
+        {
+          "url": "https://raw.githubusercontent.com/storytold/photocraft/v0.15.1/docs/images/photocraft-demo.jpg",
+          "caption": {
+            "en": "Type and adjustment layers",
+            "pt_BR": "Camadas de texto e de ajuste"
+          }
+        },
+        {
+          "url": "https://raw.githubusercontent.com/storytold/photocraft/v0.15.1/docs/images/photocraft-adjustments.jpg",
+          "caption": {
+            "en": "Adjustments",
+            "pt_BR": "Ajustes"
+          }
+        },
+        {
+          "url": "https://raw.githubusercontent.com/storytold/photocraft/v0.15.1/docs/images/photocraft-masks.jpg",
+          "caption": {
+            "en": "Masks",
+            "pt_BR": "Máscaras"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ai.storyteller.lightcraft",
+      "pkg": "ai.storyteller.lightcraft",
+      "repo": "archlingmo-craft",
+      "name": "LightCraft",
+      "version": "0.13.0",
+      "summary": {
+        "en": "Organise photos and develop raw files, non-destructively",
+        "pt_BR": "Organize fotos e revele arquivos RAW sem alterar o original"
+      },
+      "description": {
+        "en": "<p>LightCraft is a photo library and raw developer: organise your photos and develop raw files non-destructively, with curves, colour grading, masking and presets.</p><p>A free alternative to Adobe Lightroom.</p><p><b>Experimental (pre-alpha).</b> Work on copies of your files.</p>",
+        "pt_BR": "<p>O LightCraft é uma biblioteca de fotos e revelador RAW: organize suas fotos e revele arquivos RAW sem alterar o original, com curvas, correção de cor, máscaras e predefinições.</p><p>Uma alternativa livre ao Adobe Lightroom.</p><p><b>Experimental (pré-alfa).</b> Trabalhe com cópias dos seus arquivos.</p>"
+      },
+      "replaces": {
+        "en": "Adobe Lightroom",
+        "pt_BR": "Adobe Lightroom"
+      },
+      "developer": "storytold (Learning Machines LLC)",
+      "license": "MIT OR Apache-2.0",
+      "homepage": "https://github.com/storytold/lightcraft",
+      "icon": "https://raw.githubusercontent.com/storytold/lightcraft/v0.13.0/assets/app-icon/hicolor/256x256/apps/ai.storyteller.lightcraft.png",
+      "iconName": "ai.storyteller.lightcraft",
+      "categories": [
+        "Graphics",
+        "2DGraphics",
+        "RasterGraphics",
+        "Photography"
+      ],
+      "experimental": true,
+      "opens": [
+        "RAW (DNG, CR2, CR3, NEF, ARW, RAF…)",
+        "JPEG",
+        "PNG",
+        "TIFF",
+        "HEIC",
+        "WebP"
+      ],
+      "keywords": {
+        "en": "photo raw lightroom develop library dng",
+        "pt_BR": "foto raw lightroom revelar biblioteca fotografia"
+      },
+      "screenshots": [
+        {
+          "url": "https://raw.githubusercontent.com/storytold/lightcraft/v0.13.0/docs/images/hero-tetons.jpg",
+          "caption": {
+            "en": "Developing a photo",
+            "pt_BR": "Revelando uma foto"
+          }
+        },
+        {
+          "url": "https://raw.githubusercontent.com/storytold/lightcraft/v0.13.0/docs/images/grid-demo.jpg",
+          "caption": {
+            "en": "Photo library",
+            "pt_BR": "Biblioteca de fotos"
+          }
+        },
+        {
+          "url": "https://raw.githubusercontent.com/storytold/lightcraft/v0.13.0/docs/images/masking.jpg",
+          "caption": {
+            "en": "Masking",
+            "pt_BR": "Máscaras"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ai.storyteller.vectorcraft",
+      "pkg": "ai.storyteller.vectorcraft",
+      "repo": "archlingmo-craft",
+      "name": "VectorCraft",
+      "version": "0.16.0",
+      "summary": {
+        "en": "Draw and edit vector illustrations, SVG and PDF",
+        "pt_BR": "Desenhe e edite ilustrações vetoriais, SVG e PDF"
+      },
+      "description": {
+        "en": "<p>VectorCraft is an open-source vector illustration app. Draw with pen, shape and brush tools, style art with fills, strokes, gradients and live effects, lay out artboards and type, and open and save SVG and PDF.</p><p>A free alternative to Adobe Illustrator.</p><p><b>Experimental (pre-alpha).</b> Work on copies of your files.</p>",
+        "pt_BR": "<p>O VectorCraft é um app livre de ilustração vetorial. Desenhe com caneta, formas e pincéis, aplique preenchimentos, contornos, degradês e efeitos, organize pranchetas e texto, e abra e salve SVG e PDF.</p><p>Uma alternativa livre ao Adobe Illustrator.</p><p><b>Experimental (pré-alfa).</b> Trabalhe com cópias dos seus arquivos.</p>"
+      },
+      "replaces": {
+        "en": "Adobe Illustrator",
+        "pt_BR": "Adobe Illustrator"
+      },
+      "developer": "storytold (Learning Machines LLC)",
+      "license": "MIT OR Apache-2.0",
+      "homepage": "https://github.com/storytold/vectorcraft",
+      "icon": "https://raw.githubusercontent.com/storytold/vectorcraft/v0.16.0/assets/app-icon/hicolor/256x256/apps/ai.storyteller.vectorcraft.png",
+      "iconName": "ai.storyteller.vectorcraft",
+      "categories": [
+        "Graphics",
+        "2DGraphics",
+        "VectorGraphics"
+      ],
+      "experimental": true,
+      "opens": [
+        "SVG",
+        "PDF",
+        "AI",
+        "EPS",
+        "DXF",
+        "EMF/WMF"
+      ],
+      "keywords": {
+        "en": "vector illustration illustrator svg drawing",
+        "pt_BR": "vetor ilustracao illustrator svg desenho"
+      },
+      "screenshots": [
+        {
+          "url": "https://raw.githubusercontent.com/storytold/vectorcraft/v0.16.0/docs/images/shot-1-neon.png",
+          "caption": {
+            "en": "A poster with a live glow effect",
+            "pt_BR": "Um pôster com efeito de brilho"
+          }
+        },
+        {
+          "url": "https://raw.githubusercontent.com/storytold/vectorcraft/v0.16.0/docs/images/shot-2-ribbons.png",
+          "caption": {
+            "en": "Gradient ribbons",
+            "pt_BR": "Fitas com degradê"
+          }
+        },
+        {
+          "url": "https://raw.githubusercontent.com/storytold/vectorcraft/v0.16.0/docs/images/shot-4-bezier.png",
+          "caption": {
+            "en": "Editing Bézier paths",
+            "pt_BR": "Editando curvas Bézier"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ai.storyteller.designcraft",
+      "pkg": "ai.storyteller.designcraft",
+      "repo": "archlingmo-craft",
+      "name": "DesignCraft",
+      "version": "0.12.0",
+      "summary": {
+        "en": "Lay out magazines, books and print documents",
+        "pt_BR": "Diagrame revistas, livros e materiais impressos"
+      },
+      "description": {
+        "en": "<p>DesignCraft is a page layout app: spreads and parent pages, threaded text frames, paragraph and character styles, swatches and text wrap; IDML import and export.</p><p>A free alternative to Adobe InDesign.</p><p><b>Experimental (pre-alpha).</b> Work on copies of your files.</p>",
+        "pt_BR": "<p>O DesignCraft é um app de diagramação: páginas espelhadas e páginas-mestre, quadros de texto encadeados, estilos de parágrafo e de caractere, amostras de cor e contorno de texto; importa e exporta IDML.</p><p>Uma alternativa livre ao Adobe InDesign.</p><p><b>Experimental (pré-alfa).</b> Trabalhe com cópias dos seus arquivos.</p>"
+      },
+      "replaces": {
+        "en": "Adobe InDesign",
+        "pt_BR": "Adobe InDesign"
+      },
+      "developer": "storytold (Learning Machines LLC)",
+      "license": "MIT OR Apache-2.0",
+      "homepage": "https://github.com/storytold/designcraft",
+      "icon": "https://raw.githubusercontent.com/storytold/designcraft/v0.12.0/assets/app-icon/hicolor/256x256/apps/ai.storyteller.designcraft.png",
+      "iconName": "ai.storyteller.designcraft",
+      "categories": [
+        "Graphics",
+        "Publishing"
+      ],
+      "experimental": true,
+      "opens": [
+        "IDML"
+      ],
+      "keywords": {
+        "en": "layout publishing indesign magazine book idml",
+        "pt_BR": "diagramacao editoracao indesign revista livro idml"
+      },
+      "screenshots": [
+        {
+          "url": "https://raw.githubusercontent.com/storytold/designcraft/v0.12.0/docs/images/ui-spread.png",
+          "caption": {
+            "en": "A magazine spread with threaded text frames",
+            "pt_BR": "Uma página dupla de revista com quadros de texto encadeados"
+          }
+        },
+        {
+          "url": "https://raw.githubusercontent.com/storytold/designcraft/v0.12.0/docs/images/page-cover.png",
+          "caption": {
+            "en": "A cover made in DesignCraft",
+            "pt_BR": "Uma capa feita no DesignCraft"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ai.storyteller.figcraft",
+      "pkg": "ai.storyteller.figcraft",
+      "repo": "archlingmo-craft",
+      "name": "FigCraft",
+      "version": "0.10.0",
+      "summary": {
+        "en": "Design and prototype user interfaces",
+        "pt_BR": "Crie e prototipe interfaces"
+      },
+      "description": {
+        "en": "<p>FigCraft is an open-source interface design and prototyping tool. Lay out screens on an infinite canvas with frames, auto layout and constraints, build reusable components and variants, and link screens into clickable prototypes.</p><p>A free alternative to Figma.</p><p><b>Experimental (pre-alpha).</b> Work on copies of your files.</p>",
+        "pt_BR": "<p>O FigCraft é uma ferramenta livre de design e prototipagem de interfaces. Monte telas numa tela infinita com frames, layout automático e restrições, crie componentes reutilizáveis e variantes, e ligue telas em protótipos clicáveis.</p><p>Uma alternativa livre ao Figma.</p><p><b>Experimental (pré-alfa).</b> Trabalhe com cópias dos seus arquivos.</p>"
+      },
+      "replaces": {
+        "en": "Figma",
+        "pt_BR": "Figma"
+      },
+      "developer": "storytold (Learning Machines LLC)",
+      "license": "MIT OR Apache-2.0",
+      "homepage": "https://github.com/storytold/figcraft",
+      "icon": "https://raw.githubusercontent.com/storytold/figcraft/v0.10.0/assets/app-icon/hicolor/256x256/apps/ai.storyteller.figcraft.png",
+      "iconName": "ai.storyteller.figcraft",
+      "categories": [
+        "Graphics",
+        "2DGraphics",
+        "VectorGraphics"
+      ],
+      "experimental": true,
+      "opens": [
+        "SVG",
+        "PNG",
+        "JPEG"
+      ],
+      "keywords": {
+        "en": "interface ui ux design prototype figma",
+        "pt_BR": "interface design prototipo figma telas"
+      },
+      "screenshots": [
+        {
+          "url": "https://raw.githubusercontent.com/storytold/figcraft/v0.10.0/docs/images/shot-1-hero.png",
+          "caption": {
+            "en": "Editing app screens",
+            "pt_BR": "Editando telas de um app"
+          }
+        },
+        {
+          "url": "https://raw.githubusercontent.com/storytold/figcraft/v0.10.0/docs/images/shot-2-components.png",
+          "caption": {
+            "en": "Components and variants",
+            "pt_BR": "Componentes e variantes"
+          }
+        },
+        {
+          "url": "https://raw.githubusercontent.com/storytold/figcraft/v0.10.0/docs/images/shot-3-prototype.png",
+          "caption": {
+            "en": "Prototyping",
+            "pt_BR": "Prototipagem"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ai.storyteller.cadcraft",
+      "pkg": "ai.storyteller.cadcraft",
+      "repo": "archlingmo-craft",
+      "name": "CADCraft",
+      "version": "0.12.0",
+      "summary": {
+        "en": "Draft, dimension and plot 2D drawings",
+        "pt_BR": "Desenhe, cote e plote desenhos 2D"
+      },
+      "description": {
+        "en": "<p>CADCraft is an open-source computer-aided design and drafting application with a familiar command line, object snaps, layers, dimensions, hatches and blocks. It opens and saves DXF and DWG drawings and exports SVG and PNG.</p><p>A free alternative to AutoCAD.</p><p><b>Experimental (pre-alpha).</b> Work on copies of your files.</p>",
+        "pt_BR": "<p>O CADCraft é um app livre de desenho técnico (CAD) com a linha de comando que você conhece, snaps de objeto, camadas, cotas, hachuras e blocos. Abre e salva desenhos DXF e DWG e exporta SVG e PNG.</p><p>Uma alternativa livre ao AutoCAD.</p><p><b>Experimental (pré-alfa).</b> Trabalhe com cópias dos seus arquivos.</p>"
+      },
+      "replaces": {
+        "en": "AutoCAD",
+        "pt_BR": "AutoCAD"
+      },
+      "developer": "storytold (Learning Machines LLC)",
+      "license": "MIT OR Apache-2.0",
+      "homepage": "https://github.com/storytold/cadcraft",
+      "icon": "https://raw.githubusercontent.com/storytold/cadcraft/v0.12.0/assets/app-icon/hicolor/256x256/apps/ai.storyteller.cadcraft.png",
+      "iconName": "ai.storyteller.cadcraft",
+      "categories": [
+        "Engineering",
+        "Graphics"
+      ],
+      "experimental": true,
+      "opens": [
+        "DWG",
+        "DXF"
+      ],
+      "keywords": {
+        "en": "cad autocad drafting dwg dxf engineering",
+        "pt_BR": "cad autocad desenho tecnico dwg dxf engenharia arquitetura"
+      },
+      "screenshots": [
+        {
+          "url": "https://raw.githubusercontent.com/storytold/cadcraft/v0.12.0/docs/images/ui-bracket.png",
+          "caption": {
+            "en": "A mechanical part with dimensions and hatching",
+            "pt_BR": "Uma peça mecânica com cotas e hachuras"
+          }
+        },
+        {
+          "url": "https://raw.githubusercontent.com/storytold/cadcraft/v0.12.0/docs/images/ui-apartment.png",
+          "caption": {
+            "en": "An apartment floor plan",
+            "pt_BR": "A planta de um apartamento"
+          }
+        },
+        {
+          "url": "https://raw.githubusercontent.com/storytold/cadcraft/v0.12.0/docs/images/ui-layout.png",
+          "caption": {
+            "en": "Paper layout",
+            "pt_BR": "Layout de impressão"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ai.storyteller.filmcraft",
+      "pkg": "ai.storyteller.filmcraft",
+      "repo": "archlingmo-craft",
+      "name": "FilmCraft",
+      "version": "0.12.0",
+      "summary": {
+        "en": "Edit video, color and sound",
+        "pt_BR": "Edite vídeo, cor e som"
+      },
+      "description": {
+        "en": "<p>FilmCraft is a non-linear video editor: cut on the timeline, grade colour with scopes, add captions and effects, and mix sound with loudness meters.</p><p>A free alternative to Adobe Premiere Pro.</p><p><b>Experimental (pre-alpha).</b> Work on copies of your files.</p>",
+        "pt_BR": "<p>O FilmCraft é um editor de vídeo não linear: corte na linha do tempo, corrija cores com escopos, adicione legendas e efeitos, e mixe o som com medidores de volume.</p><p>Uma alternativa livre ao Adobe Premiere Pro.</p><p><b>Experimental (pré-alfa).</b> Trabalhe com cópias dos seus arquivos.</p>"
+      },
+      "replaces": {
+        "en": "Adobe Premiere Pro",
+        "pt_BR": "Adobe Premiere Pro"
+      },
+      "developer": "storytold (Learning Machines LLC)",
+      "license": "MIT OR Apache-2.0",
+      "homepage": "https://github.com/storytold/filmcraft",
+      "icon": "https://raw.githubusercontent.com/storytold/filmcraft/v0.12.0/assets/app-icon/hicolor/256x256/apps/ai.storyteller.filmcraft.png",
+      "iconName": "ai.storyteller.filmcraft",
+      "categories": [
+        "AudioVideo",
+        "Video",
+        "AudioVideoEditing"
+      ],
+      "experimental": true,
+      "opens": [
+        "MP4",
+        "MOV",
+        "MKV",
+        "WebM",
+        "AVI",
+        "MXF",
+        "MPEG"
+      ],
+      "keywords": {
+        "en": "video editor premiere timeline editing",
+        "pt_BR": "editor de video premiere edicao linha do tempo"
+      },
+      "screenshots": [
+        {
+          "url": "https://raw.githubusercontent.com/storytold/filmcraft/v0.12.0/docs/images/filmcraft-hero.png",
+          "caption": {
+            "en": "Colour workspace with scopes",
+            "pt_BR": "Área de cor com escopos"
+          }
+        },
+        {
+          "url": "https://raw.githubusercontent.com/storytold/filmcraft/v0.12.0/docs/images/filmcraft-assembly.png",
+          "caption": {
+            "en": "Assembling a cut",
+            "pt_BR": "Montando um corte"
+          }
+        },
+        {
+          "url": "https://raw.githubusercontent.com/storytold/filmcraft/v0.12.0/docs/images/filmcraft-effects.png",
+          "caption": {
+            "en": "Effects",
+            "pt_BR": "Efeitos"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ai.storyteller.effectcraft",
+      "pkg": "ai.storyteller.effectcraft",
+      "repo": "archlingmo-craft",
+      "name": "EffectCraft",
+      "version": "0.16.0",
+      "summary": {
+        "en": "Motion graphics and visual effects compositor",
+        "pt_BR": "Animação gráfica e composição de efeitos visuais"
+      },
+      "description": {
+        "en": "<p>EffectCraft is an open-source motion graphics and visual effects compositor: layers with keyframes and a graph editor, masks and shapes, text animators, expressions, 3D cameras and lights, over 300 effects and a render queue.</p><p>A free alternative to Adobe After Effects.</p><p><b>Experimental (pre-alpha).</b> Work on copies of your files.</p>",
+        "pt_BR": "<p>O EffectCraft é um compositor livre de animação gráfica e efeitos visuais: camadas com quadros-chave e editor de gráficos, máscaras e formas, animação de texto, expressões, câmeras e luzes 3D, mais de 300 efeitos e fila de renderização.</p><p>Uma alternativa livre ao Adobe After Effects.</p><p><b>Experimental (pré-alfa).</b> Trabalhe com cópias dos seus arquivos.</p>"
+      },
+      "replaces": {
+        "en": "Adobe After Effects",
+        "pt_BR": "Adobe After Effects"
+      },
+      "developer": "storytold (Learning Machines LLC)",
+      "license": "MIT OR Apache-2.0",
+      "homepage": "https://github.com/storytold/effectcraft",
+      "icon": "https://raw.githubusercontent.com/storytold/effectcraft/v0.16.0/assets/app-icon/hicolor/256x256/apps/ai.storyteller.effectcraft.png",
+      "iconName": "ai.storyteller.effectcraft",
+      "categories": [
+        "AudioVideo",
+        "Video",
+        "Graphics"
+      ],
+      "experimental": true,
+      "opens": [],
+      "keywords": {
+        "en": "motion graphics after effects compositing vfx animation",
+        "pt_BR": "animacao efeitos visuais after effects composicao"
+      },
+      "screenshots": [
+        {
+          "url": "https://raw.githubusercontent.com/storytold/effectcraft/v0.16.0/docs/images/effectcraft-hero.png",
+          "caption": {
+            "en": "A composition with text layers and timeline",
+            "pt_BR": "Uma composição com camadas de texto e linha do tempo"
+          }
+        },
+        {
+          "url": "https://raw.githubusercontent.com/storytold/effectcraft/v0.16.0/docs/images/effectcraft-graph-editor.png",
+          "caption": {
+            "en": "Graph editor",
+            "pt_BR": "Editor de gráficos"
+          }
+        },
+        {
+          "url": "https://raw.githubusercontent.com/storytold/effectcraft/v0.16.0/docs/images/effectcraft-3d.png",
+          "caption": {
+            "en": "3D layers",
+            "pt_BR": "Camadas 3D"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ai.storyteller.soundcraft",
+      "pkg": "ai.storyteller.soundcraft",
+      "repo": "archlingmo-craft",
+      "name": "SoundCraft",
+      "version": "0.12.1",
+      "summary": {
+        "en": "Record, edit and mix audio and MIDI",
+        "pt_BR": "Grave, edite e mixe áudio e MIDI"
+      },
+      "description": {
+        "en": "<p>SoundCraft is an open-source digital audio workstation. Record, edit and mix multitrack audio and MIDI in Edit and Mix windows that work the way studio engineers expect.</p><p>A free alternative to Avid Pro Tools.</p><p><b>Experimental (pre-alpha).</b> Work on copies of your files.</p>",
+        "pt_BR": "<p>O SoundCraft é uma estação de trabalho de áudio (DAW) livre. Grave, edite e mixe áudio multipista e MIDI em janelas de edição e mixagem que funcionam como os técnicos de estúdio esperam.</p><p>Uma alternativa livre ao Avid Pro Tools.</p><p><b>Experimental (pré-alfa).</b> Trabalhe com cópias dos seus arquivos.</p>"
+      },
+      "replaces": {
+        "en": "Avid Pro Tools",
+        "pt_BR": "Avid Pro Tools"
+      },
+      "developer": "storytold (Learning Machines LLC)",
+      "license": "MIT OR Apache-2.0",
+      "homepage": "https://github.com/storytold/soundcraft",
+      "icon": "https://raw.githubusercontent.com/storytold/soundcraft/v0.12.1/assets/app-icon/hicolor/256x256/apps/ai.storyteller.soundcraft.png",
+      "iconName": "ai.storyteller.soundcraft",
+      "categories": [
+        "AudioVideo",
+        "Audio",
+        "Midi",
+        "Mixer",
+        "Sequencer",
+        "Recorder"
+      ],
+      "experimental": true,
+      "opens": [
+        "WAV",
+        "AIFF",
+        "FLAC",
+        "MP3",
+        "MIDI"
+      ],
+      "keywords": {
+        "en": "audio daw recording mixing midi pro tools music",
+        "pt_BR": "audio gravar mixar musica estudio midi"
+      },
+      "screenshots": [
+        {
+          "url": "https://raw.githubusercontent.com/storytold/soundcraft/v0.12.1/docs/images/mix.png",
+          "caption": {
+            "en": "Mixer with channel strips",
+            "pt_BR": "Mesa de mixagem"
+          }
+        },
+        {
+          "url": "https://raw.githubusercontent.com/storytold/soundcraft/v0.12.1/docs/images/edit.png",
+          "caption": {
+            "en": "Edit window",
+            "pt_BR": "Janela de edição"
+          }
+        },
+        {
+          "url": "https://raw.githubusercontent.com/storytold/soundcraft/v0.12.1/docs/images/midi.png",
+          "caption": {
+            "en": "MIDI editing",
+            "pt_BR": "Edição MIDI"
+          }
+        }
+      ]
+    }
+  ],
+  "_collections": "Featured collections on the home page. bundle: apps installed together in one pacman transaction.",
+  "collections": [
+    {
+      "id": "craft",
+      "title": {
+        "en": "Craft suite: free alternatives to Office, Photoshop, AutoCAD…",
+        "pt_BR": "Suíte Craft: alternativas livres a Office, Photoshop, AutoCAD…"
+      },
+      "text": {
+        "en": "Thirteen native apps for documents, design, CAD, video and audio. Experimental (pre-alpha): work on copies of your files.",
+        "pt_BR": "Treze apps nativos para documentos, design, CAD, vídeo e áudio. Experimental (pré-alfa): trabalhe com cópias dos seus arquivos."
+      },
+      "colors": [
+        "#1d2b64",
+        "#4b6cb7"
+      ],
+      "experimental": true,
+      "apps": [
+        "ai.storyteller.wordcraft",
+        "ai.storyteller.gridcraft",
+        "ai.storyteller.deckcraft",
+        "ai.storyteller.pdfcraft",
+        "ai.storyteller.photocraft",
+        "ai.storyteller.lightcraft",
+        "ai.storyteller.vectorcraft",
+        "ai.storyteller.designcraft",
+        "ai.storyteller.figcraft",
+        "ai.storyteller.cadcraft",
+        "ai.storyteller.filmcraft",
+        "ai.storyteller.effectcraft",
+        "ai.storyteller.soundcraft"
+      ],
+      "bundle": {
+        "label": {
+          "en": "Install office suite",
+          "pt_BR": "Instalar suíte de escritório"
+        },
+        "name": {
+          "en": "Craft office suite",
+          "pt_BR": "Suíte de escritório Craft"
+        },
+        "apps": [
+          "ai.storyteller.wordcraft",
+          "ai.storyteller.gridcraft",
+          "ai.storyteller.deckcraft"
+        ]
+      }
+    }
   ]
 }

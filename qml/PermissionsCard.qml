@@ -34,7 +34,9 @@ LingmoUI.Card {
     readonly property string repo: app.arch ? (app.arch.repo || "") : ""
     readonly property bool officialRepo: ["core", "extra", "multilib", "core-testing", "extra-testing",
                                           "multilib-testing"].indexOf(repo) >= 0
-    readonly property string level: source === "arch" ? (officialRepo || repo === "archlingmo" ? "info" : "medium")
+    // Curated apps are the developers' own packages, mirrored: not built by the team
+    readonly property bool mirrored: !!app.curated
+    readonly property string level: source === "arch" ? ((officialRepo || repo === "archlingmo") && !mirrored ? "info" : "medium")
                                                        : (info.level || "")
     readonly property var items: info.items || []
     readonly property int importantCount: items.filter(i => i.level !== "low").length
@@ -87,6 +89,8 @@ LingmoUI.Card {
                     return control.info.text || ""
                 if (control.officialRepo)
                     return qsTr("Programs from the Arch repositories run directly on the system, with the same access you have to your files and devices. This one comes from the official Arch Linux repositories (%1), built and signed by its maintainers.").arg(control.repo)
+                if (control.mirrored && control.repo.indexOf("archlingmo") === 0)
+                    return qsTr("Programs from the Arch repositories run directly on the system, with the same access you have to your files and devices. This one is the developer's own package (%1), copied unchanged into an ArchLingmo repository (%2) after its checksum and contents were checked; it was not built by the ArchLingmo team.").arg(control.app.developer || "").arg(control.repo)
                 if (control.repo === "archlingmo")
                     return qsTr("Programs from the Arch repositories run directly on the system, with the same access you have to your files and devices. This one comes from the ArchLingmo repository, built and signed by the ArchLingmo team.")
                 return qsTr("Programs from the Arch repositories run directly on the system, with the same access you have to your files and devices. This one comes from the “%1” repository, which is not an official Arch Linux repository.").arg(control.repo || qsTr("local"))

@@ -190,6 +190,11 @@ Flickable {
                         elide: Text.ElideRight
                     }
                     LingmoUI.Badge {
+                        visible: !!page.app.experimental
+                        text: qsTr("Experimental")
+                        tone: LingmoUI.Theme.warningColor
+                    }
+                    LingmoUI.Badge {
                         visible: page.source === "flathub" && !!page.app.flathub && page.app.flathub.verified
                         text: qsTr("Verified")
                         tone: LingmoUI.Theme.successColor
@@ -278,8 +283,9 @@ Flickable {
                     LingmoUI.ActionButton {
                         visible: !page.installed
                         primary: true
-                        implicitWidth: 150
-                        text: qsTr("Install")
+                        implicitWidth: Math.max(150, contentItem ? contentItem.implicitWidth + LingmoUI.Units.largeSpacing * 4 : 150)
+                        // Its repository (e.g. archlingmo-craft) isn't enabled yet: the store asks first
+                        text: page.source === "arch" && page.src && page.src.needsRepo ? qsTr("Enable and Install") : qsTr("Install")
                         enabled: !installer.busy && !!page.src
                                  && (page.source === "flathub" || page.src.available)
                         onClicked: {
@@ -301,7 +307,9 @@ Flickable {
                 Label {
                     visible: !page.busyHere && page.found && page.source !== ""
                     text: page.bothSources ? qsTr("From: %1").arg(page.sourceName(page.source))
-                                           : page.source === "flathub" ? qsTr("From Flathub") : qsTr("From the Arch repositories")
+                                           : page.source === "flathub" ? qsTr("From Flathub")
+                                           : page.app.repo === "archlingmo-craft" ? qsTr("From the ArchLingmo Craft repository")
+                                           : qsTr("From the Arch repositories")
                     color: LingmoUI.Theme.secondaryTextColor
                     font.pointSize: LingmoUI.Units.fontCaption
                     Layout.alignment: Qt.AlignRight
@@ -355,6 +363,17 @@ Flickable {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 200
             }
+        }
+
+        // Early-stage apps (e.g. the Craft suite): say so before anyone trusts them with work
+        LingmoUI.Banner {
+            visible: page.found && !!page.app.experimental
+            Layout.fillWidth: true
+            type: LingmoUI.Banner.Warning
+            closable: false
+            iconName: "dialog-warning"
+            title: qsTr("Experimental — pre-alpha: work on copies of your files")
+            text: qsTr("This app is in early development. It may crash, lose changes or save files that other programs open differently. Keep the originals and open copies in it.")
         }
 
         // Native games that need the user's own game data
@@ -607,11 +626,14 @@ Flickable {
                             { label: qsTr("Source"), value: page.source === "arch"
                                         ? qsTr("Arch Linux repositories (%1)").arg(page.app.arch ? page.app.arch.repo || "local" : "")
                                         : page.source === "flathub" ? (page.app.flathub.verified ? qsTr("Flathub, verified developer") : "Flathub") : "" },
+                            { label: qsTr("Opens files"), value: (page.app.opens || []).join(", ") },
+                            { label: qsTr("Alternative to"), value: page.app.replaces || "" },
                             { label: qsTr("Package"), value: page.source === "arch" ? (page.app.arch ? page.app.arch.pkgname : "")
                                                                                     : (page.app.flathub ? page.app.flathub.flatpakId : "") },
                         ]
 
                         delegate: RowLayout {
+                            visible: modelData.value !== ""
                             Layout.fillWidth: true
                             Layout.columnSpan: 1
                             spacing: LingmoUI.Units.largeSpacing

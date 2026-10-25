@@ -7,6 +7,7 @@
         <file alias="qml/AppPage.qml">qml/AppPage.qml</file>
         <file alias="qml/CategoryPage.qml">qml/CategoryPage.qml</file>
         <file alias="qml/CategoryTile.qml">qml/CategoryTile.qml</file>
+        <file alias="qml/CollectionBanner.qml">qml/CollectionBanner.qml</file>
         <file alias="qml/FlathubNotice.qml">qml/FlathubNotice.qml</file>
         <file alias="qml/GamesPage.qml">qml/GamesPage.qml</file>
         <file alias="qml/HeroBanner.qml">qml/HeroBanner.qml</file>
@@ -28,6 +29,7 @@
         <file alias="icons/back.svg">resources/icons/back.svg</file>
         <file alias="icons/check.svg">resources/icons/check.svg</file>
         <file alias="icons/development.svg">resources/icons/development.svg</file>
+        <file alias="icons/engineering.svg">resources/icons/engineering.svg</file>
         <file alias="icons/education.svg">resources/icons/education.svg</file>
         <file alias="icons/games.svg">resources/icons/games.svg</file>
         <file alias="icons/graphics.svg">resources/icons/graphics.svg</file>

@@ -65,6 +65,14 @@ public:
     // A package that isn't an AppStream app (native games from [archlingmo])
     Q_INVOKABLE bool installPackage(const QString &pkgname, const QString &name);
     Q_INVOKABLE bool removePackage(const QString &pkgname, const QString &name);
+    // Several packages in one transaction (a collection's bundle, e.g. the Craft office suite)
+    Q_INVOKABLE bool installPackages(const QStringList &pkgnames, const QString &name);
+    // Adds a known ArchLingmo repository (e.g. archlingmo-craft) to pacman.conf, syncs
+    // it and installs the packages from it: one helper call, one authorization.
+    // key: the app's key, or "pkg:<pkg>,…" for a bundle. Ask the user first
+    // (repoConsentNeeded): install() and installPackages() do.
+    Q_INVOKABLE bool enableRepoAndInstall(const QString &repo, const QString &key, const QStringList &packages,
+                                          const QString &name);
     // Enables [multilib] when needed and installs the gaming packages in one go
     Q_INVOKABLE bool prepareGaming(const QStringList &packages);
     Q_INVOKABLE void cancel();
@@ -77,6 +85,9 @@ Q_SIGNALS:
     void finished(const QString &key, const QString &source, const QString &action, bool ok, const QString &message);
     // A Flathub app was asked for but the flathub remote isn't set up yet
     void flathubConsentNeeded(const QString &key);
+    // The packages come from a repository that isn't in pacman.conf yet: ask, then
+    // call enableRepoAndInstall() with the same arguments
+    void repoConsentNeeded(const QString &repo, const QString &key, const QStringList &packages, const QString &name);
 
 private:
     void begin(const QString &key, const QString &source, const QString &action, const QString &name);
@@ -88,6 +99,9 @@ private:
     void takeLine(const QString &line);
     void parseLine(const QString &line);
     QString helperError(int exitCode) const;
+    // Runs enable-repo directly when pacman.conf already lists the repository (its
+    // database just isn't synced), else asks for consent. False when not needed.
+    bool needsRepo(const QString &repo, const QString &key, const QStringList &packages, const QString &name);
 
     Catalog *m_catalog;
     FlatpakBackend *m_flatpak;
@@ -102,5 +116,6 @@ private:
     int m_total = 0;
     int m_downloaded = 0;
     bool m_inHooks = false;
+    QString m_enablingRepo; // enable-repo running: reload the catalog afterwards
     QTimer m_logTimer;
 };
