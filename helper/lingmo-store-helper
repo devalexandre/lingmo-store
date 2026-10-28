@@ -146,7 +146,7 @@ repo_section() {
     archlingmo-craft)
         echo '[archlingmo-craft]'
         echo 'SigLevel = Optional TrustAll'
-        echo 'Server = https://github.com/devalexandre/archlingmo-craft/releases/download/$arch' ;;
+        echo 'Server = https://github.com/ArchLingmo/archlingmo-craft/releases/download/$arch' ;;
     *) return 1 ;;
     esac
 }
